@@ -1,0 +1,9 @@
+{
+  "type": "oss-monorepository",
+  "many-repositories": {
+    "conference": {
+      "name": "Crystallize Export App",
+      "git": "git@github.com:CrystallizeAPI/crystallize-export-app.git"
+    }
+  }
+}

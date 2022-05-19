@@ -1,0 +1,10 @@
+{
+    "extends": "@tsconfig/node16/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "declaration": true,
+        "lib": ["es2021", "DOM"],
+        "sourceMap": true
+    },
+    "include": ["./src/**/*"]
+}
