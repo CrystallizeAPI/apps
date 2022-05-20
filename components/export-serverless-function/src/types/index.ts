@@ -35,6 +35,9 @@ export interface ItemsExportOptions {
 
 export interface FileOptions {
     format: 'xlsx' | 'csv' | 'json' | 'xml' | 'pdf';
+    json?: {
+        singleFile?: boolean;
+    };
     name?: string;
     prefix?: string;
     compress?: boolean;

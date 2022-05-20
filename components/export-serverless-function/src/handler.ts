@@ -1,10 +1,7 @@
 import 'dotenv/config';
-import { writeFileSync } from 'fs';
-import { ensureDirSync, removeSync } from 'fs-extra';
-import path from 'path';
-import { Workbook } from 'exceljs';
 import { getAllItemsForShape, getTenantByIdentifier } from './graphql';
 import { ExportRequest, Item, ItemsExportOptions } from './types';
+import { exportFile } from './files/export-file';
 
 const { CRYSTALLIZE_TENANT_IDENTIFIER, FUNCTION_TYPE } = process.env;
 
@@ -33,50 +30,6 @@ export const fetchItemsForExport = async (options: ItemsExportOptions): Promise<
     return shapeItems;
 };
 
-export const exportJson = (filePath: string, shapeItems: Record<string, Item[]>) => {
-    Object.entries(shapeItems).map(([key, items]) => {
-        writeFileSync(path.resolve(filePath, `${key}.json`), JSON.stringify(items, null, 2));
-    });
-};
-
-export const exportXlsx = async (filePath: string, shapeItems: Record<string, Item[]>) => {
-    const workbook = new Workbook();
-
-    Object.entries(shapeItems).map(([key, items]) => {
-        if (!items.length) {
-            return;
-        }
-
-        const sheet = workbook.addWorksheet(key);
-        sheet.columns = Object.keys(items[0]).map((key) => ({ header: key, key }));
-        sheet.addRows(
-            items.map((item) =>
-                Object.entries(item).reduce((row: Record<string, any>, [key, value]) => {
-                    row[key] = JSON.stringify(value);
-                    return row;
-                }, {}),
-            ),
-        );
-    });
-
-    await workbook.xlsx.writeFile(path.resolve(filePath, `export.xlsx`));
-};
-
-export const exportFile = async (request: ExportRequest, shapeItems: Record<string, Item[]>) => {
-    const filePath = path.resolve(process.cwd(), 'data');
-    removeSync(filePath);
-    ensureDirSync(filePath);
-
-    switch (request.file.format) {
-        case 'json':
-            exportJson(filePath, shapeItems);
-            break;
-        case 'xlsx':
-            exportXlsx(filePath, shapeItems);
-            break;
-    }
-};
-
 export const execute = async (request: ExportRequest) => {
     switch (request.type) {
         case 'items':
@@ -84,9 +37,9 @@ export const execute = async (request: ExportRequest) => {
             exportFile(request, shapeItems);
             break;
         case 'shapes':
-            throw new Error('unhandled type');
+            throw new Error('not yet implemented');
         case 'orders':
-            throw new Error('unhandled type');
+            throw new Error('not yet implemented');
     }
 };
 
@@ -100,9 +53,9 @@ export const handler = async (event: any) => {
             await Promise.all(event.Records.forEach((record: any) => execute(JSON.parse(record.body))));
             break;
         case 'cloudflare':
-            break;
+            throw new Error('not yet implemented');
         case 'netlify':
-            break;
+            throw new Error('not yet implemented');
         default:
             await execute(event as ExportRequest);
     }
@@ -112,6 +65,7 @@ export const handler = async (event: any) => {
 handler({
     file: {
         format: 'json',
+        compress: true,
     },
     type: 'items',
 } as ExportRequest);
