@@ -10,6 +10,9 @@ const query = gql`
                 shapes {
                     identifier
                 }
+                availableLanguages {
+                    code
+                }
             }
         }
     }

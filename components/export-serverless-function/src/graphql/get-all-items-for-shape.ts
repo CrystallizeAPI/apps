@@ -1,26 +1,27 @@
 import { gql, GraphQLClient } from 'graphql-request';
+import { Item } from '../types';
 import { getClient } from './client';
 
 const query = gql`
-    query ($tenantId: ID!, $shapeIdentifier: String!, $language: String!) {
+    query ($tenantId: ID!, $shapeIdentifier: String!, $language: String!, $versionLabel: VersionLabel) {
         shape {
             get(identifier: $shapeIdentifier, tenantId: $tenantId) {
+                type
                 items(language: $language) {
                     id
                     name
+                    hasVersion(versionLabel: $versionLabel)
                     tree {
                         path
                     }
                     externalReference
                     createdAt
                     updatedAt
-                    version {
-                        label
-                    }
                     topics {
                         id
                         path
                     }
+                    ...Product
                     components {
                         componentId
                         content {
@@ -44,6 +45,32 @@ const query = gql`
                         }
                     }
                 }
+            }
+        }
+    }
+
+    fragment Product on Product {
+        variants {
+            id
+            name
+            sku
+            attributes {
+                attribute
+                value
+            }
+            priceVariants {
+                identifier
+                price
+            }
+            stockLocations {
+                identifier
+                stock
+            }
+            subscriptionPlans {
+                identifier
+            }
+            images {
+                url
             }
         }
     }
@@ -128,11 +155,17 @@ const query = gql`
     }
 `;
 
-export const getAllItemsForShape = async (tenantId: string, shapeIdentifier: string, language: string) => {
+export const getAllItemsForShape = async (
+    tenantId: string,
+    shapeIdentifier: string,
+    language: string,
+    versionLabel: string = 'current',
+): Promise<Item[]> => {
     const res = await getClient().request(query, {
         tenantId,
         shapeIdentifier,
         language,
+        versionLabel,
     });
     return res.shape.get.items;
 };

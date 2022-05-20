@@ -3,4 +3,7 @@ export interface Tenant {
     shapes: {
         identifier: string;
     }[];
+    availableLanguages: {
+        code: string;
+    }[];
 }
