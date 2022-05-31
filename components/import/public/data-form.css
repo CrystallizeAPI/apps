@@ -22,6 +22,11 @@ body {
     background: rgb(243, 244, 246);
 }
 
+.error {
+    max-width: 100%;
+    overflow: scroll;
+}
+
 .match-form {
     background: #eeeff1;
     border-radius: 10px;

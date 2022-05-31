@@ -8,10 +8,11 @@ interface ShapeChooserProps {
 export const ShapeChooser = ({ shapes, setSelectedShape }: ShapeChooserProps) => {
     return (
         <select
+            defaultValue={shapes[0].identifier}
             onChange={(e) => setSelectedShape(shapes.find((shape) => shape.identifier === e.target.value) as Shape)}
         >
-            {shapes.map((shape, i) => (
-                <option key={shape.identifier} value={shape.identifier} selected={i === 0}>
+            {shapes.map((shape) => (
+                <option key={shape.identifier} value={shape.identifier}>
                     {shape.name}
                 </option>
             ))}

@@ -1,6 +1,6 @@
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataMatchingForm } from '~/components/data-form';
 import { FileChooser } from '~/components/file-chooser';
 import { ShapeChooser } from '~/components/shape-chooser';
@@ -34,14 +34,6 @@ export const loader = async () => {
 //     formAction({ request, schema, mutation, successPath: '/import/status' });
 // };
 
-const submit = async (data: FormSubmission) => {
-    await fetch('/import/submit', {
-        method: 'POST',
-        cache: 'no-cache',
-        body: JSON.stringify(data),
-    });
-};
-
 export default function Index() {
     const { shapes } = useLoaderData<LoaderData>();
     const [selectedShape, setSelectedShape] = useState(shapes[0]);
@@ -49,6 +41,31 @@ export default function Index() {
     const [rows, setRows] = useState([] as Record<string, any>[]);
     const [mapping, setMapping] = useState({} as Record<string, string>);
     const [groupProductsBy, setGroupProductsBy] = useState('' as string);
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [done, setDone] = useState(false);
+
+    const submit = async (data: FormSubmission) => {
+        setError('');
+        setLoading(true);
+        try {
+            const res = await fetch('/import/submit', {
+                method: 'POST',
+                cache: 'no-cache',
+                body: JSON.stringify(data),
+            });
+            if (res.status !== 200) {
+                const error = await res.json();
+                setError(error.message);
+            } else {
+                setDone(true);
+            }
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (!shapes) {
         return 'loading';
@@ -78,7 +95,7 @@ export default function Index() {
                         <label>
                             Group Products By:&nbsp;
                             <select onChange={(e) => setGroupProductsBy(e.target.value)}>
-                                <option disabled selected value="" />
+                                <option defaultChecked={true} value="" />
                                 {headers.map((header) => (
                                     <option key={header} value={header}>
                                         {header}
@@ -88,20 +105,31 @@ export default function Index() {
                         </label>
                     </div>
                     <div>
-                        <button
-                            onClick={() =>
-                                submit({
-                                    shape: selectedShape as Shape,
-                                    rows,
-                                    mapping,
-                                    groupProductsBy,
-                                })
-                            }
-                            type="button"
-                        >
-                            Import
-                        </button>
+                        {loading && <span>Importing... Please wait...</span>}
+                        {!loading &&
+                            (done ? (
+                                <span>Import completed</span>
+                            ) : (
+                                <button
+                                    onClick={() =>
+                                        submit({
+                                            shape: selectedShape as Shape,
+                                            rows,
+                                            mapping,
+                                            groupProductsBy,
+                                        })
+                                    }
+                                    type="button"
+                                >
+                                    Import
+                                </button>
+                            ))}
                     </div>
+                    {error && (
+                        <div className="error">
+                            <pre>Error: {error}</pre>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

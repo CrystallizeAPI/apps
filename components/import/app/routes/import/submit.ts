@@ -74,7 +74,7 @@ const runImport = async (spec: JsonSpec) => {
         throw new Error('CRYSTALLIZE_TENANT_IDENTIFIER must be set');
     }
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const bootstrapper = new Bootstrapper();
         bootstrapper.config.logLevel = 'verbose';
         bootstrapper.setAccessToken(CRYSTALLIZE_ACCESS_TOKEN_ID, CRYSTALLIZE_ACCESS_TOKEN_SECRET);
@@ -82,10 +82,7 @@ const runImport = async (spec: JsonSpec) => {
         bootstrapper.setSpec(spec);
 
         bootstrapper.on(EVENT_NAMES.DONE, () => resolve(null));
-        bootstrapper.on(EVENT_NAMES.ERROR, (err) => {
-            console.error(err);
-            return json({ message: 'Error response from API' }, 500);
-        });
+        bootstrapper.on(EVENT_NAMES.ERROR, (err) => reject(err));
         bootstrapper.start();
     });
 };
@@ -126,6 +123,10 @@ export const action: ActionFunction = async ({ request }) => {
     // console.log('products', JSON.stringify(products, '  ', 2));
     spec.items = Object.values(products);
 
-    await runImport(spec);
-    return new Response('done');
+    try {
+        await runImport(spec);
+    } catch (err: any) {
+        return json({ message: err.error }, 500);
+    }
+    return json({ message: 'done' }, 200);
 };
