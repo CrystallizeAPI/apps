@@ -83,7 +83,8 @@ const runImport = async (spec: JsonSpec) => {
 
         bootstrapper.on(EVENT_NAMES.DONE, () => resolve(null));
         bootstrapper.on(EVENT_NAMES.ERROR, (err) => {
-            throw new Error(err);
+            console.error(err);
+            return json({ message: 'Error response from API' }, 500);
         });
         bootstrapper.start();
     });
