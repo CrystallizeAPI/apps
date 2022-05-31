@@ -1,11 +1,17 @@
 import { createClient } from '@crystallize/js-api-client';
 import type { Shape, TenantQueryResponse } from '~/types';
 
+const { CRYSTALLIZE_ACCESS_TOKEN_ID, CRYSTALLIZE_ACCESS_TOKEN_SECRET, CRYSTALLIZE_TENANT_IDENTIFIER } = process.env;
+
 export const getShapes = async (): Promise<Shape[]> => {
+    if (!CRYSTALLIZE_TENANT_IDENTIFIER || !CRYSTALLIZE_ACCESS_TOKEN_ID || !CRYSTALLIZE_ACCESS_TOKEN_SECRET) {
+        throw new Error('Crystallize environment vars must be set');
+    }
+
     const client = createClient({
-        tenantIdentifier: 'brunost',
-        accessTokenId: 'f8d30e69b3aa17518422',
-        accessTokenSecret: '3694328c160d0fde7932f2c0caf52e4c25efc841',
+        tenantIdentifier: CRYSTALLIZE_TENANT_IDENTIFIER,
+        accessTokenId: CRYSTALLIZE_ACCESS_TOKEN_ID,
+        accessTokenSecret: CRYSTALLIZE_ACCESS_TOKEN_SECRET,
     }).pimApi;
 
     const res: TenantQueryResponse = await client(
@@ -28,7 +34,7 @@ export const getShapes = async (): Promise<Shape[]> => {
           }
       `,
         {
-            tenantIdentifier: 'brunost',
+            tenantIdentifier: CRYSTALLIZE_TENANT_IDENTIFIER,
         },
     );
 
