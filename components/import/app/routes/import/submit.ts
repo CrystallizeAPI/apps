@@ -76,7 +76,7 @@ const runImport = async (spec: JsonSpec) => {
 
     return new Promise((resolve) => {
         const bootstrapper = new Bootstrapper();
-        // bootstrapper.config.logLevel = 'verbose';
+        bootstrapper.config.logLevel = 'verbose';
         bootstrapper.setAccessToken(CRYSTALLIZE_ACCESS_TOKEN_ID, CRYSTALLIZE_ACCESS_TOKEN_SECRET);
         bootstrapper.setTenantIdentifier(CRYSTALLIZE_TENANT_IDENTIFIER);
         bootstrapper.setSpec(spec);
@@ -122,7 +122,7 @@ export const action: ActionFunction = async ({ request }) => {
         return obj;
     }, {});
 
-    // console.log(JSON.stringify(products, '  ', 2));
+    // console.log('products', JSON.stringify(products, '  ', 2));
     spec.items = Object.values(products);
 
     await runImport(spec);
