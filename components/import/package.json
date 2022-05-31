@@ -24,6 +24,7 @@
     "remix-domains": "^0.2.0",
     "remix-forms": "^0.16.1",
     "use-file-picker": "^1.4.2",
+    "uuid": "^8.3.2",
     "zod": "^3.17.3"
   },
   "devDependencies": {
@@ -31,6 +32,7 @@
     "@remix-run/eslint-config": "^1.5.1",
     "@types/react": "^17.0.45",
     "@types/react-dom": "^17.0.17",
+    "@types/uuid": "^8.3.4",
     "eslint": "^8.15.0",
     "typescript": "^4.6.4"
   },

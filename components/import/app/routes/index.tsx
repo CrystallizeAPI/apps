@@ -48,7 +48,6 @@ export default function Index() {
     const [headers, setHeaders] = useState([] as string[]);
     const [rows, setRows] = useState([] as Record<string, any>[]);
     const [mapping, setMapping] = useState({} as Record<string, string>);
-    const [importSeparateProducts, setImportSeparateProducts] = useState(false);
     const [groupProductsBy, setGroupProductsBy] = useState('' as string);
 
     if (!shapes) {
@@ -77,25 +76,17 @@ export default function Index() {
                     />
                     <div>
                         <label>
-                            <input type="checkbox" onChange={(e) => setImportSeparateProducts(e.target.checked)} />
-                            Import separate products
+                            Group Products By:&nbsp;
+                            <select onChange={(e) => setGroupProductsBy(e.target.value)}>
+                                <option disabled selected value="" />
+                                {headers.map((header) => (
+                                    <option key={header} value={header}>
+                                        {header}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
                     </div>
-                    {importSeparateProducts && (
-                        <div>
-                            <label>
-                                Group Products By:&nbsp;
-                                <select onChange={(e) => setGroupProductsBy(e.target.value)}>
-                                    <option disabled selected value="" />
-                                    {headers.map((header) => (
-                                        <option key={header} value={header}>
-                                            {header}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
-                        </div>
-                    )}
                     <div>
                         <button
                             onClick={() =>
@@ -103,7 +94,6 @@ export default function Index() {
                                     shape: selectedShape as Shape,
                                     rows,
                                     mapping,
-                                    importSeparateProducts,
                                     groupProductsBy,
                                 })
                             }
