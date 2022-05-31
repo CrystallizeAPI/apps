@@ -19,8 +19,8 @@
 
 html,
 body {
-    background: rgb(243, 244, 246);
-    padding: 10px;
+    background: #fff;
+    padding: 20px 50px;
     margin: 0;
 }
 
@@ -30,14 +30,32 @@ select {
     color: #4c4f5a;
     border: none;
     border-radius: 5px;
-    box-shadow: 0 0 5px 0 #a4a4a4;
-    margin-top: 10px;
-    max-width: 100%;
+    filter: drop-shadow(0px 2px 4px rgba(130, 138, 144, 0.15));
+    margin-top: 2px;
+    width: 90%;
+    padding-right: 30px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='13' height='7' viewBox='0 0 13 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6.5 6L12 1' stroke='%234D525B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat, repeat;
+    background-position: right 0.7em top 50%, 0 0;
+    background-size: 0.65em auto, 100%;
 }
 
 .error {
     max-width: 100%;
     overflow: scroll;
+    padding: 10px 30px 20px;
+    color: #ce1abc;
+}
+
+.import-message {
+    max-width: 100%;
+    padding: 10px 30px;
+    color: #4a4a4a;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .app-section {
@@ -45,16 +63,22 @@ select {
     flex-direction: column;
     width: 100%;
     color: #4a4a4a;
-    background: #eeeff1;
-    border-radius: 10px;
     overflow: hidden;
-    border: 2px dashed #dfdfdf;
     margin-bottom: 20px;
+    background: #eeeff1;
+    border: 1px dashed #9095a8;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+.file-chooser-section {
+    height: 400px;
 }
 
 .app-section-inner {
-    width: 100%;
-    padding: 20px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 50px 0;
 }
 
 .app-section h1 {
@@ -95,6 +119,9 @@ select {
     box-sizing: border-box;
     color: black;
     background: #eeeff1;
+    display: flex;
+    align-items: center;
+    overflow-x: scroll;
 }
 
 .dsg-corner-indicator {
@@ -231,4 +258,49 @@ select {
 .dsg-active-cell-disabled,
 .dsg-selection-rect-disabled {
     border-color: var(--dsg-selection-disabled-border-color);
+}
+
+.dsg-cell-header,
+.dsg-cell {
+    width: 200px !important;
+    flex: none !important;
+}
+
+.dsg-cell-header {
+    background: #fafafa !important;
+}
+
+button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 25px;
+    gap: 20px;
+    background: #bff6f8;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    color: #4d525b;
+    border: none;
+}
+
+.dsg-add-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 30px 20px;
+    margin-bottom: 40px;
+}
+
+.dsg-add-row-input {
+    padding: 15px 25px;
+    border: none;
+}
+.group-products-section {
+    padding-bottom: 30px;
+}
+.group-products-section-inner {
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
 }
