@@ -29,3 +29,39 @@ export interface Folder {
     name: string;
     path: string;
 }
+
+export interface Item {
+    id: string;
+    name: string;
+    path: string;
+    externalReference?: string;
+    createdAt: string;
+    updatedAt?: string;
+    shape: {
+        identifier: string;
+    };
+    topics?: {
+        id: string;
+        path: string;
+    }[];
+    components: {
+        id: string;
+        content: any; // TODO
+    }[];
+}
+
+export interface Product extends Item {
+    variants: {
+        name: string;
+        sku: string;
+        stock: number;
+        price: number;
+        attributes: {
+            attribute: string;
+            value: string;
+        }[];
+        images: {
+            url: string;
+        }[];
+    }[];
+}

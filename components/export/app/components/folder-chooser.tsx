@@ -8,7 +8,7 @@ interface FolderChooserProps {
 export const FolderChooser = ({ folders, setSelectedFolder }: FolderChooserProps) => {
     return (
         <div className="folder-chooser">
-            <h2>Select Import Location</h2>
+            <h2>Select Folder for Export</h2>
             <select
                 defaultValue={folders[0].path}
                 onChange={(e) => setSelectedFolder(folders.find((folder) => folder.path === e.target.value) as Folder)}

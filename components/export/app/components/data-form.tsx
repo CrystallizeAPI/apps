@@ -75,29 +75,24 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
                         >
                             <label className="match-label">
                                 Map "{header}" to
-                                <select
+                                <input
                                     className="match-select"
+                                    type="text"
+                                    defaultValue={mapping[header]}
                                     onChange={(e) => {
                                         const m: Record<string, string> = {
                                             ...mapping,
                                         };
-                                        m[e.target.value] = header;
+                                        m[header] = e.target.value;
                                         setMapping(m);
                                     }}
-                                >
-                                    <option selected value="" />
-                                    {shapeFields.map((field) => (
-                                        <option key={field.key} value={field.key}>
-                                            {field.value}
-                                        </option>
-                                    ))}
-                                </select>
+                                />
                             </label>
                         </div>
                     ))}
                 </div>
             </div>
-            <DataSheetGrid value={rows} onChange={setRows} columns={columns} gutterColumn={false} />
+            <DataSheetGrid lockRows={true} value={rows} onChange={setRows} columns={columns} gutterColumn={false} />
         </div>
     );
 };
