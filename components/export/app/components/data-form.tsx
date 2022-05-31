@@ -16,47 +16,6 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
         title: header,
     }));
 
-    let shapeFields =
-        shape.type === 'product'
-            ? [
-                  {
-                      key: 'product.name',
-                      value: 'Product Name',
-                  },
-                  {
-                      key: 'variant.name',
-                      value: 'Variant Name',
-                  },
-                  {
-                      key: 'variant.sku',
-                      value: 'Variant SKU',
-                  },
-                  {
-                      key: 'variant.images',
-                      value: 'Variant Images',
-                  },
-                  {
-                      key: 'variant.price',
-                      value: 'Variant Price',
-                  },
-                  {
-                      key: 'variant.stock',
-                      value: 'Variant Stock',
-                  },
-                  {
-                      key: 'variant.attribute',
-                      value: 'Variant Attribute',
-                  },
-              ]
-            : [];
-    shapeFields = shapeFields.concat(
-        shape.components.map((component) => ({
-            key: `component.${component.id}`,
-            value: `Component "${component.name}"`,
-            type: component.type,
-        })),
-    );
-
     return (
         <div className="match-form">
             <div className="match-header">

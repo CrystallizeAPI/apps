@@ -21,7 +21,7 @@ export const loader = async () => {
     });
 };
 
-const headers = [
+const baseHeaders = [
     'Item Name',
     'Item Path',
     'Variant Name',
@@ -68,7 +68,6 @@ const mapItem = (item: Product): Record<string, any>[] => {
                         .join(' ');
                 } else {
                     console.warn('decoding component type not implemented', id, content);
-                    record[`Component "${id}"`] = JSON.stringify(content);
                 }
             });
 
@@ -153,7 +152,9 @@ export default function Index() {
                     <div className="app-section">
                         <DataMatchingForm
                             shape={selectedShape}
-                            headers={headers}
+                            headers={baseHeaders.concat(
+                                Object.keys(rows[0]).filter((key) => key.startsWith('Component ')),
+                            )}
                             rows={rows}
                             setRows={setRows}
                             mapping={mapping}
