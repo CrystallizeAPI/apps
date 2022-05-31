@@ -9,10 +9,11 @@ import {
 } from '@crystallize/import-utilities';
 import { type ActionFunction, json } from '@remix-run/node';
 import { v4 as uuidv4 } from 'uuid';
-import type { Shape } from '~/types';
+import type { Shape, Folder } from '~/types';
 
 export interface FormSubmission {
     shape: Shape;
+    folder?: Folder;
     rows: Record<string, any>[];
     mapping: Record<string, string>;
     groupProductsBy?: string;
@@ -91,7 +92,7 @@ export const action: ActionFunction = async ({ request }) => {
     if (request.method !== 'POST') {
         return json({ message: 'Method not allowed' }, 405);
     }
-    const { shape, rows, mapping, groupProductsBy }: FormSubmission = await request.json();
+    const { shape, folder, rows, mapping, groupProductsBy }: FormSubmission = await request.json();
 
     const spec: JsonSpec = {};
     const variants = rows.map((row) => mapVariant(row, mapping));
@@ -102,7 +103,7 @@ export const action: ActionFunction = async ({ request }) => {
             name: productName || variants[i].name,
             shape: shape.identifier,
             vatType: 'No Tax',
-            parentCataloguePath: '/',
+            parentCataloguePath: folder?.path || '/',
             variants: [variants[i]],
             components: mapComponents(row, mapping, shape),
         };

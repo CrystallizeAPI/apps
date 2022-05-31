@@ -1,42 +1,32 @@
+import { Folder } from '@crystallize/import-utilities/dist/generated/graphql';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { DataMatchingForm } from '~/components/data-form';
 import { FileChooser } from '~/components/file-chooser';
+import { FolderChooser } from '~/components/folder-chooser';
 import { ShapeChooser } from '~/components/shape-chooser';
+import { getFolders } from '~/models/folders.server';
 import { getShapes } from '~/models/shapes.server';
 import type { Shape } from '~/types';
 import type { FormSubmission } from './import/submit';
 
 type LoaderData = {
     shapes: Awaited<ReturnType<typeof getShapes>>;
+    folders: Awaited<ReturnType<typeof getFolders>>;
 };
 
 export const loader = async () => {
     return json<LoaderData>({
         shapes: await getShapes(),
+        folders: await getFolders(),
     });
 };
 
-// const schema = z.object({
-//     shape: z.any(),
-//     mapping: z.record(z.string(), z.string()),
-//     rows: z.array(
-//                 z.record(z.string(), z.any()),
-//     ),
-// });
-
-// const mutation = makeDomainFunction(schema)(async values => (
-//     // do something
-// ))
-
-// const action: ActionFunction = async ({ request }) => {
-//     formAction({ request, schema, mutation, successPath: '/import/status' });
-// };
-
 export default function Index() {
-    const { shapes } = useLoaderData<LoaderData>();
+    const { shapes, folders } = useLoaderData<LoaderData>();
     const [selectedShape, setSelectedShape] = useState(shapes[0]);
+    const [selectedFolder, setSelectedFolder] = useState(folders[0]);
     const [headers, setHeaders] = useState([] as string[]);
     const [rows, setRows] = useState([] as Record<string, any>[]);
     const [mapping, setMapping] = useState({} as Record<string, string>);
@@ -67,70 +57,91 @@ export default function Index() {
         }
     };
 
-    if (!shapes) {
+    if (!shapes || !folders) {
         return 'loading';
     }
 
     return (
         <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}>
-            {selectedShape && <p>Chosen Shape: {selectedShape.identifier}</p>}
-            <FileChooser
-                onChange={({ headers, rows }) => {
-                    setHeaders(headers);
-                    setRows(rows);
-                }}
-            />
-            <ShapeChooser shapes={shapes} setSelectedShape={setSelectedShape} />
-            {!!rows?.length && (
-                <div>
-                    <DataMatchingForm
-                        shape={selectedShape}
-                        headers={headers}
-                        rows={rows}
-                        setRows={setRows}
-                        mapping={mapping}
-                        setMapping={setMapping}
-                    />
-                    <div>
-                        <label>
-                            Group Products By:&nbsp;
-                            <select onChange={(e) => setGroupProductsBy(e.target.value)}>
-                                <option defaultChecked={true} value="" />
-                                {headers.map((header) => (
-                                    <option key={header} value={header}>
-                                        {header}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
+            <div className="app-section">
+                <div className="app-section-inner">
+                    <h1>Organize Your Import</h1>
+                    <div className="flex">
+                        <ShapeChooser shapes={shapes} setSelectedShape={setSelectedShape} />
+                        <FolderChooser folders={folders} setSelectedFolder={setSelectedFolder} />
                     </div>
-                    <div>
-                        {loading && <span>Importing... Please wait...</span>}
-                        {!loading &&
-                            (done ? (
-                                <span>Import completed</span>
-                            ) : (
-                                <button
-                                    onClick={() =>
-                                        submit({
-                                            shape: selectedShape as Shape,
-                                            rows,
-                                            mapping,
-                                            groupProductsBy,
-                                        })
-                                    }
-                                    type="button"
-                                >
-                                    Import
-                                </button>
-                            ))}
-                    </div>
-                    {error && (
-                        <div className="error">
-                            <pre>Error: {error}</pre>
-                        </div>
-                    )}
                 </div>
+            </div>
+            {!rows?.length && (
+                <div className="app-section">
+                    <div className="app-section-inner">
+                        <FileChooser
+                            onChange={({ headers, rows }) => {
+                                setHeaders(headers);
+                                setRows(rows);
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
+            {!!rows?.length && (
+                <>
+                    <div className="app-section">
+                        <DataMatchingForm
+                            shape={selectedShape}
+                            headers={headers}
+                            rows={rows}
+                            setRows={setRows}
+                            mapping={mapping}
+                            setMapping={setMapping}
+                        />
+                    </div>
+
+                    <div className="app-section">
+                        <div className="app-section-inner">
+                            <div>
+                                <label>
+                                    Group Products By:&nbsp;
+                                    <select onChange={(e) => setGroupProductsBy(e.target.value)}>
+                                        <option defaultChecked={true} value="" />
+                                        {headers.map((header) => (
+                                            <option key={header} value={header}>
+                                                {header}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                            </div>
+                            <div>
+                                {loading && <span>Importing... Please wait...</span>}
+                                {!loading &&
+                                    (done ? (
+                                        <span>Import completed</span>
+                                    ) : (
+                                        <button
+                                            onClick={() =>
+                                                submit({
+                                                    shape: selectedShape as Shape,
+                                                    folder: selectedFolder,
+                                                    rows,
+                                                    mapping,
+                                                    groupProductsBy,
+                                                })
+                                            }
+                                            type="button"
+                                        >
+                                            Import {rows.length} Rows
+                                        </button>
+                                    ))}
+                            </div>
+                            {error && (
+                                <div className="error">
+                                    <pre>Error: {error}</pre>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </>
             )}
         </div>
     );

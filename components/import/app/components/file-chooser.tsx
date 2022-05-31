@@ -52,9 +52,9 @@ export const FileChooser = ({ onChange }: FileChooserProps) => {
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
-        <div {...getRootProps()}>
+        <div className="file-chooser" {...getRootProps()}>
             <input {...getInputProps()} />
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <img src="/upload.png" alt="Click to upload" />
         </div>
     );
 };
