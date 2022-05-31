@@ -39,6 +39,7 @@ const mappingPresets: Record<string, Record<string, string>> = {
         'Item Path': 'link',
         'Variant Images': 'image_link',
         'Variant Price': 'price',
+        'Variant Stock': 'availability', // currently wrong, should convert to values "in_stock", "out_of_stock"
     },
 };
 
@@ -51,19 +52,25 @@ const mapItem = (item: Product): Record<string, any>[] => {
             'Variant SKU': variant.sku,
             'Variant Images': variant.images.map(({ url }) => url).join(','),
             'Variant Price': variant.price,
-            'Varaint Stock': variant.stock,
+            'Variant Stock': variant.stock,
         };
 
-        item.components.forEach(({ id, content }) => {
-            if (content.text) {
-                record[`Component "${id}"`] = content.text;
-            } else if (content.plainText?.length) {
-                record[`Component "${id}"`] = content.plainText.map((text: string) => text).join(' ');
-            } else {
-                console.warn('decoding component type not implemented', id, content);
-                record[`Component "${id}"`] = JSON.stringify(content);
-            }
-        });
+        item.components
+            .filter(({ content }) => !!content)
+            .forEach(({ id, content }) => {
+                if (content.text) {
+                    record[`Component "${id}"`] = content.text;
+                } else if (content.plainText?.length) {
+                    record[`Component "${id}"`] = content.plainText.map((text: string) => text).join(' ');
+                } else if (content.paragraphs?.length) {
+                    record[`Component "${id}"`] = content.paragraphs[0].body.plainText
+                        .map((text: string) => text)
+                        .join(' ');
+                } else {
+                    console.warn('decoding component type not implemented', id, content);
+                    record[`Component "${id}"`] = JSON.stringify(content);
+                }
+            });
 
         return record;
     });
