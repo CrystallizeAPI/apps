@@ -30,7 +30,7 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
                         <div
                             key={header}
                             className="dsg-cell"
-                            style={{ flex: '1 1 0%', flexDirection: 'column', alignItems: 'start', minWidth: '100px' }}
+                            style={{ flexDirection: 'column', alignItems: 'start', width: '200px' }}
                         >
                             <label className="match-label">
                                 Map "{header}" to
@@ -45,6 +45,7 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
                                         m[header] = e.target.value;
                                         setMapping(m);
                                     }}
+                                    style={{ marginTop: '10px' }}
                                 />
                             </label>
                         </div>

@@ -1,11 +1,11 @@
 import type { LinksFunction, MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import styles from '../public/data-form.css';
 
 export const links: LinksFunction = () => [
     {
         rel: 'stylesheet',
-        href: './data-form.css',
-        type: 'text/css',
+        href: styles,
     },
 ];
 
