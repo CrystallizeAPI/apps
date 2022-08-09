@@ -62,7 +62,7 @@ const mapItem = (item: Product): Record<string, any>[] => {
                     record[`Component "${id}"`] = content.text;
                 } else if (content.plainText?.length) {
                     record[`Component "${id}"`] = content.plainText.map((text: string) => text).join(' ');
-                } else if (content.paragraphs?.length) {
+                } else if (content.paragraphs?.length && content.paragraphs[0].body?.plainText) {
                     record[`Component "${id}"`] = content.paragraphs[0].body.plainText
                         .map((text: string) => text)
                         .join(' ');
