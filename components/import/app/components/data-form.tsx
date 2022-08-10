@@ -14,6 +14,7 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
     const columns = headers.map((header) => ({
         ...keyColumn(header, textColumn),
         title: header,
+        width: '1 1 200px',
     }));
 
     let shapeFields =
@@ -65,18 +66,15 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
                     <strong>{rows.length}</strong> components were recognized in this file.
                 </h2>
             </div>
-            <div className="dsg-container">
-                <div className="dsg-row">
+            <div className="dsg-container" style={{ background: '#fff', overflow: 'scroll' }}>
+                <div className="dsg-row" style={{ minWidth: 940 }}>
+                    <div className="dsg-cell" style={{ flex: '0 0 40px' }}></div>
                     {headers.map((header) => (
-                        <div
-                            key={header}
-                            className="dsg-cell"
-                            style={{ flexDirection: 'column', alignItems: 'start', width: '200px' }}
-                        >
-                            <label className="match-label">
+                        <div key={header} className="dsg-cell" style={{ flex: '1 1 200px' }}>
+                            <label className="match-label" style={{ borderBottom: 0 }}>
                                 Map "{header}" to
                                 <select
-                                    className="match-select"
+                                    className="match-select grey"
                                     onChange={(e) => {
                                         const m: Record<string, string> = {
                                             ...mapping,
@@ -84,7 +82,7 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
                                         m[e.target.value] = header;
                                         setMapping(m);
                                     }}
-                                    style={{marginTop: '10px'}}
+                                    style={{ marginTop: '10px' }}
                                 >
                                     <option selected value="" />
                                     {shapeFields.map((field) => (
@@ -98,7 +96,7 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
                     ))}
                 </div>
             </div>
-            <DataSheetGrid value={rows} onChange={setRows} columns={columns} gutterColumn={false} />
+            <DataSheetGrid value={rows} onChange={setRows} columns={columns} height={800} />
         </div>
     );
 };

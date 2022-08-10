@@ -58,31 +58,66 @@ export default function Index() {
     };
 
     if (!shapes || !folders) {
-        return 'loading';
+        return (
+            <div className="empty-screen">
+                <span className="loader"></span>
+            </div>
+        );
     }
-
     return (
-        <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}>
-            <div className="app-section">
-                <div className="app-section-inner">
-                    <h1>Organize Your Import</h1>
-                    <div className="flex">
-                        <ShapeChooser shapes={shapes} setSelectedShape={setSelectedShape} />
-                        <FolderChooser folders={folders} setSelectedFolder={setSelectedFolder} />
+        <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4', padding: '20px 50px' }}>
+            <div className="floating-actionbar">
+                <div className="grid">
+                    <ShapeChooser shapes={shapes} setSelectedShape={setSelectedShape} />
+                    <FolderChooser folders={folders} setSelectedFolder={setSelectedFolder} />
+                    <div>
+                        <h2>Group Products By</h2>
+                        <select
+                            className="grey"
+                            onChange={(e) => setGroupProductsBy(e.target.value)}
+                            disabled={!rows?.length}
+                        >
+                            <option defaultChecked={true} value="" />
+                            {headers.map((header) => (
+                                <option key={header} value={header}>
+                                    {header}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <button
+                            className="action-button"
+                            onClick={() =>
+                                submit({
+                                    shape: selectedShape as Shape,
+                                    folder: selectedFolder,
+                                    rows,
+                                    mapping,
+                                    groupProductsBy,
+                                })
+                            }
+                            type="button"
+                            disabled={!rows?.length || done}
+                        >
+                            {done ? 'Import completed' : `Import ${rows.length} rows`}
+                        </button>
                     </div>
                 </div>
             </div>
-            {!rows?.length && (
+
+            {!rows?.length ? (
                 <div className="file-chooser-section app-section">
                     <FileChooser
                         onChange={({ headers, rows }) => {
+                            console.log({ headers });
                             setHeaders(headers);
+                            console.log({ rows });
                             setRows(rows);
                         }}
                     />
                 </div>
-            )}
-            {!!rows?.length && (
+            ) : (
                 <>
                     <div className="app-section">
                         <DataMatchingForm
@@ -95,55 +130,24 @@ export default function Index() {
                         />
                     </div>
 
-                    <div className="app-section">
-                        <div className="group-products-section">
-                            <div className="group-products-section-inner">
-                                <div>
-                                    <label>
-                                        Group Products By:&nbsp;
-                                        <select
-                                            onChange={(e) => setGroupProductsBy(e.target.value)}
-                                            style={{ marginTop: '10px' }}
-                                        >
-                                            <option defaultChecked={true} value="" />
-                                            {headers.map((header) => (
-                                                <option key={header} value={header}>
-                                                    {header}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </label>
-                                </div>
-                                <div>
-                                    {!loading &&
-                                        (done ? (
-                                            <button>Import completed</button>
-                                        ) : (
-                                            <button
-                                                onClick={() =>
-                                                    submit({
-                                                        shape: selectedShape as Shape,
-                                                        folder: selectedFolder,
-                                                        rows,
-                                                        mapping,
-                                                        groupProductsBy,
-                                                    })
-                                                }
-                                                type="button"
-                                            >
-                                                Import {rows.length} Rows
-                                            </button>
-                                        ))}
-                                </div>
-                            </div>
-                            {loading && <span className='import-message'>Importing! Please wait.</span>}
+                    {(loading || error) && (
+                        <div className="feedback-container">
+                            {loading && (
+                                <>
+                                    <div className="loader-wrapper" style={{ transform: 'scale(0.5,0.5)' }}>
+                                        <div className="loader"></div>
+                                    </div>
+                                    <span className="import-message">Bip bop, importing your stuff...</span>
+                                </>
+                            )}
+
                             {error && (
                                 <div className="error">
                                     <pre>Error: {error}</pre>
                                 </div>
                             )}
                         </div>
-                    </div>
+                    )}
                 </>
             )}
         </div>
