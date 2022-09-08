@@ -15,7 +15,8 @@ All contributions will happen here:
 
 | Bundles                                                    | Licence(s) |
 | ---------------------------------------------------------- | ---------- |
-| [Import App](https://github.com/CrystallizeAPI/import-app) | ![MIT]     |
+| [Export Serverless Function](https://github.com/CrystallizeAPI/export-serverless-function) | ![MIT]     |
+| [Hello World Comics](https://github.com/CrystallizeAPI/export-serverless-function) | ![MIT]     |
 
 ## Contributions
 
