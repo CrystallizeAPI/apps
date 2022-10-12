@@ -1,6 +1,10 @@
 {
     "type": "oss-monorepository",
     "many-repositories": {
+        "crystallize-refund-app": {
+            "name": "Crystallize Refund App",
+            "git": "git@github.com:CrystallizeAPI/crystallize-refund-app.git"
+        },
         "crystallize-subscription-contract-app": {
             "name": "Crystallize Subscription Contract App",
             "git": "git@github.com:CrystallizeAPI/crystallize-subscription-contract-app.git"
