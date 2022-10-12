@@ -1,10 +1,6 @@
 {
     "type": "oss-monorepository",
     "many-repositories": {
-        "export-serverless-function": {
-            "name": "Export Serverless Function",
-            "git": "git@github.com:CrystallizeAPI/export-serverless-function.git"
-        },
         "hello-world-comics": {
             "name": "Hello World Comics",
             "git": "git@github.com:CrystallizeAPI/hello-world-comics-app.git"
