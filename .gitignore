@@ -2,4 +2,5 @@
 .env
 .vscode
 node_modules
+*.pem
 dist
