@@ -1,0 +1,24 @@
+// App Variable Specicific Style
+
+$crystallize-background-color: #f3f4f6;
+$crystallize-text-color: #4c4f5a;
+$crystallize-font-family: 'Roboto', sans-serif;
+$crystallize-light-cyan: #d4f6f6;
+$crystallize-purple: #44266d;
+
+// Override Twitter Bootstrap's default styles
+$dark: $crystallize-purple;
+// $primary: #BFF6F8;
+$component-active-color: $crystallize-background-color;
+$component-active-bg: $crystallize-purple;
+
+$body-bg: #f3f4f6;
+
+// Import Twitter Bootstrap's
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';
+
+.r-icon {
+    color: $crystallize-purple;
+    margin-right: 4px;
+    margin-top: -3px;
+}

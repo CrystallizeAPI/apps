@@ -1,0 +1,10 @@
+contract.app.crystallize.com {
+    tls domains.pem key.pem
+    push
+    @websockets {
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    reverse_proxy @websockets localhost:3002
+    reverse_proxy 127.0.0.1:3001
+}

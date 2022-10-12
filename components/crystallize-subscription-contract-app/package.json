@@ -1,0 +1,44 @@
+{
+    "private": true,
+    "sideEffects": false,
+    "scripts": {
+        "build": "run-p \"build:*\"",
+        "build:remix": "remix build",
+        "build:css": "sass -q --no-source-map src/styles/app.scss:src/styles/app.css",
+        "dev": "run-p \"dev:*\"",
+        "dev:remix": "PORT=3001 remix dev",
+        "dev:sass": "sass -q --no-source-map --watch src/styles/app.scss:src/styles/app.css",
+        "start": "remix-serve build",
+        "prettier:fix": "prettier --write .",
+        "prettier:check": "prettier --check ."
+    },
+    "dependencies": {
+        "@crystallize/js-api-client": "^1.3",
+        "@remix-run/node": "^1.7.2",
+        "@remix-run/react": "^1.7.2",
+        "@remix-run/serve": "^1.7.2",
+        "bootstrap": "^5.2.1",
+        "dayjs": "^1.11.5",
+        "jsonwebtoken": "^8.5.1",
+        "react": "^18.2.0",
+        "react-bootstrap": "^2.5.0",
+        "react-datepicker": "^4.8.0",
+        "react-dom": "^18.2.0",
+        "react-icons": "^4.4.0"
+    },
+    "devDependencies": {
+        "@remix-run/dev": "^1.7.2",
+        "@remix-run/eslint-config": "^1.7.2",
+        "@types/jsonwebtoken": "^8.5.9",
+        "@types/react": "^18.0.15",
+        "@types/react-datepicker": "^4.4.2",
+        "@types/react-dom": "^18.0.6",
+        "npm-run-all": "^4.1.5",
+        "prettier": "^2.7.1",
+        "sass": "^1.54.9",
+        "typescript": "^4.7.4"
+    },
+    "engines": {
+        "node": ">=14"
+    }
+}

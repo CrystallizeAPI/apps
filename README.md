@@ -13,9 +13,10 @@ All contributions will happen here:
 
 ## Managed Repositories
 
-| Bundles                                                                            | Licence(s) |
-| ---------------------------------------------------------------------------------- | ---------- |
-| [Hello World Comics](https://github.com/CrystallizeAPI/export-serverless-function) | ![MIT]     |
+| Bundles                                                                                                          | Licence(s) |
+| ---------------------------------------------------------------------------------------------------------------- | ---------- |
+| [Crystallize Subscription Contract App](https://github.com/CrystallizeAPI/crystallize-subscription-contract-app) | ![MIT]     |
+| [Hello World Comics](https://github.com/CrystallizeAPI/export-serverless-function)                               | ![MIT]     |
 
 ## Contributions
 

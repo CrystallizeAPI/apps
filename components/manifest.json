@@ -1,6 +1,10 @@
 {
     "type": "oss-monorepository",
     "many-repositories": {
+        "crystallize-subscription-contract-app": {
+            "name": "Crystallize Subscription Contract App",
+            "git": "git@github.com:CrystallizeAPI/crystallize-subscription-contract-app.git"
+        },
         "hello-world-comics": {
             "name": "Hello World Comics",
             "git": "git@github.com:CrystallizeAPI/hello-world-comics-app.git"
