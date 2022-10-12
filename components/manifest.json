@@ -1,12 +1,12 @@
 {
     "type": "oss-monorepository",
     "many-repositories": {
-        "crystallize-refund-app": {
-            "name": "Crystallize Refund App",
+        "crystallize-refund": {
+            "name": "Crystallize Refund",
             "git": "git@github.com:CrystallizeAPI/crystallize-refund-app.git"
         },
-        "crystallize-subscription-contract-app": {
-            "name": "Crystallize Subscription Contract App",
+        "crystallize-subscription-contract": {
+            "name": "Crystallize Subscription Contract",
             "git": "git@github.com:CrystallizeAPI/crystallize-subscription-contract-app.git"
         },
         "hello-world-comics": {
