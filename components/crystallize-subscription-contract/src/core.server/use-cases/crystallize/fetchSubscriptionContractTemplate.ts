@@ -78,9 +78,6 @@ export default async (apiClient: ClientInterface, config: any) => {
               }),
           };
 
-    console.log('initial', initial);
-    console.log('recurring', recurring);
-
     return {
         ...template,
         initial,
