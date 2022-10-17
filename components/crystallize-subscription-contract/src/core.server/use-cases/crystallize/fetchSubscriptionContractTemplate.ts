@@ -54,29 +54,29 @@ export default async (apiClient: ClientInterface, config: any) => {
     const initial = !template.initial
         ? {}
         : {
-            ...template.initial,
-            ...period.initial,
-            meteredVariables: template.initial?.meteredVariables.map((variable: any) => {
-                return {
-                    ...variable,
-                    tierType: variable.tierType.value, // should be in the lib
-                    ...definition[variable.id],
-                };
-            }),
-        };
+              ...template.initial,
+              ...period.initial,
+              meteredVariables: template.initial?.meteredVariables.map((variable: any) => {
+                  return {
+                      ...variable,
+                      tierType: variable.tierType.value, // should be in the lib
+                      ...definition[variable.id],
+                  };
+              }),
+          };
     const recurring = !template.recurring
         ? {}
         : {
-            ...template.recurring,
-            ...period.recurring,
-            meteredVariables: template.recurring?.meteredVariables.map((variable: any) => {
-                return {
-                    ...variable,
-                    tierType: variable.tierType.value, // should be in the lib
-                    ...definition[variable.id],
-                };
-            }),
-        };
+              ...template.recurring,
+              ...period.recurring,
+              meteredVariables: template.recurring?.meteredVariables.map((variable: any) => {
+                  return {
+                      ...variable,
+                      tierType: variable.tierType.value, // should be in the lib
+                      ...definition[variable.id],
+                  };
+              }),
+          };
 
     console.log('initial', initial);
     console.log('recurring', recurring);

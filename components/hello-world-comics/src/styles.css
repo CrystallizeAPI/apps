@@ -2,13 +2,13 @@ a {
     padding: 15px 35px;
     font-size: 16px;
     font-weight: 600;
-    background: #F9C3C7;
+    background: #f9c3c7;
     border: none;
     margin-top: 25px;
     border-radius: 25px;
     color: #000;
     text-decoration: none;
-    font-family: "Trebuchet MS";
+    font-family: 'Trebuchet MS';
 }
 
 .comic {
@@ -17,7 +17,7 @@ a {
     max-width: 700px;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.10);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .comic img {
@@ -28,7 +28,7 @@ a {
 h1 {
     margin-bottom: 25px;
     text-align: center;
-    font-family: "Trebuchet MS";
+    font-family: 'Trebuchet MS';
     font-size: 45;
 }
 
@@ -52,6 +52,5 @@ h1 {
 body {
     margin: 0;
     padding: 0;
-    color: #828A90;
-
+    color: #828a90;
 }

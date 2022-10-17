@@ -1,1 +1,1 @@
-export default () => (<p>Invalid Signature.</p>);
+export default () => <p>Invalid Signature.</p>;

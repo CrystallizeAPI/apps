@@ -1,4 +1,9 @@
-import { catalogueFetcherGraphqlBuilder, ClientInterface, createCatalogueFetcher, createSearcher } from "@crystallize/js-api-client";
+import {
+    catalogueFetcherGraphqlBuilder,
+    ClientInterface,
+    createCatalogueFetcher,
+    createSearcher,
+} from '@crystallize/js-api-client';
 
 export default async (client: ClientInterface) => {
     const totalResults: any = await client.searchApi(`query {
@@ -14,21 +19,31 @@ export default async (client: ClientInterface) => {
     const base = Buffer.from(randomCursor.toString()).toString('base64');
 
     const search = createSearcher(client).search;
-    const comicPathResults = (await search('en', {
-        name: true,
-        path: true
-    }, {
-        //@ts-ignore
-        type: 'DOCUMENT',
-        include: {
-            paths: '/comics'
-        }
-    }, undefined, undefined, {
-        perPage: 1,
-        total: 1
-    }, {
-        after: base
-    }).next()).value;
+    const comicPathResults = (
+        await search(
+            'en',
+            {
+                name: true,
+                path: true,
+            },
+            {
+                //@ts-ignore
+                type: 'DOCUMENT',
+                include: {
+                    paths: '/comics',
+                },
+            },
+            undefined,
+            undefined,
+            {
+                perPage: 1,
+                total: 1,
+            },
+            {
+                after: base,
+            },
+        ).next()
+    ).value;
 
     const fetcher = createCatalogueFetcher(client);
     const builder = catalogueFetcherGraphqlBuilder;
@@ -36,7 +51,7 @@ export default async (client: ClientInterface) => {
         catalogue: {
             __args: {
                 path: comicPathResults.path,
-                language: 'en'
+                language: 'en',
             },
             id: true,
             name: true,
@@ -46,15 +61,14 @@ export default async (client: ClientInterface) => {
                     variants: {
                         url: true,
                         width: true,
-                        height: true
-                    }
-                }
-            })
-        }
+                        height: true,
+                    },
+                },
+            }),
+        },
     });
     return {
         name: comic.catalogue.name,
-        images: comic.catalogue.stripe.content.images[0]
-    }
-}
-
+        images: comic.catalogue.stripe.content.images[0],
+    };
+};

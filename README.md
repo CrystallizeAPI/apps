@@ -17,7 +17,7 @@ All contributions will happen here:
 | ---------------------------------------------------------------------------------------------------------------- | ---------- |
 | [Crystallize Refund App](https://github.com/CrystallizeAPI/crystallize-refund-app)                               | ![MIT]     |
 | [Crystallize Subscription Contract App](https://github.com/CrystallizeAPI/crystallize-subscription-contract-app) | ![MIT]     |
-| [Hello World Comics](https://github.com/CrystallizeAPI/export-serverless-function)                               | ![MIT]     |
+| [Hello World Comics](https://github.com/CrystallizeAPI/hello-world-comics-app)                                   | ![MIT]     |
 
 ## Contributions
 

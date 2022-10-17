@@ -35,3 +35,7 @@ add-component-compliance-files: ## Add the compliance files into all the compone
 			fi; \
 		fi; \
 	done
+
+.PHONY: codeclean
+codeclean: ## Code Clean
+	@yarn prettier --write .

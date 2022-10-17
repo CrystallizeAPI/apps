@@ -1,18 +1,19 @@
-import { json, LoaderFunction, redirect } from "@remix-run/server-runtime";
-import { createClient, CrystallizeSignature } from "@crystallize/js-api-client";
-import { useLoaderData } from "@remix-run/react";
-import fetchRandomComic from "src/core/fetchRandomComic";
+import { json, LoaderFunction, redirect } from '@remix-run/server-runtime';
+import { createClient, CrystallizeSignature } from '@crystallize/js-api-client';
+import { useLoaderData } from '@remix-run/react';
+import fetchRandomComic from 'src/core/fetchRandomComic';
 import { Image } from '@crystallize/reactjs-components';
-import { Link } from "react-router-dom";
-import decodeCrystallizeSignature from "src/core/decodeCrystallizeSignature";
-import { commitSession, getSession } from "src/session";
+import { Link } from 'react-router-dom';
+import decodeCrystallizeSignature from 'src/core/decodeCrystallizeSignature';
+import { commitSession, getSession } from 'src/session';
 
 export const loader: LoaderFunction = async ({ request }) => {
     try {
         const url = new URL(request.url);
-        const signature = url.searchParams.get("crystallizeSignature") || "";
-        const signaturePayload: CrystallizeSignature | null = (signature.length > 0) ? decodeCrystallizeSignature(signature) : null;
-        const session = await getSession(request.headers.get("Cookie"));
+        const signature = url.searchParams.get('crystallizeSignature') || '';
+        const signaturePayload: CrystallizeSignature | null =
+            signature.length > 0 ? decodeCrystallizeSignature(signature) : null;
+        const session = await getSession(request.headers.get('Cookie'));
 
         if (!session.has('signatureChecked') && !signaturePayload) {
             return redirect('/invalid');
@@ -20,9 +21,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
         if (signaturePayload) {
             session.set('signatureChecked', signaturePayload);
-            return redirect("/", {
+            return redirect('/', {
                 headers: {
-                    "Set-Cookie": await commitSession(session),
+                    'Set-Cookie': await commitSession(session),
                 },
             });
         }
@@ -40,18 +41,20 @@ export const loader: LoaderFunction = async ({ request }) => {
         return json({ comic, initialSignature: signatureChecked });
     } catch (error) {
         console.log(error);
-        throw redirect("/invalid");
+        throw redirect('/invalid');
     }
 };
 
 export default () => {
     const { initialSignature, comic } = useLoaderData();
     console.log(initialSignature, comic);
-    return <div className="container">
-        <h1>{comic.name}</h1>
-        <div className="image-wrapper">
-            <Image {...comic.images} sizes="100vw" alt={comic.name} className="comic" />
+    return (
+        <div className="container">
+            <h1>{comic.name}</h1>
+            <div className="image-wrapper">
+                <Image {...comic.images} sizes="100vw" alt={comic.name} className="comic" />
+            </div>
+            <Link to={'/'}>Next comic</Link>
         </div>
-        <Link to={'/'}>Next comic</Link>
-    </div>
-}
+    );
+};

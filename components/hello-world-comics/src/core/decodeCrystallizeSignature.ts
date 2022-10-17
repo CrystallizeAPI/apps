@@ -14,12 +14,7 @@ export default (signatureJwt: string): CrystallizeSignature => {
         }
         return jwt.verify(signatureJwt, signingSecret) as CrystallizeSignature;
     } catch (expection: any) {
-        console.log("Invalid Crystallize Signature: ", expection.message);
-        throw redirect("/invalid");
+        console.log('Invalid Crystallize Signature: ', expection.message);
+        throw redirect('/invalid');
     }
-}
-
-
-
-
-
+};

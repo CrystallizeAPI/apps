@@ -1,17 +1,10 @@
-import type { MetaFunction } from "@remix-run/node";
-import {
-    Links,
-    LiveReload,
-    Meta,
-    Outlet,
-    Scripts,
-    ScrollRestoration,
-} from "@remix-run/react";
-import styles from "./styles.css";
+import type { MetaFunction } from '@remix-run/node';
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import styles from './styles.css';
 export const meta: MetaFunction = () => ({
-    charset: "utf-8",
-    title: "Random Crystallize comic",
-    viewport: "width=device-width,initial-scale=1",
+    charset: 'utf-8',
+    title: 'Random Crystallize comic',
+    viewport: 'width=device-width,initial-scale=1',
 });
 
 export function links() {
