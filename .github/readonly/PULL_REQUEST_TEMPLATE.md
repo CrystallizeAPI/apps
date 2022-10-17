@@ -4,7 +4,7 @@ However, this repository is what we call a "subtree split": a read-only copy of 
 
 If you want to contribute, you should instead open a pull request on the main repository:
 
-https://github.com/CrystallizeAPI/tools
+https://github.com/CrystallizeAPI/apps
 
 Thank you for your contribution!
 

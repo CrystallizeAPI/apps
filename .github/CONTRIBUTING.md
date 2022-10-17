@@ -1,8 +1,5 @@
-# Crystallize Boilerplates
+# Crystallize Apps
 
 ## Contribution
 
 @todo
-
-
-
