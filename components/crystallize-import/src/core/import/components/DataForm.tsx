@@ -85,7 +85,7 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
     return (
         <div className="match-form">
             <div className="match-header">
-                <h1>Match column labels to product components</h1>
+                <h1>Match column labels to item components</h1>
                 <h2>
                     <strong>{rows.length}</strong> components were recognized in this file.
                 </h2>

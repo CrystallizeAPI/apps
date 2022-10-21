@@ -72,20 +72,24 @@ export default function Index() {
                 <div className="grid">
                     <ShapeChooser shapes={shapes} setSelectedShape={setSelectedShape} />
                     <FolderChooser folders={folders} setSelectedFolder={setSelectedFolder} />
-                    <div>
-                        <h2>Group Products By</h2>
-                        <select
-                            className="grey"
-                            onChange={(e) => setGroupProductsBy(e.target.value)}
-                            disabled={!rows?.length}
-                        >
-                            <option defaultChecked={true} value="" />
-                            {headers.map((header) => (
-                                <option key={header} value={header}>
-                                    {header}
-                                </option>
-                            ))}
-                        </select>
+                    <div style={{ flex: '1 1 0%' }}>
+                        {selectedShape.type === 'product' && (
+                            <div>
+                                <h2>Group Product Variants By</h2>
+                                <select
+                                    className="grey"
+                                    onChange={(e) => setGroupProductsBy(e.target.value)}
+                                    disabled={!rows?.length}
+                                >
+                                    <option defaultChecked={true} value="" />
+                                    {headers.map((header) => (
+                                        <option key={header} value={header}>
+                                            {header}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
                     </div>
                     <div>
                         <button
