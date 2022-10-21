@@ -1,9 +1,15 @@
 import type { LinksFunction, MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+
+import datagridStyles from '../node_modules/react-datasheet-grid/dist/style.css';
 import styles from '~/styles/app.css';
 
 export const links: LinksFunction = () => {
     return [
+        {
+            rel: 'stylesheet',
+            href: datagridStyles,
+        },
         {
             rel: 'stylesheet',
             href: styles,

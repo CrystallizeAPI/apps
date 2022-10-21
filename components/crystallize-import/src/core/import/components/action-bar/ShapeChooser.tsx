@@ -1,18 +1,22 @@
 import type { Shape } from '@crystallize/schema/shape';
+import { useImport } from '../../provider';
 
 interface ShapeChooserProps {
     shapes: Shape[];
-    setSelectedShape: (shape: Shape) => void;
 }
 
-export const ShapeChooser = ({ shapes, setSelectedShape }: ShapeChooserProps) => {
+export const ShapeChooser = ({ shapes }: ShapeChooserProps) => {
+    const { dispatch } = useImport();
+
     return (
         <div className="shape-chooser">
             <h2>Select Shape</h2>
             <select
                 className="grey"
                 defaultValue={shapes[0].identifier}
-                onChange={(e) => setSelectedShape(shapes.find((shape) => shape.identifier === e.target.value) as Shape)}
+                onChange={(e) =>
+                    dispatch.updateSelectedShape(shapes.find((shape) => shape.identifier === e.target.value) as Shape)
+                }
             >
                 <optgroup label="Folders">
                     {shapes

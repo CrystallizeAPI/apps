@@ -1,21 +1,10 @@
-import { DataSheetGrid, keyColumn, textColumn } from 'react-datasheet-grid';
-import type { Shape } from '@crystallize/schema/shape';
+import { DataSheetGrid, keyColumn, textColumn, checkboxColumn, Column } from 'react-datasheet-grid';
 
-interface DataMatchingFormProps {
-    shape: Shape;
-    headers: string[];
-    rows: Record<string, any>[];
-    mapping: Record<string, string>;
-    setRows: (rows: Record<string, any>[]) => void;
-    setMapping: (mapping: Record<string, string>) => void;
-}
+import { useImport } from '../provider';
+import { ColumnHeader } from './data-grid/ColumnHeader';
 
-export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, setRows }: DataMatchingFormProps) => {
-    const columns = headers.map((header) => ({
-        ...keyColumn(header, textColumn),
-        title: header,
-        width: '1 1 200px',
-    }));
+export const DataMatchingForm = () => {
+    const { state, dispatch } = useImport();
 
     const shapeFields: {
         key: string;
@@ -32,7 +21,7 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
         },
     ];
 
-    if (shape.type === 'product') {
+    if (state.selectedShape.type === 'product') {
         shapeFields.push(
             ...[
                 {
@@ -67,14 +56,14 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
         );
     }
 
-    shape.components?.map(({ id, name, type }) =>
+    state.selectedShape.components?.map(({ id, name, type }) =>
         shapeFields.push({
             key: `component.${id}`,
             value: `Component "${name}"`,
             type,
         }),
     );
-    shape.variantComponents?.map(({ id, name, type }) =>
+    state.selectedShape.variantComponents?.map(({ id, name, type }) =>
         shapeFields.push({
             key: `variantComponent.${id}`,
             value: `Variant Component "${name}"`,
@@ -82,45 +71,39 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
         }),
     );
 
+    const columnsFromRows: Column[] = state.headers.map(
+        (header): Column => ({
+            ...keyColumn(header, textColumn),
+            title: <ColumnHeader title={header} shapeFields={shapeFields} />,
+            minWidth: 200,
+        }),
+    );
+
+    const columns: Column[] = [
+        {
+            ...keyColumn('_import', checkboxColumn),
+            minWidth: 40,
+            maxWidth: 40,
+        },
+        ...columnsFromRows,
+    ];
+
     return (
         <div className="match-form">
             <div className="match-header">
                 <h1>Match column labels to item components</h1>
                 <h2>
-                    <strong>{rows.length}</strong> components were recognized in this file.
+                    <strong>{state.rows.length}</strong> rows were found in this file.
                 </h2>
             </div>
-            <div className="dsg-container" style={{ background: '#fff', overflow: 'scroll' }}>
-                <div className="dsg-row" style={{ minWidth: 940 }}>
-                    <div className="dsg-cell" style={{ flex: '0 0 40px' }}></div>
-                    {headers.map((header) => (
-                        <div key={header} className="dsg-cell" style={{ flex: '1 1 200px' }}>
-                            <label className="match-label" style={{ borderBottom: 0 }}>
-                                Map "{header}" to
-                                <select
-                                    className="match-select grey"
-                                    onChange={(e) => {
-                                        const m: Record<string, string> = {
-                                            ...mapping,
-                                        };
-                                        m[e.target.value] = header;
-                                        setMapping(m);
-                                    }}
-                                    style={{ marginTop: '10px' }}
-                                >
-                                    <option selected value="" />
-                                    {shapeFields.map((field) => (
-                                        <option key={field.key} value={field.key}>
-                                            {field.value}
-                                        </option>
-                                    ))}
-                                </select>
-                            </label>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <DataSheetGrid value={rows} onChange={setRows} columns={columns} height={800} />
+            <DataSheetGrid
+                value={state.rows}
+                onChange={(rows) => dispatch.updateRows(rows)}
+                columns={columns}
+                height={800}
+                rowClassName={({ rowData }) => (rowData._import ? 'row-included' : 'row-excluded')}
+                headerRowHeight={80}
+            />
         </div>
     );
 };
