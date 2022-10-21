@@ -2,33 +2,31 @@ import { Item } from '@crystallize/schema/item';
 import { Shape } from '@crystallize/schema/shape';
 import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import CrystallizeAPI from 'src/core.server/use-cases/crystallize';
-import fetchTenantShapes from '~/core.server/use-cases/crystallize/fetchTenantShapes';
-// import { DataMatchingForm } from '~/components/data-form';
-// import { FileChooser } from '~/components/file-chooser';
-// import { FolderChooser } from '~/components/folder-chooser';
-// import { ShapeChooser } from '~/components/shape-chooser';
-// import type { FormSubmission } from './import/submit';
-
-type LoaderData = {
-    shapes: Awaited<ReturnType<typeof fetchTenantShapes>>;
-    // folders: Awaited<ReturnType<typeof getFolders>>;
-};
+import { DataMatchingForm } from '~/core/import/components/DataForm';
+import { FileChooser } from '~/core/import/components/FileChooser';
+import { FolderChooser } from '~/core/import/components/FolderChooser';
+import { ShapeChooser } from '~/core/import/components/ShapeChooser';
+import type { FormSubmission } from './api/submit';
 
 export const loader: LoaderFunction = async ({ request }) => {
     const api = await CrystallizeAPI(request);
-
-    return json<LoaderData>({
-        shapes: await api.fetchTenantShapes(),
-        // folders: await getFolders(),
-    });
+    try {
+        const { shapes, folders } = await api.fetchTenantShapesAndFolders();
+        return json({
+            shapes,
+            folders,
+        });
+    } catch (err) {
+        console.error(err);
+        return json({ shapes: [], folders: [] });
+    }
 };
 
 export default function Index() {
-    const folders = [1];
-    const { shapes } = useLoaderData<LoaderData>();
+    const { shapes, folders } = useLoaderData();
     const [selectedShape, setSelectedShape] = useState(shapes[0]);
     const [selectedFolder, setSelectedFolder] = useState(folders[0]);
     const [headers, setHeaders] = useState([] as string[]);
@@ -43,7 +41,7 @@ export default function Index() {
         setError('');
         setLoading(true);
         try {
-            const res = await fetch('/import/submit', {
+            const res = await fetch('/api/submit', {
                 method: 'POST',
                 cache: 'no-cache',
                 body: JSON.stringify(data),
@@ -114,9 +112,7 @@ export default function Index() {
                 <div className="file-chooser-section app-section">
                     <FileChooser
                         onChange={({ headers, rows }) => {
-                            console.log({ headers });
                             setHeaders(headers);
-                            console.log({ rows });
                             setRows(rows);
                         }}
                     />

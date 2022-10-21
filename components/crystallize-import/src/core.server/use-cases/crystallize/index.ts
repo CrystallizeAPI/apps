@@ -1,12 +1,8 @@
 import { createClient } from '@crystallize/js-api-client';
+import { Item } from '@crystallize/schema/item';
 import { Shape } from '@crystallize/schema/shape';
 import { requireValidSession } from '~/core.server/session';
-import { Contract, ContractError } from '~/core/contract/types';
-import fetchSubscriptionCatalogue from './fetchSubscriptionCatalogue';
-import { fetchAll as fetchAllContracts, fetchById } from './fetchSubscriptionContracts';
-import fetchSubscriptionContractTemplate from './fetchSubscriptionContractTemplate';
-import fetchTenantShapes from './fetchTenantShapes';
-import { createContract, updateContract } from './pushContract';
+import fetchTenantShapesAndFolders from './fetchTenantShapesAndFolders';
 
 export default async (request: Request) => {
     const signatureChecked = await requireValidSession(request);
@@ -26,12 +22,7 @@ export default async (request: Request) => {
     });
 
     return {
-        fetchTenantShapes: (): Promise<Shape[]> => fetchTenantShapes(apiClient),
-        updateContract: (
-            contractId: string,
-            contract: Contract,
-        ): Promise<{ contract: Contract; errors: ContractError[] }> => updateContract(apiClient, contractId, contract),
-        createContract: (contract: Contract): Promise<{ contract: Contract; errors: ContractError[] }> =>
-            createContract(apiClient, contract),
+        fetchTenantShapesAndFolders: (): Promise<{ shapes: Shape[]; folders: Item[] }> =>
+            fetchTenantShapesAndFolders(apiClient),
     };
 };

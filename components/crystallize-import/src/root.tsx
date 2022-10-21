@@ -1,23 +1,21 @@
-import type { MetaFunction } from '@remix-run/node';
+import type { LinksFunction, MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-import { FaFileSignature } from 'react-icons/fa';
+import styles from '~/styles/app.css';
 
-export const meta: MetaFunction = () => ({
-    charset: 'utf-8',
-    title: 'Crystallize Subscription Contract App',
-    viewport: 'width=device-width,initial-scale=1',
-});
-
-import styles from './styles/app.css';
-
-export function links() {
+export const links: LinksFunction = () => {
     return [
         {
             rel: 'stylesheet',
             href: styles,
         },
     ];
-}
+};
+
+export const meta: MetaFunction = () => ({
+    charset: 'utf-8',
+    title: 'Import | Crystallize ',
+    viewport: 'width=device-width,initial-scale=1',
+});
 
 export default function App() {
     return (
@@ -27,16 +25,10 @@ export default function App() {
                 <Links />
             </head>
             <body>
-                <div className="container">
-                    <h1>
-                        <FaFileSignature className="r-icon" />
-                        Subscription Contract App
-                    </h1>
-                    <Outlet />
-                </div>
+                <Outlet />
                 <ScrollRestoration />
                 <Scripts />
-                <LiveReload port={443} />
+                <LiveReload />
             </body>
         </html>
     );

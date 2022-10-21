@@ -1,4 +1,4 @@
-contract.app.crystallize.com {
+import.app.crystallize.com {
     tls domains.pem key.pem
     push
     @websockets {

@@ -8,7 +8,7 @@ A Crystallize App injects a signature to notify the current tenant and it requir
 Therefore, even locally, you need HTTPS.
 
 Moreover this kind of app requires to share the cookie with `.crystallize.com`, therefore the local development will have a custom domain.
-Here: `contract.app.crystallize.com`
+Here: `import.app.crystallize.com`
 
 You need:
 
@@ -30,6 +30,6 @@ This will install the Certificates, and the dependencies.
 make serve
 ```
 
-> https://contract.app.crystallize.com/
+> https://import.app.crystallize.com/
 
 From there you can install it on a Crystallize tenant.

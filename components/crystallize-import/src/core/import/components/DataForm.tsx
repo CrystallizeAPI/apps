@@ -17,54 +17,69 @@ export const DataMatchingForm = ({ shape, headers, rows, mapping, setMapping, se
         width: '1 1 200px',
     }));
 
-    let shapeFields: {
+    const shapeFields: {
         key: string;
         value: string;
         type?: string;
-    }[] =
-        shape.type === 'product'
-            ? [
-                  {
-                      key: 'product.name',
-                      value: 'Product Name',
-                  },
-                  {
-                      key: 'variant.name',
-                      value: 'Variant Name',
-                  },
-                  {
-                      key: 'variant.sku',
-                      value: 'Variant SKU',
-                  },
-                  {
-                      key: 'variant.images',
-                      value: 'Variant Images',
-                  },
-                  {
-                      key: 'variant.price',
-                      value: 'Variant Price',
-                  },
-                  {
-                      key: 'variant.stock',
-                      value: 'Variant Stock',
-                  },
-                  {
-                      key: 'variant.attribute',
-                      value: 'Variant Attribute',
-                  },
-              ]
-            : [];
-    shapeFields = shapeFields.concat(
-        shape.components?.map(({ id, name, type }) => ({
+    }[] = [
+        {
+            key: 'item.name',
+            value: 'Item Name',
+        },
+        {
+            key: 'item.externalReference',
+            value: 'Item External Reference',
+        },
+    ];
+
+    if (shape.type === 'product') {
+        shapeFields.push(
+            ...[
+                {
+                    key: 'variant.name',
+                    value: 'Variant Name',
+                },
+                {
+                    key: 'variant.sku',
+                    value: 'Variant SKU',
+                },
+                {
+                    key: 'variant.images',
+                    value: 'Variant Images',
+                },
+                {
+                    key: 'variant.price',
+                    value: 'Variant Price',
+                },
+                {
+                    key: 'variant.stock',
+                    value: 'Variant Stock',
+                },
+                {
+                    key: 'variant.attribute',
+                    value: 'Variant Attribute',
+                },
+                {
+                    key: 'variant.externalReference',
+                    value: 'Variant External Reference',
+                },
+            ],
+        );
+    }
+
+    shape.components?.map(({ id, name, type }) =>
+        shapeFields.push({
             key: `component.${id}`,
             value: `Component "${name}"`,
             type,
-        })) || [],
-        shape.variantComponents?.map(({ id, name, type }) => ({
+        }),
+    );
+    shape.variantComponents?.map(({ id, name, type }) =>
+        shapeFields.push({
             key: `variantComponent.${id}`,
             value: `Variant Component "${name}"`,
             type,
-        })) || [],
+        }),
     );
 
     return (

@@ -1,24 +1,785 @@
-// App Variable Specicific Style
-
-$crystallize-background-color: #f3f4f6;
-$crystallize-text-color: #4c4f5a;
-$crystallize-font-family: 'Roboto', sans-serif;
-$crystallize-light-cyan: #d4f6f6;
-$crystallize-purple: #44266d;
-
-// Override Twitter Bootstrap's default styles
-$dark: $crystallize-purple;
-// $primary: #BFF6F8;
-$component-active-color: $crystallize-background-color;
-$component-active-bg: $crystallize-purple;
-
-$body-bg: #f3f4f6;
-
-// Import Twitter Bootstrap's
-@import '../../node_modules/bootstrap/scss/bootstrap.scss';
-
-.r-icon {
-    color: $crystallize-purple;
-    margin-right: 4px;
-    margin-top: -3px;
+* {
+    box-sizing: border-box;
 }
+html,
+body {
+    /* background: #f3f4f6; */
+    /* padding: 20px 50px; */
+    margin: 0;
+    background: #f3f4f6;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 200px;
+    gap: 20px;
+}
+
+select {
+    padding: 15px 30px;
+    background: white;
+    color: #4c4f5a;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    filter: drop-shadow(0px 2px 4px rgba(130, 138, 144, 0.15));
+    width: 100%;
+    padding-right: 30px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='13' height='7' viewBox='0 0 13 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6.5 6L12 1' stroke='%234D525B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+    background-repeat: no-repeat, repeat;
+    background-position: right 0.7em top 50%, 0 0;
+    background-size: 0.65em auto, 100%;
+}
+select.grey {
+    background-color: #f3f4f6;
+    box-shadow: none;
+    filter: drop-shadow(0px 0px 0px rgba(130, 138, 144, 0));
+}
+
+select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.floating-actionbar {
+    position: fixed;
+    width: calc(100% - 100px);
+    left: 50px;
+    z-index: 99;
+    top: 0px;
+    padding: 10px 25px 15px;
+    background: #fff;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.02);
+}
+.floating-actionbar h2 {
+    font-size: 12px;
+    color: #9095a8;
+    font-weight: 500;
+    margin: 10px 0 0 0 !important;
+}
+.error {
+    max-width: 100%;
+    overflow: scroll;
+    padding: 10px 30px 20px;
+    color: #ce1abc;
+}
+
+.app-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+    margin-top: 100px;
+    background: #eeeff1;
+    /* border: 1px dashed #9095a8; */
+    /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15); */
+    border-radius: 8px;
+}
+.empty-screen {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+.file-chooser-section {
+    height: 400px;
+    margin-top: 120px;
+    padding: 5px;
+}
+
+.app-section-inner {
+    width: 100%;
+    margin: 0 auto;
+    padding: 50px 50px;
+}
+
+.app-section h1 {
+    font-size: 22px;
+    margin-top: 0;
+}
+
+.app-section h2 {
+    font-size: 14px;
+    color: #9095a8;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex > div {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.file-chooser {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+    border: 1px dashed #4a4a4a;
+    border-radius: 8px;
+}
+.table-header {
+}
+.match-label {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    color: #9095a8;
+    font-size: 12px;
+    padding: 10px;
+    font-weight: 500;
+}
+.match-select {
+    padding: 8px 14px;
+    width: 100%;
+    /* position: absolute; */
+}
+.match-form {
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.match-header {
+    padding: 30px;
+    background: #fff;
+}
+
+.match-header h1 {
+    color: #4a4a4a;
+    margin-bottom: 0px;
+    font-size: 22px;
+}
+
+.match-header h2 {
+    color: #9095a8;
+    font-weight: 400;
+    font-size: 14px;
+    margin: 0;
+}
+
+button {
+    display: block;
+    /* flex-direction: row; */
+    /* align-items: center; */
+    text-align: center;
+    padding: 15px 25px;
+    /* gap: 20px; */
+    background: #bff6f8;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    color: #4d525b;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button.action-button {
+    width: 100%;
+    margin-top: 25px;
+}
+
+.loader {
+    position: relative;
+    animation: flix 3s ease-in infinite alternate;
+}
+.center {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+.loader-wrapper {
+    width: 48px;
+    height: 48px;
+}
+.loader:before {
+    content: '';
+    display: block;
+    font-size: 0;
+    width: 48px;
+    height: 48px;
+    background-color: #bff6f8;
+    border: 2px solid #528693;
+    background-image: radial-gradient(circle 10px at 22px 22px, #fff 100%, transparent 0),
+        radial-gradient(circle 12px at 22px 22px, #528693 100%, transparent 0),
+        radial-gradient(circle 10px at 6px 40px, #fff 100%, transparent 0),
+        radial-gradient(circle 12px at 6px 40px, #528693 100%, transparent 0),
+        radial-gradient(circle 14px at 31px -6px, #fff 100%, transparent 0),
+        radial-gradient(circle 16px at 31px -6px, #528693 100%, transparent 0),
+        radial-gradient(circle 5px at 40px 30px, #fff 100%, transparent 0),
+        radial-gradient(circle 7px at 40px 30px, #528693 100%, transparent 0);
+    border-radius: 50%;
+    animation: rotate 1s linear infinite;
+}
+.loader:after {
+    content: '';
+    position: absolute;
+    top: 0%;
+    border: 2px solid #528693;
+    transform: translate(-50%, -100%);
+    left: 50%;
+    width: 24px;
+    height: 12px;
+    background: #ffccec;
+    border-radius: 50px 50px 0 0;
+}
+.import-message {
+    max-width: 100%;
+    padding: 10px 10px;
+    color: #4a4a4a;
+    font-weight: 500;
+}
+
+.feedback-container {
+    display: flex;
+    width: 100%;
+    padding: 50px 20px;
+    color: #4a4a4a;
+    background: #eeeff1;
+    /* border: 1px dashed #9095a8; */
+    /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15); */
+    border-radius: 8px;
+}
+
+@keyframes flix {
+    0%,
+    60% {
+        transform: rotate(-10deg);
+    }
+    100%,
+    30%,
+    80% {
+        transform: rotate(5deg);
+    }
+}
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+:root {
+    --dsg-border-color: #e8ebed;
+    --dsg-selection-border-color: rgb(69, 128, 230);
+    --dsg-selection-border-radius: 2px;
+    --dsg-selection-border-width: 2px;
+    --dsg-selection-background-color: rgba(69, 128, 230, 0.04);
+    --dsg-selection-disabled-border-color: #9da6ab;
+    --dsg-selection-disabled-background-color: rgba(0, 0, 0, 0.04);
+    --dsg-corner-indicator-width: 10px;
+    --dsg-header-text-color: rgb(157, 166, 171);
+    --dsg-header-active-text-color: black;
+    --dsg-cell-background-color: white;
+    --dsg-cell-disabled-background-color: rgb(250, 250, 250);
+    --dsg-transition-duration: 0.1s;
+    --dsg-expand-rows-indicator-width: 10px;
+    --dsg-scroll-shadow-width: 7px;
+    --dsg-scroll-shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+.dsg-container {
+    border: solid 1px var(--dsg-border-color);
+    border-top: none;
+    border-left: none;
+    cursor: cell;
+    user-select: none;
+    box-sizing: border-box;
+    color: black;
+    background: white;
+    /* height: 100vh; */
+}
+
+.dsg-corner-indicator {
+    margin: auto;
+    width: 0;
+    border-bottom: solid var(--dsg-corner-indicator-width) var(--dsg-header-text-color);
+    border-left: solid var(--dsg-corner-indicator-width) transparent;
+}
+
+.dsg-row {
+    background: var(--dsg-cell-background-color);
+    box-shadow: 0 1px var(--dsg-border-color) inset;
+    display: flex;
+}
+
+.dsg-row-header {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+}
+
+.dsg-cell {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    background: var(--dsg-cell-background-color);
+    border: solid 1px var(--dsg-border-color);
+    border-bottom: none;
+    border-right: none;
+    box-shadow: 1px 1px var(--dsg-border-color);
+    position: relative;
+    max-width: 200px;
+}
+
+.dsg-hidden-cell {
+    display: none;
+}
+
+.dsg-cell-sticky-right {
+    position: sticky;
+    right: 0;
+    z-index: 3;
+}
+
+.dsg-cell-disabled {
+    background: var(--dsg-cell-disabled-background-color);
+}
+
+.dsg-cell-header,
+.dsg-cell-gutter {
+    color: var(--dsg-header-text-color);
+    transition: color var(--dsg-transition-duration);
+    box-shadow: none;
+}
+
+.dsg-cell-header-container {
+    padding: 0 10px;
+    line-height: 15px;
+}
+
+.dsg-cell-header.dsg-cell-gutter {
+    box-shadow: 1px 0 var(--dsg-border-color), 0 1px var(--dsg-border-color);
+}
+
+.dsg-cell-header.dsg-cell-sticky-right {
+    box-shadow: 0 1px var(--dsg-border-color);
+}
+
+.dsg-cell-gutter {
+    position: sticky;
+    left: 0;
+    padding: 0 5px;
+    justify-content: center;
+    z-index: 3;
+}
+
+.dsg-cell-header-active,
+.dsg-cell-gutter-active {
+    color: var(--dsg-header-active-text-color);
+}
+
+.dsg-active-cell,
+.dsg-selection-rect {
+    position: absolute;
+    border: solid var(--dsg-selection-border-width) var(--dsg-selection-border-color);
+    box-sizing: border-box;
+    border-radius: var(--dsg-selection-border-radius);
+    transition: all var(--dsg-transition-duration);
+    pointer-events: none;
+}
+
+.dsg-active-cell-focus {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.dsg-active-cell-disabled,
+.dsg-selection-rect-disabled {
+    border-color: var(--dsg-selection-disabled-border-color);
+}
+
+.dsg-selection-rect {
+    background: var(--dsg-selection-background-color);
+}
+
+.dsg-selection-rect-disabled {
+    background: var(--dsg-selection-disabled-background-color);
+}
+
+.dsg-scrollable-view-container {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+}
+
+.dsg-scrollable-view {
+    position: sticky;
+    z-index: 1;
+    box-sizing: border-box;
+    border: solid 1px var(--dsg-border-color);
+    border-bottom: none;
+    border-right: none;
+    transition: box-shadow 0.3s;
+    box-shadow: 0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset;
+}
+
+.dsg-scrollable-view-t {
+    box-shadow: 0 var(--dsg-scroll-shadow-width) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset;
+}
+
+.dsg-scrollable-view-r {
+    box-shadow: 0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset,
+        calc(0px - var(--dsg-scroll-shadow-width)) 0 var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset;
+}
+
+.dsg-scrollable-view-b {
+    box-shadow: 0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset;
+}
+
+.dsg-scrollable-view-l {
+    box-shadow: 0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        var(--dsg-scroll-shadow-width) 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset;
+}
+
+.dsg-scrollable-view-t.dsg-scrollable-view-r {
+    box-shadow: 0 var(--dsg-scroll-shadow-width) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        calc(0px - var(--dsg-scroll-shadow-width)) 0 var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset;
+}
+
+.dsg-scrollable-view-r.dsg-scrollable-view-b {
+    box-shadow: 0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset,
+        calc(0px - var(--dsg-scroll-shadow-width)) 0 var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset;
+}
+
+.dsg-scrollable-view-b.dsg-scrollable-view-l {
+    box-shadow: 0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        var(--dsg-scroll-shadow-width) 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset;
+}
+
+.dsg-scrollable-view-l.dsg-scrollable-view-t {
+    box-shadow: 0 var(--dsg-scroll-shadow-width) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        var(--dsg-scroll-shadow-width) 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset;
+}
+
+.dsg-scrollable-view-t.dsg-scrollable-view-b {
+    box-shadow: 0 var(--dsg-scroll-shadow-width) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset;
+}
+
+.dsg-scrollable-view-l.dsg-scrollable-view-r {
+    box-shadow: 0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset,
+        calc(0px - var(--dsg-scroll-shadow-width)) 0 var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        var(--dsg-scroll-shadow-width) 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset;
+}
+
+.dsg-scrollable-view-t.dsg-scrollable-view-r.dsg-scrollable-view-b {
+    box-shadow: 0 var(--dsg-scroll-shadow-width) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        calc(0px - var(--dsg-scroll-shadow-width)) 0 var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset;
+}
+
+.dsg-scrollable-view-r.dsg-scrollable-view-b.dsg-scrollable-view-l {
+    box-shadow: 0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset,
+        calc(0px - var(--dsg-scroll-shadow-width)) 0 var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        var(--dsg-scroll-shadow-width) 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset;
+}
+
+.dsg-scrollable-view-b.dsg-scrollable-view-l.dsg-scrollable-view-t {
+    box-shadow: 0 var(--dsg-scroll-shadow-width) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        0 calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        var(--dsg-scroll-shadow-width) 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset;
+}
+
+.dsg-scrollable-view-l.dsg-scrollable-view-t.dsg-scrollable-view-r {
+    box-shadow: 0 var(--dsg-scroll-shadow-width) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        calc(0px - var(--dsg-scroll-shadow-width)) 0 var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color)
+            inset,
+        var(--dsg-scroll-shadow-width) 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset;
+}
+
+.dsg-scrollable-view-t.dsg-scrollable-view-r.dsg-scrollable-view-b.dsg-scrollable-view-l {
+    box-shadow: 0 var(--dsg-scroll-shadow-width) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        calc(0px - var(--dsg-scroll-shadow-width)) 0 var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        0 calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-width)
+            calc(0px - var(--dsg-scroll-shadow-width)) var(--dsg-scroll-shadow-color) inset,
+        var(--dsg-scroll-shadow-width) 0 var(--dsg-scroll-shadow-width) calc(0px - var(--dsg-scroll-shadow-width))
+            var(--dsg-scroll-shadow-color) inset;
+}
+
+.dsg-selection-col-marker-container {
+    position: absolute;
+    top: 0;
+}
+
+.dsg-selection-col-marker {
+    background: var(--dsg-selection-border-color);
+    position: sticky;
+    width: 100%;
+    height: var(--dsg-selection-border-width);
+}
+
+.dsg-selection-row-marker-container {
+    position: absolute;
+    left: 0;
+}
+
+.dsg-selection-row-marker {
+    background: var(--dsg-selection-border-color);
+    position: sticky;
+    height: 100%;
+    width: var(--dsg-selection-border-width);
+}
+
+.dsg-selection-col-marker-container,
+.dsg-selection-col-marker,
+.dsg-selection-row-marker-container,
+.dsg-selection-row-marker {
+    z-index: 2;
+    transition: all var(--dsg-transition-duration);
+    pointer-events: none;
+}
+
+.dsg-selection-col-marker-disabled,
+.dsg-selection-row-marker-disabled {
+    background: var(--dsg-selection-disabled-border-color);
+}
+
+.dsg-add-row {
+    background: #fafafa;
+    border: 1px solid var(--dsg-border-color);
+    border-top: none;
+    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    color: black;
+}
+
+.dsg-add-row > * {
+    margin-right: 10px;
+}
+
+.dsg-add-row-btn,
+.dsg-add-row-input {
+    background: white;
+    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border: 1px solid #dcdcdc;
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+
+.dsg-add-row-input {
+    width: 55px;
+}
+
+.dsg-add-row-btn:hover,
+.dsg-add-row-input:hover {
+    border-color: #c7c7c7;
+}
+
+.dsg-add-row-btn:focus,
+.dsg-add-row-input:focus {
+    border-color: var(--dsg-selection-border-color);
+    outline: none;
+}
+
+.dsg-add-row-btn:before {
+    content: '';
+    display: inline-block;
+    margin-right: 10px;
+    background: #9da6ab;
+    width: 10px;
+    height: 2px;
+}
+
+.dsg-add-row-btn:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 14px;
+    margin-right: 10px;
+    background: #9da6ab;
+    width: 2px;
+    height: 10px;
+}
+
+.dsg-input {
+    display: block;
+    flex: 1;
+    border: none;
+    min-width: 0;
+    align-self: stretch;
+    box-sizing: border-box;
+    background: none;
+    padding: 0 10px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.dsg-input-suffix {
+    padding-right: 10px;
+    opacity: 0.5;
+    margin-left: -5px;
+}
+
+.dsg-input-align-right {
+    text-align: right;
+}
+
+.dsg-checkbox {
+    margin: auto;
+}
+
+.dsg-context-menu {
+    position: fixed;
+    background: white;
+    z-index: 10000;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+    padding: 5px 0;
+    color: black;
+}
+
+.dsg-context-menu-item {
+    padding: 3px 20px;
+    cursor: default;
+}
+
+.dsg-context-menu-item:hover {
+    background: #fafafa;
+}
+
+.dsg-expand-rows-indicator {
+    background: var(--dsg-cell-background-color);
+    border: solid 1px var(--dsg-selection-border-color);
+    box-shadow: 0 0 0 1px var(--dsg-cell-background-color);
+    width: var(--dsg-expand-rows-indicator-width);
+    height: var(--dsg-expand-rows-indicator-width);
+    box-sizing: border-box;
+    position: absolute;
+    transition: all var(--dsg-transition-duration);
+    cursor: crosshair;
+}
+
+.dsg-expand-rows-indicator-disabled {
+    border: solid 1px var(--dsg-selection-disabled-border-color);
+}
+
+.dsg-expand-rows-rect {
+    position: absolute;
+    box-sizing: border-box;
+    transition: all var(--dsg-transition-duration);
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+/* .data-grid-container .data-grid .cell > input {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    text-align: center;
+    border: none;
+}
+.data-grid-container .data-grid .cell.selected {
+    position: relative;
+} */
