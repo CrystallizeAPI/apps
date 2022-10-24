@@ -5,6 +5,7 @@ export const Reducer = (state: State, action: Action): State => {
         case 'UPDATE_SELECTED_SHAPE':
             return {
                 ...state,
+                mapping: {},
                 selectedShape: action.shape,
             };
         case 'UPDATE_SELECTED_FOLDER':
