@@ -9,9 +9,50 @@ export interface Data {
     rows: Record<string, any>[];
 }
 
+const readJson = async (file: File): Promise<Data> => {
+    try {
+        const data = JSON.parse(await file.text());
+
+        if (!data) {
+            throw new Error('no data');
+        }
+
+        if (Array.isArray(data) && data.length) {
+            return {
+                headers: Object.keys(data[0]),
+                rows: data,
+            };
+        }
+
+        if (typeof data === 'object') {
+            const entries: [string, any][] = Object.entries(data);
+            const headers = ['key', ...Object.keys(entries[0][1])];
+            const rows = entries.map(([key, value]) => ({
+                key,
+                ...value,
+            }));
+            return {
+                headers,
+                rows,
+            };
+        }
+
+        if (data.items?.length && Array.isArray(data.items)) {
+            return {
+                headers: Object.keys(data.items[0]),
+                rows: data.items,
+            };
+        }
+
+        throw new Error('unable to decode json');
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
 const readCsv = async (file: File): Promise<Data> => {
     const rows = d3.csvParse(await file.text());
-
     return {
         headers: Object.keys(rows[0]),
         rows,
@@ -54,18 +95,13 @@ export const FileChooser = ({ onChange }: FileChooserProps) => {
                 onChange(await readCsv(file));
                 setLoading(false);
                 break;
-            default:
-                const reader = new FileReader();
-
-                reader.onabort = () => console.log('file reading was aborted');
-                reader.onerror = () => console.log('file reading has failed');
-                reader.onload = () => {
-                    // Do whatever you want with the file contents
-                    const binaryStr = reader.result;
-                    console.log(binaryStr);
-                };
-                reader.readAsArrayBuffer(file);
+            case 'json':
+                onChange(await readJson(file));
                 setLoading(false);
+                break;
+            default:
+                throw new Error('Unsupported file format');
+                break;
         }
     }, []);
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
