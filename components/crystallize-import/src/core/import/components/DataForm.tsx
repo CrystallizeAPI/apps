@@ -6,75 +6,10 @@ import { ColumnHeader } from './data-grid/ColumnHeader';
 export const DataMatchingForm = () => {
     const { state, dispatch } = useImport();
 
-    const shapeFields: {
-        key: string;
-        value: string;
-        type?: string;
-    }[] = [
-        {
-            key: 'item.name',
-            value: 'Item Name',
-        },
-        {
-            key: 'item.externalReference',
-            value: 'Item External Reference',
-        },
-    ];
-
-    if (state.selectedShape.type === 'product') {
-        shapeFields.push(
-            ...[
-                {
-                    key: 'variant.name',
-                    value: 'Variant Name',
-                },
-                {
-                    key: 'variant.sku',
-                    value: 'Variant SKU',
-                },
-                {
-                    key: 'variant.images',
-                    value: 'Variant Images',
-                },
-                {
-                    key: 'variant.price',
-                    value: 'Variant Price',
-                },
-                {
-                    key: 'variant.stock',
-                    value: 'Variant Stock',
-                },
-                {
-                    key: 'variant.attribute',
-                    value: 'Variant Attribute',
-                },
-                {
-                    key: 'variant.externalReference',
-                    value: 'Variant External Reference',
-                },
-            ],
-        );
-    }
-
-    state.selectedShape.components?.map(({ id, name, type }) =>
-        shapeFields.push({
-            key: `component.${id}`,
-            value: `Component "${name}"`,
-            type,
-        }),
-    );
-    state.selectedShape.variantComponents?.map(({ id, name, type }) =>
-        shapeFields.push({
-            key: `variantComponent.${id}`,
-            value: `Variant Component "${name}"`,
-            type,
-        }),
-    );
-
     const columnsFromRows: Column[] = state.headers.map(
         (header): Column => ({
             ...keyColumn(header, textColumn),
-            title: <ColumnHeader title={header} shapeFields={shapeFields} />,
+            title: <ColumnHeader title={header} />,
             minWidth: 200,
         }),
     );

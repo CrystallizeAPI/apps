@@ -1,15 +1,24 @@
 import { useState, useCallback } from 'react';
-import {} from 'react';
+import * as d3 from 'd3';
 
 import { useDropzone } from 'react-dropzone';
 import readXlsxFile from 'read-excel-file';
 
-export interface XlsxData {
+export interface Data {
     headers: string[];
     rows: Record<string, any>[];
 }
 
-const readXlsx = async (file: File): Promise<XlsxData> => {
+const readCsv = async (file: File): Promise<Data> => {
+    const rows = d3.csvParse(await file.text());
+
+    return {
+        headers: Object.keys(rows[0]),
+        rows,
+    };
+};
+
+const readXlsx = async (file: File): Promise<Data> => {
     const allRows = await readXlsxFile(file);
     const headers = allRows[0].map((col) => col.toString());
     const rows = allRows.splice(1).map((row) =>
@@ -26,7 +35,7 @@ const readXlsx = async (file: File): Promise<XlsxData> => {
 };
 
 interface FileChooserProps {
-    onChange: (data: XlsxData) => void;
+    onChange: (data: Data) => void;
 }
 
 export const FileChooser = ({ onChange }: FileChooserProps) => {
@@ -38,8 +47,11 @@ export const FileChooser = ({ onChange }: FileChooserProps) => {
         const extension = file.name.split('.').at(-1);
         switch (extension) {
             case 'xlsx':
-                const data = await readXlsx(file);
-                onChange(data);
+                onChange(await readXlsx(file));
+                setLoading(false);
+                break;
+            case 'csv':
+                onChange(await readCsv(file));
                 setLoading(false);
                 break;
             default:

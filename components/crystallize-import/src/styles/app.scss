@@ -51,7 +51,7 @@ body {
 
 .popover {
     background: white;
-    border-radius: 10px;
+    border-radius: 4px;
     box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.5);
     overflow: hidden;
     font-family: system-ui, sans-serif;
@@ -74,6 +74,7 @@ body {
 }
 
 .popover-item {
+    display: flex;
     padding: 10px;
     border-bottom: 1px solid var(--dsg-border-color);
     cursor: default;
@@ -85,6 +86,7 @@ body {
 
 .popover-item-remove {
     color: white;
+    font-size: 12px;
     background: rgb(239, 72, 54);
     border-bottom: none;
 }

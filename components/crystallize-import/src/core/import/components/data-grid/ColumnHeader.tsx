@@ -21,7 +21,6 @@ interface ColumnMapperProps {
 
 interface ColumnHeaderProps {
     title: string;
-    shapeFields: ShapeField[];
 }
 
 const ColumnMapperList = ({ title, shapeFields, onChange }: ColumnMapperProps) => {
@@ -43,9 +42,74 @@ const ColumnMapperList = ({ title, shapeFields, onChange }: ColumnMapperProps) =
     );
 };
 
-export const ColumnHeader = ({ title, shapeFields }: ColumnHeaderProps) => {
+export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
     const { state, dispatch } = useImport();
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+    const shapeFields: {
+        key: string;
+        value: string;
+        type?: string;
+    }[] = [
+        {
+            key: 'item.name',
+            value: 'Item Name',
+        },
+        {
+            key: 'item.externalReference',
+            value: 'Item External Reference',
+        },
+    ];
+
+    if (state.selectedShape.type === 'product') {
+        shapeFields.push(
+            ...[
+                {
+                    key: 'variant.name',
+                    value: 'Variant Name',
+                },
+                {
+                    key: 'variant.sku',
+                    value: 'Variant SKU',
+                },
+                {
+                    key: 'variant.images',
+                    value: 'Variant Images',
+                },
+                {
+                    key: 'variant.price',
+                    value: 'Variant Price',
+                },
+                {
+                    key: 'variant.stock',
+                    value: 'Variant Stock',
+                },
+                {
+                    key: 'variant.attribute',
+                    value: 'Variant Attribute',
+                },
+                {
+                    key: 'variant.externalReference',
+                    value: 'Variant External Reference',
+                },
+            ],
+        );
+    }
+
+    state.selectedShape.components?.map(({ id, name, type }) =>
+        shapeFields.push({
+            key: `component.${id}`,
+            value: name,
+            type,
+        }),
+    );
+    state.selectedShape.variantComponents?.map(({ id, name, type }) =>
+        shapeFields.push({
+            key: `variantComponent.${id}`,
+            value: name,
+            type,
+        }),
+    );
 
     const selectedShapeField = shapeFields.find(({ key }) => state.mapping[key] === title);
 
@@ -111,7 +175,7 @@ export const ColumnHeader = ({ title, shapeFields }: ColumnHeaderProps) => {
                         )}
                         {selectedShapeField && (
                             <li className="popover-item popover-item-remove" onClick={() => onChange('')}>
-                                Clear <BsTrashFill />
+                                <span style={{ flexGrow: 1, textAlign: 'left' }}>Clear</span> <BsTrashFill />
                             </li>
                         )}
                     </div>
