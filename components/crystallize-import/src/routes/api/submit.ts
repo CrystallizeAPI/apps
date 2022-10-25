@@ -9,7 +9,7 @@ import {
 } from '@crystallize/import-utilities';
 import { type ActionFunction, json } from '@remix-run/node';
 import { v4 as uuidv4 } from 'uuid';
-import type { Shape } from '@crystallize/schema/shape';
+import type { NumericComponentConfig, Shape } from '@crystallize/schema/shape';
 import type { Item } from '@crystallize/schema/item';
 import { requireValidSession } from '~/core.server/session';
 
@@ -21,19 +21,21 @@ export interface FormSubmission {
     groupProductsBy?: string;
 }
 
-const mapVariant = (row: Record<string, any>, mapping: Record<string, string>): JSONProductVariant => {
+const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, shape: Shape): JSONProductVariant => {
     const name = row[mapping['variant.name']];
     const sku = row[mapping['variant.sku']];
     const images = row[mapping['variant.images']];
-    const price = row[mapping['variant.price']];
-    const stock = row[mapping['variant.stock']];
+    const price = row[mapping['variant.price']] ? Number.parseFloat(row[mapping['variant.price']]) : undefined;
+    const stock = row[mapping['variant.stock']] ? Number.parseFloat(row[mapping['variant.stock']]) : undefined;
     const attribute = row[mapping['variant.attribute']];
+    const externalReference = row[mapping['variant.attribute']];
 
     const variant: JSONProductVariant = {
         name,
         sku,
         price,
         stock,
+        externalReference,
     };
 
     if (images) {
@@ -49,23 +51,74 @@ const mapVariant = (row: Record<string, any>, mapping: Record<string, string>): 
         variant.attributes[mapping['variant.attribute']] = `${attribute}`;
     }
 
+    variant.components = mapComponents(row, mapping, 'variantComponents', shape);
     return variant;
 };
 
 const mapComponents = (
     row: Record<string, any>,
     mapping: Record<string, string>,
+    prefix: 'components' | 'variantComponents',
     shape: Shape,
 ): Record<string, JSONComponentContent> => {
-    const components: Record<string, JSONComponentContent> = {};
-    Object.entries(mapping)
-        .filter(([key]) => key.split('.')[0] === 'component')
-        .forEach(([key, value]) => {
+    return Object.entries(mapping)
+        .filter(([key]) => key.split('.')[0] === prefix)
+        .reduce((acc: Record<string, JSONComponentContent>, [key, value]) => {
             const componentId = key.split('.')[1];
-            const content = row[value];
-            components[componentId] = content;
-        });
-    return components;
+            const component = shape[prefix]?.find((cmp) => cmp.id === componentId);
+            const content: string = row[value];
+
+            if (!component) {
+                console.error('Component does not exist', componentId);
+                return acc;
+            }
+
+            if (!content) {
+                return acc;
+            }
+
+            switch (component?.type) {
+                case 'boolean':
+                    acc[componentId] = !!content;
+                    break;
+                case 'datetime':
+                    acc[componentId] = new Date(content).toISOString();
+                    break;
+                case 'gridRelations':
+                    acc[componentId] = [...content.split(',').map((name) => ({ name }))];
+                    break;
+                case 'images':
+                    acc[componentId] = [...content.split(',').map((src) => ({ src }))];
+                    break;
+                case 'itemRelations':
+                    acc[componentId] = [...content.split(',').map((externalReference) => ({ externalReference }))];
+                    break;
+                case 'location':
+                    acc[componentId] = {
+                        lat: Number.parseFloat(content.split(',')[0]),
+                        long: Number.parseFloat(content.split(',')[1]),
+                    };
+                    break;
+                case 'numeric':
+                    acc[componentId] = {
+                        number: Number.parseFloat(content),
+                        unit: component.config ? (component.config as NumericComponentConfig).units?.[0] : undefined,
+                    };
+                    break;
+                case 'paragraphCollection':
+                    acc[componentId] = {
+                        html: content,
+                    };
+                    break;
+                case 'singleLine':
+                case 'richText':
+                    acc[componentId] = content;
+                    break;
+                default:
+                    throw new Error(`Component type "${component.type} is not yet supported for import"`);
+            }
+            return acc;
+        }, {});
 };
 
 const runImport = async (
@@ -97,18 +150,18 @@ export const action: ActionFunction = async ({ request }) => {
     }
     const { shape, folder, rows, mapping, groupProductsBy }: FormSubmission = await request.json();
 
-    const { tenantId, tenantIdentifier } = await requireValidSession(request);
+    const { tenantIdentifier } = await requireValidSession(request);
     const cookie = request.headers.get('Cookie') || '';
     const cookiePayload = cookie
         .split(';')
         .map((value: string): [string, string] => value.split('=') as [string, string])
-        .reduce((memo: Record<string, any>, value: [string, string]) => {
-            memo[decodeURIComponent(value[0]?.trim())] = decodeURIComponent(value[1]?.trim());
-            return memo;
+        .reduce((acc: Record<string, any>, value: [string, string]) => {
+            acc[decodeURIComponent(value[0]?.trim())] = decodeURIComponent(value[1]?.trim());
+            return acc;
         }, {});
 
     const spec: JsonSpec = {};
-    const variants = rows.map((row) => mapVariant(row, mapping));
+    const variants = rows.map((row) => mapVariant(row, mapping, shape));
 
     const products: Record<string, JSONProduct> = rows.reduce((obj: Record<string, JSONProduct>, row, i) => {
         const productName = row[mapping['item.name']];
@@ -118,8 +171,7 @@ export const action: ActionFunction = async ({ request }) => {
             vatType: 'No Tax',
             parentCataloguePath: folder?.tree?.path || '/',
             variants: [variants[i]],
-            components: mapComponents(row, mapping, shape),
-            // variantComponents: mapVariantComponents(row, mapping, shape),
+            components: mapComponents(row, mapping, 'components', shape),
         };
 
         if (groupProductsBy) {

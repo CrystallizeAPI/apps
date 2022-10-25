@@ -101,7 +101,6 @@ export const FileChooser = ({ onChange }: FileChooserProps) => {
                 break;
             default:
                 throw new Error('Unsupported file format');
-                break;
         }
     }, []);
     const { getRootProps, getInputProps } = useDropzone({ onDrop });

@@ -98,14 +98,14 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
 
     state.selectedShape.components?.map(({ id, name, type }) =>
         shapeFields.push({
-            key: `component.${id}`,
+            key: `components.${id}`,
             value: name,
             type,
         }),
     );
     state.selectedShape.variantComponents?.map(({ id, name, type }) =>
         shapeFields.push({
-            key: `variantComponent.${id}`,
+            key: `variantComponents.${id}`,
             value: name,
             type,
         }),
@@ -116,8 +116,8 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
     const availableShapeFields = shapeFields.filter(({ key }) => !state.mapping[key]);
     const basicItemFields = availableShapeFields.filter(({ key }) => key.startsWith('item.'));
     const productVariantFields = availableShapeFields.filter(({ key }) => key.startsWith('variant.'));
-    const itemComponentsFields = availableShapeFields.filter(({ key }) => key.startsWith('component.'));
-    const variantComponentFields = availableShapeFields.filter(({ key }) => key.startsWith('variantComponent.'));
+    const itemComponentsFields = availableShapeFields.filter(({ key }) => key.startsWith('components.'));
+    const variantComponentFields = availableShapeFields.filter(({ key }) => key.startsWith('variantComponents.'));
 
     const onChange = (key: string) => {
         const newMapping = {

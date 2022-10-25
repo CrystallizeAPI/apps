@@ -1,5 +1,5 @@
 import { DataSheetGrid, keyColumn, textColumn, checkboxColumn, Column } from 'react-datasheet-grid';
-
+import { FaUndo } from 'react-icons/fa';
 import { useImport } from '../provider';
 import { ColumnHeader } from './data-grid/ColumnHeader';
 
@@ -26,10 +26,23 @@ export const DataMatchingForm = () => {
     return (
         <div className="match-form">
             <div className="match-header">
-                <h1>Match column labels to item components</h1>
-                <h2>
-                    <strong>{state.rows.length}</strong> rows were found in this file.
-                </h2>
+                <div>
+                    <h1>Match column labels to item components</h1>
+                    <h2>
+                        <strong>{state.rows.length}</strong> rows were found in this file.
+                    </h2>
+                </div>
+                <div>
+                    <button
+                        className="reset"
+                        onClick={() => {
+                            dispatch.updateRows([]);
+                            dispatch.updateMapping({});
+                        }}
+                    >
+                        <FaUndo />
+                    </button>
+                </div>
             </div>
             <DataSheetGrid
                 value={state.rows}
