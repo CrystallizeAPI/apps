@@ -1,6 +1,10 @@
 {
     "type": "oss-monorepository",
     "many-repositories": {
+        "crystallize-import": {
+            "name": "Crystallize Import",
+            "git": "git@github.com:CrystallizeAPI/crystallize-import-app.git"
+        },
         "crystallize-refund": {
             "name": "Crystallize Refund",
             "git": "git@github.com:CrystallizeAPI/crystallize-refund-app.git"
