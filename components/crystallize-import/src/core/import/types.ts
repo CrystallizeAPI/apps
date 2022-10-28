@@ -51,3 +51,53 @@ export type State = {
     loading?: boolean;
     done?: boolean;
 };
+
+export type FieldMapping = {
+    key: string;
+    description: string;
+    type?: string;
+};
+
+export const FIELD_MAPPINGS: Record<string, Record<string, FieldMapping>> = {
+    item: {
+        name: {
+            key: 'item.name',
+            description: 'Item Name',
+        },
+        externalReference: {
+            key: 'item',
+            description: 'Item External Reference',
+        },
+    },
+    productVariant: {
+        name: {
+            key: 'variant.name',
+            description: 'Variant Name',
+        },
+        sku: {
+            key: 'variant.sku',
+            description: 'Variant SKU',
+        },
+        images: {
+            key: 'variant.images',
+            description: 'Variant Images',
+        },
+        price: {
+            key: 'variant.price',
+            description: 'Variant Price',
+        },
+        stock: {
+            key: 'variant.stock',
+            description: 'Variant Stock',
+        },
+        attribute: {
+            key: 'variant.attribute',
+            description: 'Variant Attribute',
+            type: 'text',
+        },
+        externalReference: {
+            key: 'variant.externalReference',
+            description: 'Variant External Reference',
+        },
+    },
+};

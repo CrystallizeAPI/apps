@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { NumericComponentConfig, Shape } from '@crystallize/schema/shape';
 import type { Item } from '@crystallize/schema/item';
 import { requireValidSession } from '~/core.server/session';
+import { FIELD_MAPPINGS } from '~/core/import/types';
 
 export interface FormSubmission {
     shape: Shape;
@@ -22,13 +23,13 @@ export interface FormSubmission {
 }
 
 const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, shape: Shape): JSONProductVariant => {
-    const name = row[mapping['variant.name']];
+    const name = row[mapping[FIELD_MAPPINGS.item.name.key]];
     const sku = row[mapping['variant.sku']];
     const images = row[mapping['variant.images']];
     const price = row[mapping['variant.price']] ? Number.parseFloat(row[mapping['variant.price']]) : undefined;
     const stock = row[mapping['variant.stock']] ? Number.parseFloat(row[mapping['variant.stock']]) : undefined;
     const attribute = row[mapping['variant.attribute']];
-    const externalReference = row[mapping['variant.attribute']];
+    const externalReference = row[mapping[FIELD_MAPPINGS.productVariant.externalReference.key]];
 
     const variant: JSONProductVariant = {
         name,
@@ -149,8 +150,7 @@ export const action: ActionFunction = async ({ request }) => {
         return json({ message: 'Method not allowed' }, 405);
     }
     const { shape, folder, rows, mapping, groupProductsBy }: FormSubmission = await request.json();
-
-    const { tenantIdentifier } = await requireValidSession(request);
+    const { tenantIdentifier, userId } = await requireValidSession(request);
     const cookie = request.headers.get('Cookie') || '';
     const cookiePayload = cookie
         .split(';')
@@ -163,7 +163,7 @@ export const action: ActionFunction = async ({ request }) => {
     const spec: JsonSpec = {};
     const variants = rows.map((row) => mapVariant(row, mapping, shape));
 
-    const products: Record<string, JSONProduct> = rows.reduce((obj: Record<string, JSONProduct>, row, i) => {
+    const mapProduct = (obj: Record<string, JSONProduct>, row: Record<string, any>, i: number) => {
         const productName = row[mapping['item.name']];
         let product: JSONProduct = {
             name: productName || variants[i].name,
@@ -185,9 +185,18 @@ export const action: ActionFunction = async ({ request }) => {
         }
 
         return obj;
-    }, {});
+    };
 
-    spec.items = Object.values(products);
+    if (shape.type === 'product') {
+        spec.items = Object.values(rows.reduce(mapProduct, {}));
+    } else {
+        spec.items = rows.map((row) => ({
+            name: row[mapping['item.name']],
+            shape: shape.identifier,
+            parentCataloguePath: folder?.tree?.path || '/',
+            components: mapComponents(row, mapping, 'components', shape),
+        }));
+    }
 
     try {
         await runImport(spec, {

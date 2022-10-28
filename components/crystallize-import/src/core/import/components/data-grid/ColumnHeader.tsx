@@ -5,17 +5,12 @@ import { AiFillCaretDown } from 'react-icons/ai';
 import { BsTrashFill } from 'react-icons/bs';
 import { useImport } from '../../provider';
 import { useState } from 'react';
-
-type ShapeField = {
-    key: string;
-    value: string;
-    type?: string;
-};
+import { FieldMapping, FIELD_MAPPINGS } from '../../types';
 
 interface ColumnMapperProps {
     title: string;
-    shapeFields: ShapeField[];
-    selectedShapeField?: ShapeField;
+    shapeFields: FieldMapping[];
+    selectedShapeField?: FieldMapping;
     onChange: (key: string) => void;
 }
 
@@ -34,7 +29,7 @@ const ColumnMapperList = ({ title, shapeFields, onChange }: ColumnMapperProps) =
                     .filter((field) => !state.mapping[field.key])
                     .map((field) => (
                         <li className="popover-item" key={field.key} onClick={() => onChange(field.key)}>
-                            {field.value}
+                            {field.description}
                         </li>
                     ))}
             </ul>
@@ -46,67 +41,22 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
     const { state, dispatch } = useImport();
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-    const shapeFields: {
-        key: string;
-        value: string;
-        type?: string;
-    }[] = [
-        {
-            key: 'item.name',
-            value: 'Item Name',
-        },
-        {
-            key: 'item.externalReference',
-            value: 'Item External Reference',
-        },
-    ];
-
+    const shapeFields: FieldMapping[] = Object.values(FIELD_MAPPINGS.item);
     if (state.selectedShape.type === 'product') {
-        shapeFields.push(
-            ...[
-                {
-                    key: 'variant.name',
-                    value: 'Variant Name',
-                },
-                {
-                    key: 'variant.sku',
-                    value: 'Variant SKU',
-                },
-                {
-                    key: 'variant.images',
-                    value: 'Variant Images',
-                },
-                {
-                    key: 'variant.price',
-                    value: 'Variant Price',
-                },
-                {
-                    key: 'variant.stock',
-                    value: 'Variant Stock',
-                },
-                {
-                    key: 'variant.attribute',
-                    value: 'Variant Attribute',
-                },
-                {
-                    key: 'variant.externalReference',
-                    value: 'Variant External Reference',
-                },
-            ],
-        );
+        shapeFields.push(...Object.values(FIELD_MAPPINGS.productVariant));
     }
 
     state.selectedShape.components?.map(({ id, name, type }) =>
         shapeFields.push({
             key: `components.${id}`,
-            value: name,
+            description: name,
             type,
         }),
     );
     state.selectedShape.variantComponents?.map(({ id, name, type }) =>
         shapeFields.push({
             key: `variantComponents.${id}`,
-            value: name,
+            description: name,
             type,
         }),
     );
@@ -186,7 +136,7 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
                     onClick={() => setIsPopoverOpen(!isPopoverOpen)}
                 >
                     <span style={{ flexGrow: 1, textAlign: 'left' }}>
-                        {selectedShapeField ? selectedShapeField.value : 'Choose Mapping'}
+                        {selectedShapeField ? selectedShapeField.description : 'Choose Mapping'}
                     </span>{' '}
                     <AiFillCaretDown />
                 </button>
