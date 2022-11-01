@@ -1,4 +1,4 @@
-# fly.toml file generated for crystallize-import-app on 2022-10-07T09:11:56-07:00
+# fly.toml file generated for crystallize-import-app on 2022-11-01T11:26:21+01:00
 
 app = "crystallize-import-app"
 kill_signal = "SIGINT"
