@@ -28,8 +28,14 @@ const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, s
     const images = row[mapping['variant.images']];
     const price = row[mapping['variant.price']] ? Number.parseFloat(row[mapping['variant.price']]) : undefined;
     const stock = row[mapping['variant.stock']] ? Number.parseFloat(row[mapping['variant.stock']]) : undefined;
-    const attribute = row[mapping['variant.attribute']];
     const externalReference = row[mapping[FIELD_MAPPINGS.productVariant.externalReference.key]];
+
+    const attributeKeys = Object.keys(mapping).filter((key) => key.startsWith('variantAttribute.'));
+    const attributes: Record<string, string> = attributeKeys.reduce((acc: Record<string, string>, key) => {
+        const attr = key.split('.').at(-1) as string;
+        acc[attr] = `${row[mapping[key]] || ''}`;
+        return acc;
+    }, {});
 
     const variant: JSONProductVariant = {
         name,
@@ -37,6 +43,7 @@ const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, s
         price,
         stock,
         externalReference,
+        attributes,
     };
 
     if (images) {
@@ -45,11 +52,6 @@ const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, s
                 src,
             }),
         );
-    }
-
-    if (attribute) {
-        variant.attributes = {};
-        variant.attributes[mapping['variant.attribute']] = `${attribute}`;
     }
 
     variant.components = mapComponents(row, mapping, 'variantComponents', shape);

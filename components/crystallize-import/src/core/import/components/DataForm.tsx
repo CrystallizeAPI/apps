@@ -50,7 +50,7 @@ export const DataMatchingForm = () => {
                 columns={columns}
                 height={800}
                 rowClassName={({ rowData }) => (rowData._import ? 'row-included' : 'row-excluded')}
-                headerRowHeight={80}
+                headerRowHeight={100}
             />
         </div>
     );

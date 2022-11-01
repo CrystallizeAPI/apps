@@ -29,6 +29,7 @@ export default function Index() {
         selectedShape: shapes[0],
         selectedFolder: folders[0],
         headers: [],
+        attributes: [],
         rows: [],
         mapping: {},
     };

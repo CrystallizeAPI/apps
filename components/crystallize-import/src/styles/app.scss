@@ -185,13 +185,19 @@ select:disabled {
     flex-direction: column;
     width: 100%;
     color: #4a4a4a;
-    margin-bottom: 20px;
-    margin-top: 100px;
+    margin: 20px 0;
     background: #eeeff1;
     /* border: 1px dashed #9095a8; */
     /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15); */
     border-radius: 8px;
 }
+
+.attributes {
+    display: flex;
+    flex-direction: column;
+    padding: 0 30px 30px 30px;
+}
+
 .empty-screen {
     display: flex;
     height: 100vh;
@@ -200,7 +206,6 @@ select:disabled {
 }
 .file-chooser-section {
     height: 400px;
-    margin-top: 120px;
     padding: 5px;
 }
 

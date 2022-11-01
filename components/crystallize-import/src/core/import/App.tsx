@@ -5,11 +5,13 @@ import { useImport } from './provider';
 
 export const App = () => {
     const { state, dispatch } = useImport();
-    const { shapes, folders, selectedShape, selectedFolder, headers, rows } = state;
+    const { shapes, folders } = state;
 
     return (
         <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4', padding: '20px 50px' }}>
             <ActionBar shapes={shapes} folders={folders} />
+
+            <div style={{ marginTop: 100 }} />
 
             {!state.rows?.length ? (
                 <div className="file-chooser-section app-section">
@@ -27,6 +29,41 @@ export const App = () => {
                 </div>
             ) : (
                 <>
+                    {state.selectedShape.type === 'product' && (
+                        <div className="app-section">
+                            <div className="match-form">
+                                <div className="match-header">
+                                    <div>
+                                        <h1>Customize Product Variant Attributes</h1>
+                                        <h2>
+                                            Define product variant attributes to use for data matching in the table
+                                            below.
+                                        </h2>
+                                    </div>
+                                </div>
+                                <div className="attributes">
+                                    {state.attributes.map((attr) => (
+                                        <li key={attr}>{attr}</li>
+                                    ))}
+                                    <form
+                                        onSubmit={(e) => {
+                                            e.preventDefault();
+                                            const value: string = (e.target as any).attribute.value;
+                                            if (!value || state.attributes.find((attr) => attr === value)) {
+                                                return;
+                                            }
+
+                                            dispatch.updateProductVariantAttributes(state.attributes.concat(value));
+                                        }}
+                                    >
+                                        <input type="text" name="attribute" />
+                                        <button type="submit">Add</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="app-section">
                         <DataMatchingForm />
                     </div>

@@ -33,6 +33,11 @@ export const Reducer = (state: State, action: Action): State => {
                 ...state,
                 mapping: action.mapping,
             };
+        case 'UPDATE_PRODUCT_VARIANT_ATTRIBUTES':
+            return {
+                ...state,
+                attributes: action.attributes,
+            };
     }
 };
 
@@ -43,4 +48,5 @@ export const mapToReducerActions = (dispatch: Dispatch): Actions => ({
     updateRows: (rows) => dispatch({ type: 'UPDATE_ROWS', rows }),
     updateHeaders: (headers) => dispatch({ type: 'UPDATE_HEADERS', headers }),
     updateMapping: (mapping) => dispatch({ type: 'UPDATE_MAPPING', mapping }),
+    updateProductVariantAttributes: (attributes) => dispatch({ type: 'UPDATE_PRODUCT_VARIANT_ATTRIBUTES', attributes }),
 });

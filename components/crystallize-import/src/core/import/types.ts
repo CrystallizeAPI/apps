@@ -25,6 +25,10 @@ export type Action =
     | {
           type: 'UPDATE_MAPPING';
           mapping: Record<string, string>;
+      }
+    | {
+          type: 'UPDATE_PRODUCT_VARIANT_ATTRIBUTES';
+          attributes: string[];
       };
 
 export type Actions = {
@@ -34,6 +38,7 @@ export type Actions = {
     updateRows: (rows: Record<string, any>[]) => void;
     updateHeaders: (headers: string[]) => void;
     updateMapping: (mapping: Record<string, string>) => void;
+    updateProductVariantAttributes: (attributes: string[]) => void;
 };
 
 export type Dispatch = (action: Action) => void;
@@ -44,6 +49,7 @@ export type State = {
     selectedShape: Shape;
     selectedFolder: Item;
     headers: string[];
+    attributes: string[];
     rows: Record<string, any>[];
     mapping: Record<string, string>;
     groupProductsBy?: string;
@@ -89,11 +95,6 @@ export const FIELD_MAPPINGS: Record<string, Record<string, FieldMapping>> = {
         stock: {
             key: 'variant.stock',
             description: 'Variant Stock',
-        },
-        attribute: {
-            key: 'variant.attribute',
-            description: 'Variant Attribute',
-            type: 'text',
         },
         externalReference: {
             key: 'variant.externalReference',

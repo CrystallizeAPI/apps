@@ -44,6 +44,15 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
     const shapeFields: FieldMapping[] = Object.values(FIELD_MAPPINGS.item);
     if (state.selectedShape.type === 'product') {
         shapeFields.push(...Object.values(FIELD_MAPPINGS.productVariant));
+
+        shapeFields.push(
+            ...state.attributes.map(
+                (attr): FieldMapping => ({
+                    key: `variantAttribute.${attr}`,
+                    description: `Attribute "${attr}"`,
+                }),
+            ),
+        );
     }
 
     state.selectedShape.components?.map(({ id, name, type }) =>
@@ -66,6 +75,7 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
     const availableShapeFields = shapeFields.filter(({ key }) => !state.mapping[key]);
     const basicItemFields = availableShapeFields.filter(({ key }) => key.startsWith('item.'));
     const productVariantFields = availableShapeFields.filter(({ key }) => key.startsWith('variant.'));
+    const productVariantAttributeFields = availableShapeFields.filter(({ key }) => key.startsWith('variantAttribute.'));
     const itemComponentsFields = availableShapeFields.filter(({ key }) => key.startsWith('components.'));
     const variantComponentFields = availableShapeFields.filter(({ key }) => key.startsWith('variantComponents.'));
 
@@ -103,6 +113,14 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
                             <ColumnMapperList
                                 title="Product Variants"
                                 shapeFields={productVariantFields}
+                                selectedShapeField={selectedShapeField}
+                                onChange={onChange}
+                            />
+                        )}
+                        {!!productVariantAttributeFields.length && (
+                            <ColumnMapperList
+                                title="Product Variant Attributes"
+                                shapeFields={productVariantAttributeFields}
                                 selectedShapeField={selectedShapeField}
                                 onChange={onChange}
                             />
