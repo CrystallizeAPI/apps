@@ -13,11 +13,12 @@ All contributions will happen here:
 
 ## Managed Repositories
 
-| Bundles                                                                                                          | Licence(s) |
-| ---------------------------------------------------------------------------------------------------------------- | ---------- |
-| [Crystallize Refund App](https://github.com/CrystallizeAPI/crystallize-refund-app)                               | ![MIT]     |
-| [Crystallize Subscription Contract App](https://github.com/CrystallizeAPI/crystallize-subscription-contract-app) | ![MIT]     |
-| [Hello World Comics](https://github.com/CrystallizeAPI/hello-world-comics-app)                                   | ![MIT]     |
+| Bundles                                    |           | Licence(s) |
+| ------------------------------------------ | --------- | ---------- |
+| [Crystallize Import App][0]                | [Live][1] | ![MIT]     |
+| [Crystallize Refund App][2]                | [Live][3] | ![MIT]     |
+| [Crystallize Subscription Contract App][4] | [Live][5] | ![MIT]     |
+| [Hello World Comics][6]                    |           | ![MIT]     |
 
 ## Contributions
 
@@ -32,3 +33,10 @@ make add-component COMPONENT=my-new-component
 > If not already done, you still need create the Github sub-repository and add an entry in `components/manifest.json`
 
 [mit]: https://img.shields.io/badge/license-MIT-green?style=flat-square&labelColor=black
+[0]: https://github.com/CrystallizeAPI/crystallize-import-app
+[1]: https://import.app-labs.crystallize.com
+[2]: https://github.com/CrystallizeAPI/crystallize-refund-app
+[3]: https://refund.app-labs.crystallize.com
+[4]: https://github.com/CrystallizeAPI/crystallize-subscription-contract-app
+[5]: https://subscription-contract.app-labs.crystallize.com
+[6]: https://github.com/CrystallizeAPI/hello-world-comics-app
