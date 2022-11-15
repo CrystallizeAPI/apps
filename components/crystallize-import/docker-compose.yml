@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+    caddy:
+        image: caddy:latest
+        volumes:
+            - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+            - ./caddy/certs:/data/certs
+        ports:
+            - 80:80
+            - 443:443
+        environment:
+            - APP_ORIGIN_HOST=app
+            - APP_ORIGIN_WEBSOCKET_PORT=3002
+            - APP_ORIGIN_PORT=3001
+
+    app:
+        image: node:18
+        working_dir: /crystallize-import
+        volumes:
+            - .:/crystallize-import
+        ports:
+            - 3001:3001
+            - 3002:3002
+        command: bash -c "npm i && npm run dev"
