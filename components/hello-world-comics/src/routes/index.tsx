@@ -6,6 +6,8 @@ import { Image } from '@crystallize/reactjs-components';
 import { Link } from 'react-router-dom';
 import decodeCrystallizeSignature from 'src/core/decodeCrystallizeSignature';
 import { commitSession, getSession } from 'src/session';
+import { signal } from '@crystallize/app-signal';
+import { useEffect } from 'react';
 
 export const loader: LoaderFunction = async ({ request }) => {
     try {
@@ -46,15 +48,23 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default () => {
-    const { initialSignature, comic } = useLoaderData();
-    console.log(initialSignature, comic);
+    const { comic } = useLoaderData();
+
+    useEffect(() => {
+        document.addEventListener('DOMContentLoaded', () => signal.send('ready'));
+    });
+
     return (
-        <div className="container">
-            <h1>{comic.name}</h1>
-            <div className="image-wrapper">
-                <Image {...comic.images} sizes="100vw" alt={comic.name} className="comic" />
+        <>
+            <h1>Hello World App</h1>
+            <div className="toolbar"></div>
+            <div className="container">
+                <h2>{comic.name}</h2>
+                <div className="image-wrapper">
+                    <Image {...comic.images} sizes="100vw" alt={comic.name} className="comic" />
+                </div>
+                <Link to={'/'}>Next comic</Link>
             </div>
-            <Link to={'/'}>Next comic</Link>
-        </div>
+        </>
     );
 };
