@@ -15,9 +15,10 @@ You can find more information on the app mechanism here: https://crystallize.com
 ## What does it do
 
 The example app:
-- fetches comics from the public tenants
-- checks the signature if the SIGNING SECRET is set in the environment variables.
-- provide an example of running behing HTTPs with Caddy for local development
+
+-   fetches comics from the public tenants
+-   checks the signature if the SIGNING SECRET is set in the environment variables.
+-   provide an example of running behing HTTPs with Caddy for local development
 
 ## Local development with HTTPs
 
@@ -42,4 +43,8 @@ sudo mkdir -p /etc/resolver && echo "nameserver 127.0.0.1" > /etc/resolver/local
 sudo brew services restart dnsmasq
 ```
 
+### Running the project
 
+```bash
+make serve
+```
