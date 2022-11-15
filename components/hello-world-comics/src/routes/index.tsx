@@ -6,7 +6,7 @@ import { Image } from '@crystallize/reactjs-components';
 import { Link } from 'react-router-dom';
 import decodeCrystallizeSignature from 'src/core/decodeCrystallizeSignature';
 import { commitSession, getSession } from 'src/session';
-import { signal } from '@crystallize/app-signal';
+import { NavigateTo, signal } from '@crystallize/app-signal';
 import { useEffect } from 'react';
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -54,10 +54,28 @@ export default () => {
         document.addEventListener('DOMContentLoaded', () => signal.send('ready'));
     });
 
+    // @todo: coming soon
+    // const destination: NavigateTo = {
+    //     area: 'grid',
+    //     id: '12345'
+    // };
     return (
         <>
             <h1>Hello World App</h1>
-            <div className="toolbar"></div>
+            <div className="toolbar">
+                <button onClick={async () => await signal.toggleAreaMenu()}> Toggle Menu </button>
+                <button onClick={async () => await signal.changeLanguage('fr-fr')}> Change language to NO </button>
+
+                {/* <a href={signal.getUrl(destination)} onClick={(event) => {
+                    // Stop if the user wants to open in a new tab
+                    if (!(2 === event.which || event.metaKey || event.ctrlKey)) {
+                        event.preventDefault();
+                        signal.navigateTo(destination);
+                    }
+                }}>
+                    Go to Grid 123
+                </a> */}
+            </div>
             <div className="container">
                 <h2>{comic.name}</h2>
                 <div className="image-wrapper">
