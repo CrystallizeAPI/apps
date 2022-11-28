@@ -59,7 +59,6 @@ export default function Item({ customer }: { customer: CrystallizeCustomer }) {
 
   const allLabels: (CrystallizeCustomerLabel | CrystallizeOrderLabel)[] = [];
   allLabels.push(...customer.invalidLabels);
-  customer.orders?.forEach((order) => allLabels.push(...order.invalidLabels));
 
   return (
     <details
@@ -147,15 +146,6 @@ export default function Item({ customer }: { customer: CrystallizeCustomer }) {
               ))}
 
               <div className="mt-2">
-                {order.invalidLabels.map((label) => (
-                  <span
-                    className="mr-3 text-xs rounded bg-black text-white px-2 py-1 w-24 self-center text-center"
-                    key={label}
-                  >
-                    {invalidOrderLabelDisplay(label)}
-                  </span>
-                ))}
-
                 {order.payment?.[0]?.properties?.map((prop, index) => (
                   <div className="w-full flex" key={index}>
                     <span className="w-[150px]">{prop.property}:</span>{" "}

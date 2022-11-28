@@ -122,7 +122,7 @@ export const getAllOrdersForTenant = async (
   try {
     const res = await getClient().request(orderPageQuery, { tenantId });
 
-    return res.order.getMany?.edges || [];
+    return (res.order.getMany?.edges || []).map((e: any) => e.node);
   } catch (e) {
     console.log(e);
   }

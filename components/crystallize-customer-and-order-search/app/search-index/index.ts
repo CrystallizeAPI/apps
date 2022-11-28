@@ -7,18 +7,20 @@ import type {
 } from "~/graph/types";
 
 function getPaymentStatus(order: CrystallizeOrder): PaymentStatus | null {
-  const [payment] = order.payment;
-  if (payment) {
-    const status = payment.properties?.find(
-      (p) => p.property === "Payment status"
-    )?.value;
-    if (status) {
-      const value = status.toLowerCase();
-
-      return {
-        title: value[0].toUpperCase() + value.substring(1),
-        value,
-      };
+  if (Array.isArray(order.payment)) {
+    const [payment] = order.payment;
+    if (payment) {
+      const status = payment.properties?.find(
+        (p) => p.property === "Payment status"
+      )?.value;
+      if (status) {
+        const value = status.toLowerCase();
+  
+        return {
+          title: value[0].toUpperCase() + value.substring(1),
+          value,
+        };
+      }
     }
   }
   return null;

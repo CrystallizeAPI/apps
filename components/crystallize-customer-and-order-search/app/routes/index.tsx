@@ -47,7 +47,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         (order) => order.customer?.identifier == customer.identifier
       ),
     })),
-    products,
+    products
   });
 };
 
