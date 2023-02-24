@@ -39,18 +39,41 @@ h1 {
     position: relative;
 }
 
-.container {
-    background: #efefef;
+.app-container {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 100vh;
+}
+
+.app-toolbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    padding: 10px 0;
+}
+.app-toolbar button {
+    margin: 0 5px;
 }
 
 body {
+    background: #efefef;
     margin: 0;
     padding: 0;
     color: #828a90;
+}
+div.button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.avatar {
+    position: absolute;
+    right: 0;
+    top: 10px;
 }
