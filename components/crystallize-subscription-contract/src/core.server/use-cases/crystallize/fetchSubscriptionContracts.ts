@@ -3,6 +3,9 @@ import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 import { Contract } from '~/core/contract/types';
 
 const enrichMeteredVariables = (node: any): Contract => {
+    if (!node.subscriptionPlan?.meteredVariables) {
+        return node;
+    }
     const definition: Record<string, any> = node.subscriptionPlan.meteredVariables.reduce(
         (accumulator: any, variable: any) => {
             accumulator[variable.id] = variable;
@@ -83,21 +86,22 @@ const nodeQuery = () => {
             activeUntil: true,
             renewAt: true,
         },
-        initial: {
-            period: true,
-            unit: true,
-            price: true,
-            currency: true,
-            meteredVariables: {
-                id: true,
-                tierType: true,
-                tiers: {
-                    threshold: true,
-                    price: true,
-                    currency: true,
-                },
-            },
-        },
+        //BUG IN PROD: https://app.shortcut.com/crystallize/story/7495/fatal-error-server-side-when-querying-a-initial-period
+        // initial: {
+        //     period: true,
+        //     unit: true,
+        //     price: true,
+        //     currency: true,
+        //     meteredVariables: {
+        //         id: true,
+        //         tierType: true,
+        //         tiers: {
+        //             threshold: true,
+        //             price: true,
+        //             currency: true,
+        //         },
+        //     },
+        // },
         recurring: {
             period: true,
             unit: true,

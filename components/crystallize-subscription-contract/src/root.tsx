@@ -1,7 +1,7 @@
 import type { MetaFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import type { LinksFunction } from '@remix-run/node';
-import stylesheet from './styles/app.css';
+import stylesheet from '../styles/app.css';
 import designSystemStyles from '@crystallize/design-system/styles.css';
 
 export const meta: MetaFunction = () => ({

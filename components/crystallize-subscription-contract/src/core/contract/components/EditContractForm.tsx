@@ -15,7 +15,6 @@ export const EditContractForm: React.FC<{ submit: (event: FormEvent<HTMLFormElem
     const renewAt = formatDate(status.renewAt);
     const activeUntil = formatDate(status.activeUntil);
     const date = willRenew ? renewAt : activeUntil;
-    console.log({ contract });
     return (
         <form method="post" onSubmit={submit} className="min-h-[100vh]">
             <div>

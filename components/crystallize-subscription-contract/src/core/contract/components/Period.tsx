@@ -23,7 +23,7 @@ export const Period: React.FC<{ period: any; label: string }> = ({ period, label
                 </div>
                 {period.meteredVariables?.map((meteredVariable: any) => {
                     return (
-                        <div className="px-4 ">
+                        <div className="px-4 " key={meteredVariable.id}>
                             <div className="border-t py-3 w-full">
                                 <div className="flex justify-between w-full">
                                     <span className="text-xs font-medium text-gray-500">{meteredVariable.name}</span>
