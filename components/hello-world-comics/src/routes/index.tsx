@@ -57,19 +57,12 @@ export default () => {
 
     const destination: NavigateTo = {
         area: 'grid',
-        id: '12345'
+        id: '12345',
     };
     return (
         <>
-
-            <Avatar
-                name="Hello World"
-                size="2xl"
-                className='avatar'
-            />
-            <h1>
-                Hello World App - Using Design System
-            </h1>
+            <Avatar name="Hello World" size="2xl" className="avatar" />
+            <h1>Hello World App - Using Design System</h1>
 
             <div className="app-toolbar">
                 <Dialog>
@@ -90,27 +83,63 @@ export default () => {
                         </div>
                     </Dialog.Content>
                 </Dialog>
-                <div className='button-group'>
-                    <Button intent={'danger'} onClick={async () => { await signal.toggleAreaMenu(false); }}>Toggle Area Menu Off</Button>
+                <div className="button-group">
+                    <Button
+                        intent={'danger'}
+                        onClick={async () => {
+                            await signal.toggleAreaMenu(false);
+                        }}
+                    >
+                        Toggle Area Menu Off
+                    </Button>
                     <br />
-                    <Button onClick={async () => { await signal.toggleAreaMenu(true); }}>Toggle Area Menu On</Button>
+                    <Button
+                        onClick={async () => {
+                            await signal.toggleAreaMenu(true);
+                        }}
+                    >
+                        Toggle Area Menu On
+                    </Button>
                 </div>
 
-                <div className='button-group'>
-                    <Button onClick={async () => { await signal.changeLanguage('en'); }}>Change language to en</Button>
+                <div className="button-group">
+                    <Button
+                        onClick={async () => {
+                            await signal.changeLanguage('en');
+                        }}
+                    >
+                        Change language to en
+                    </Button>
                     <br />
-                    <Button onClick={async () => { await signal.changeLanguage('fr-fr'); }}>Change language to fr</Button>
+                    <Button
+                        onClick={async () => {
+                            await signal.changeLanguage('fr-fr');
+                        }}
+                    >
+                        Change language to fr
+                    </Button>
                 </div>
-                <div className='button-group'>
-                    <Button intent='action' onClick={async () => { await signal.navigateTo(destination) }}>Button to Grid</Button>
+                <div className="button-group">
+                    <Button
+                        intent="action"
+                        onClick={async () => {
+                            await signal.navigateTo(destination);
+                        }}
+                    >
+                        Button to Grid
+                    </Button>
                     <ClientOnly>
-                        <a className={'c-btn c-btn-sm c-btn-action'} href={signal.getUrl(destination)} onClick={(event) => {
-                            // Stop if the user wants to open in a new tab
-                            if (!(event.metaKey || event.ctrlKey)) {
-                                event.preventDefault();
-                                signal.navigateTo(destination);
-                            }
-                        }}>
+                        <a
+                            className={'c-btn c-btn-sm c-btn-action'}
+                            href={signal.getUrl(destination)}
+                            onClick={(event) => {
+                                // Stop if the user wants to open in a new tab
+                                if (!(event.metaKey || event.ctrlKey)) {
+                                    event.preventDefault();
+                                    signal.navigateTo(destination);
+                                }
+                            }}
+                        >
                             Link to Grid
                         </a>
                     </ClientOnly>
