@@ -1,6 +1,5 @@
 import { useNavigate } from '@remix-run/react';
 import { FormEvent, useEffect } from 'react';
-import { Alert, Container } from 'react-bootstrap';
 import { CreateContractForm } from './components/CreateContractForm';
 import { EditContractForm } from './components/EditContractForm';
 import { ContractContextProvider, useContract } from './provider';
@@ -8,11 +7,11 @@ import { Contract } from './types';
 
 export const ContractFormApp: React.FC<{ contract: Contract; mode: 'create' | 'edit' }> = ({ contract, mode }) => {
     return (
-        <Container className="contract-form">
+        <div className="contract-form">
             <ContractContextProvider initialState={{ contract, mode }}>
                 <App />
             </ContractContextProvider>
-        </Container>
+        </div>
     );
 };
 
@@ -54,28 +53,28 @@ export const App: React.FC = ({}) => {
         console.error(state.errors);
     }
     return (
-        <Container className="ContractApp">
+        <div className="ContractApp">
             {Object.keys(state.errors).length > 0 && (
-                <Alert variant={'danger'}>
-                    <Alert.Heading>Error!</Alert.Heading>
-                    There are {Object.keys(state.errors).length} errors in the contract that you need to fix.
-                    <br />
-                    {state.errors['fatal'] ?? ''}
-                </Alert>
+                <div className="bg-pink-100 border-pink-600 border rounded-lg px-6 py-4 gap-2 flex-col">
+                    <div className="flex gap-2">
+                        <span className="font-bold text-sm text-pink-600">Pump the brakes, champ.</span>
+                        <span className="font-bold text-sm text-pink-600">
+                            There are {Object.keys(state.errors).length} errors in the contract that you need to fix.
+                        </span>
+                    </div>
+                    <span className="italic font-normal text-pink-600 text-sm">{state.errors['fatal'] ?? ''}</span>
+                </div>
             )}
             {state.saved && (
-                <Alert variant={'success'}>
-                    <Alert.Heading>Congratulations!</Alert.Heading>The contract has been saved.
-                    {state.mode === 'create' && state.saved === true && (
-                        <>
-                            <hr />
-                            Redirect in 3sec.
-                        </>
-                    )}
-                </Alert>
+                <div className="bg-green-100 border-green-600 border rounded-lg px-6 py-4 gap-2 flex ">
+                    <span className="font-bold text-sm text-green-600">You're the bee's knees!</span>
+                    <span className="italic font-normal text-green-600 text-sm">
+                        The contract has been saved. {state.mode === 'create' && state.saved && 'Redirect in 3sec.'}
+                    </span>
+                </div>
             )}
             {state.mode === 'edit' && <EditContractForm submit={submit} />}
             {state.mode === 'create' && state.saved === false && <CreateContractForm submit={submit} />}
-        </Container>
+        </div>
     );
 };

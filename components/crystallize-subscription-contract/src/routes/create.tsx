@@ -1,15 +1,11 @@
 import { json, LinksFunction, LoaderFunction, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { Alert, Button, Container } from 'react-bootstrap';
-import { IoIosCreate } from 'react-icons/io';
 import { useState } from 'react';
 import { ContractFormApp } from '~/core/contract/ContractFormApp';
-import Accordion from 'react-bootstrap/Accordion';
 import { Period } from '~/core/contract/components/Period';
 import datepickerStyles from 'react-datepicker/dist/react-datepicker.css';
-import { GrInfo } from 'react-icons/gr';
 import CrystallizeAPI from 'src/core.server/use-cases/crystallize';
-
+import { Button } from '@crystallize/design-system';
 export const links: LinksFunction = () => {
     return [{ rel: 'stylesheet', href: datepickerStyles }];
 };
@@ -29,8 +25,8 @@ export default () => {
     }
 
     return (
-        <Container>
-            <Alert variant={'success'}>
+        <div>
+            <div>
                 <p>In order to create a Subscription you need to pick</p>
                 <ul>
                     <li>a Product</li>
@@ -39,9 +35,9 @@ export default () => {
                     <li>a Period</li>
                     <li>a Price Variant</li>
                 </ul>
-            </Alert>
+            </div>
             <Products products={products} state={state} dispatch={setState} />
-        </Container>
+        </div>
     );
 };
 
@@ -104,12 +100,9 @@ const Leaf: React.FC<{
 
     return (
         <>
-            <Period period={displayablePeriod} />
-            <Alert variant={'info'}>
-                <GrInfo /> * this is the recurring period information here.
-            </Alert>
-            <Button variant="primary" size="sm" disabled={state.loading} onClick={() => onSelect()}>
-                <IoIosCreate /> Create a new contract
+            <Period period={displayablePeriod} label="Recurring period" />
+            <Button variant="elevate" disabled={state.loading} onClick={() => onSelect()}>
+                Create a new contract
             </Button>
         </>
     );
@@ -117,39 +110,39 @@ const Leaf: React.FC<{
 
 const Products: React.FC<{ products: any[]; state: any; dispatch: Function }> = ({ products, state, dispatch }) => {
     return (
-        <Accordion>
+        <div>
             {products.map((product: any, index: number) => {
                 return (
-                    <Accordion.Item eventKey={product.id} key={product.id}>
-                        <Accordion.Header>{product.name} - Product</Accordion.Header>
-                        <Accordion.Body>
-                            <Accordion>
+                    <details key={product.id}>
+                        <summary>{product.name} - Product</summary>
+                        <div>
+                            <div>
                                 <Variants product={product} state={state} dispatch={dispatch} />
-                            </Accordion>
-                        </Accordion.Body>
-                    </Accordion.Item>
+                            </div>
+                        </div>
+                    </details>
                 );
             })}
-        </Accordion>
+        </div>
     );
 };
 
 const Variants: React.FC<{ product: any; state: any; dispatch: Function }> = ({ product, state, dispatch }) => {
     return (
-        <Accordion>
+        <div>
             {product.variants.map((variant: any) => {
                 return (
-                    <Accordion.Item eventKey={variant.id} key={variant.id}>
-                        <Accordion.Header>{variant.name} - Variant</Accordion.Header>
-                        <Accordion.Body>
-                            <Accordion>
+                    <details key={variant.id}>
+                        <summary>{variant.name} - Variant</summary>
+                        <div>
+                            <div>
                                 <Plans product={product} variant={variant} state={state} dispatch={dispatch} />
-                            </Accordion>
-                        </Accordion.Body>
-                    </Accordion.Item>
+                            </div>
+                        </div>
+                    </details>
                 );
             })}
-        </Accordion>
+        </div>
     );
 };
 
@@ -160,13 +153,13 @@ const Plans: React.FC<{ product: any; variant: any; state: any; dispatch: Functi
     dispatch,
 }) => {
     return (
-        <Accordion>
+        <div>
             {variant.subscriptionPlans?.map((plan: any) => {
                 return (
-                    <Accordion.Item eventKey={plan.identifier} key={plan.identifier}>
-                        <Accordion.Header>{plan.name} - Plan</Accordion.Header>
-                        <Accordion.Body>
-                            <Accordion>
+                    <details key={plan.identifier}>
+                        <summary>{plan.name} - Plan</summary>
+                        <div>
+                            <div>
                                 <Periods
                                     product={product}
                                     variant={variant}
@@ -174,12 +167,12 @@ const Plans: React.FC<{ product: any; variant: any; state: any; dispatch: Functi
                                     state={state}
                                     dispatch={dispatch}
                                 />
-                            </Accordion>
-                        </Accordion.Body>
-                    </Accordion.Item>
+                            </div>
+                        </div>
+                    </details>
                 );
             })}
-        </Accordion>
+        </div>
     );
 };
 
@@ -191,13 +184,13 @@ const Periods: React.FC<{ product: any; variant: any; plan: any; state: any; dis
     dispatch,
 }) => {
     return (
-        <Accordion>
+        <div>
             {plan.periods?.map((period: any) => {
                 return (
-                    <Accordion.Item eventKey={period.id} key={period.id}>
-                        <Accordion.Header>{period.name} - Period</Accordion.Header>
-                        <Accordion.Body>
-                            <Accordion>
+                    <details key={period.id}>
+                        <summary>{period.name} - Period</summary>
+                        <div>
+                            <div>
                                 <PriceVariants
                                     product={product}
                                     variant={variant}
@@ -206,12 +199,12 @@ const Periods: React.FC<{ product: any; variant: any; plan: any; state: any; dis
                                     state={state}
                                     dispatch={dispatch}
                                 />
-                            </Accordion>
-                        </Accordion.Body>
-                    </Accordion.Item>
+                            </div>
+                        </div>
+                    </details>
                 );
             })}
-        </Accordion>
+        </div>
     );
 };
 
@@ -224,12 +217,12 @@ const PriceVariants: React.FC<{
     dispatch: Function;
 }> = ({ product, variant, plan, period, state, dispatch }) => {
     return (
-        <Accordion>
+        <div>
             {period.initial?.priceVariants?.map((priceVariant: any) => {
                 return (
-                    <Accordion.Item key={priceVariant.identifier} eventKey={priceVariant.identifier}>
-                        <Accordion.Header>Initial - {priceVariant.identifier} - Price Variant</Accordion.Header>
-                        <Accordion.Body>
+                    <details key={priceVariant.identifier}>
+                        <summary>Initial - {priceVariant.identifier} - Price Variant</summary>
+                        <div>
                             <Leaf
                                 product={product}
                                 variant={variant}
@@ -239,15 +232,15 @@ const PriceVariants: React.FC<{
                                 state={state}
                                 dispatch={dispatch}
                             />
-                        </Accordion.Body>
-                    </Accordion.Item>
+                        </div>
+                    </details>
                 );
             })}
             {period.recurring?.priceVariants?.map((priceVariant: any) => {
                 return (
-                    <Accordion.Item key={priceVariant.identifier} eventKey={priceVariant.identifier}>
-                        <Accordion.Header>Recurring - {priceVariant.identifier} - Price Variant</Accordion.Header>
-                        <Accordion.Body>
+                    <details key={priceVariant.identifier}>
+                        <summary>Recurring - {priceVariant.identifier} - Price Variant</summary>
+                        <div>
                             <Leaf
                                 product={product}
                                 variant={variant}
@@ -257,10 +250,10 @@ const PriceVariants: React.FC<{
                                 state={state}
                                 dispatch={dispatch}
                             />
-                        </Accordion.Body>
-                    </Accordion.Item>
+                        </div>
+                    </details>
                 );
             })}
-        </Accordion>
+        </div>
     );
 };

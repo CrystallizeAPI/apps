@@ -7,5 +7,5 @@ export const ContractError: React.FC<{ path: string }> = ({ path }) => {
         return null;
     }
 
-    return <div className="invalid-feedback">{state.errors[path]}</div>;
+    return <div className="invalid-feedback text-pink-600">{state.errors[path]}</div>;
 };

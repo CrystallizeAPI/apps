@@ -13,7 +13,7 @@ const enrichMeteredVariables = (node: any): Contract => {
 
     const enrichedRecurring = {
         ...node.recurring,
-        meteredVariables: node.recurring?.meteredVariables.map((variable: any) => {
+        meteredVariables: node.recurring?.meteredVariables?.map((variable: any) => {
             return {
                 ...variable,
                 ...definition[variable.id],
@@ -83,22 +83,21 @@ const nodeQuery = () => {
             activeUntil: true,
             renewAt: true,
         },
-        // BUG!: https://app.shortcut.com/crystallize/story/7495/fatal-error-server-side-when-querying-a-initial-period
-        // initial: {
-        //     period: true,
-        //     unit: true,
-        //     price: true,
-        //     currency: true,
-        //     meteredVariables: {
-        //         id: true,
-        //         tierType: true,
-        //         tiers: {
-        //             threshold: true,
-        //             price: true,
-        //             currency: true,
-        //         },
-        //     },
-        // },
+        initial: {
+            period: true,
+            unit: true,
+            price: true,
+            currency: true,
+            meteredVariables: {
+                id: true,
+                tierType: true,
+                tiers: {
+                    threshold: true,
+                    price: true,
+                    currency: true,
+                },
+            },
+        },
         recurring: {
             period: true,
             unit: true,
