@@ -1,13 +1,8 @@
-import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useContract } from '../provider';
 import { Phase, PhaseType } from '../types';
-import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { FaHandPointLeft } from 'react-icons/fa';
 import { MeteredVariableForm } from './MeteredVariableForm';
 import { ContractError } from './Error';
-import { TbFidgetSpinner } from 'react-icons/tb';
-import { GiSpikesInit } from 'react-icons/gi';
-
+import { Button } from '@crystallize/design-system';
 export const PhaseForm: React.FC<{ type: PhaseType }> = ({ type }) => {
     const { state, dispatch } = useContract();
     const { contract } = state;
@@ -18,65 +13,62 @@ export const PhaseForm: React.FC<{ type: PhaseType }> = ({ type }) => {
     }
 
     return (
-        <fieldset className="period-form">
-            <legend>
-                {type === 'initial' && <GiSpikesInit />}
-                {type === 'recurring' && <TbFidgetSpinner />} {type} Phase ({phase.period} {phase.unit})
-                {type === 'initial' && (
-                    <Button
-                        variant="danger"
-                        size="sm"
-                        className="float-end"
-                        onClick={() => {
-                            dispatch.removePhase(type);
-                        }}
-                    >
-                        <RiDeleteBin6Fill />
-                    </Button>
-                )}
-                {type === 'recurring' && (
-                    <Button
-                        variant="dark"
-                        size="sm"
-                        className="float-end"
-                        onClick={() => {
-                            dispatch.duplicatePhase('recurring', 'initial');
-                        }}
-                    >
-                        <FaHandPointLeft />
-                    </Button>
-                )}
-            </legend>
-            <Row>
-                <Form.Group as={Col}>
-                    <Form.Control
-                        type="text"
-                        placeholder="Price"
-                        value={`${phase.price}`}
-                        onChange={(event) => {
-                            dispatch.updatePhasePrice(type, { price: event.target.value });
-                        }}
-                    />
-                    <ContractError path={`${type}.price`} />
-                </Form.Group>
-                <Form.Group as={Col}>
-                    <Form.Control
-                        type="text"
-                        placeholder="Currency"
-                        value={`${phase.currency}`}
-                        onChange={(event) => {
-                            dispatch.updatePhasePrice(type, { currency: event.target.value });
-                        }}
-                    />
-                    <ContractError path={`${type}.currency`} />
-                </Form.Group>
-            </Row>
+        <div className="period-form bg-white px-6 shadow border rounded py-6 ">
+            <div>
+                <div className="justify-end ">
+                    <div className="flex items-center">
+                        <h3 className="font-medium text-sm text-gray-500 w-full">Subscription {type}</h3>
+
+                        {type === 'initial' && (
+                            <Button
+                                intent="danger"
+                                size="xs"
+                                onClick={() => {
+                                    dispatch.removePhase(type);
+                                }}
+                            >
+                                <span className="text-xs block">Remove initial period</span>
+                            </Button>
+                        )}
+                    </div>
+                    <div className="flex flex-col py-2 flex-wrap">
+                        <div className="flex items-center">
+                            <input
+                                type="text"
+                                placeholder="Price"
+                                className="border shadow rounded-l h-12 pl-4 text-lg font-bold w-auto bg-transparent"
+                                value={`${phase.price}`}
+                                onChange={(event) => {
+                                    dispatch.updatePhasePrice(type, { price: event.target.value });
+                                }}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Currency"
+                                className="pl-4 h-12 shadow text-sm rounded-r border-y border-r font-normal w-auto bg-transparent"
+                                value={`${phase.currency}`}
+                                onChange={(event) => {
+                                    dispatch.updatePhasePrice(type, { currency: event.target.value });
+                                }}
+                            />
+
+                            {type && (
+                                <div className="pl-4 font-medium italic text-gray-500 text-sm">
+                                    / {phase.period} {phase.unit}
+                                </div>
+                            )}
+                        </div>
+                        <ContractError path={`${type}.price`} />
+                        <ContractError path={`${type}.currency`} />
+                    </div>
+                </div>
+            </div>
 
             {phase.meteredVariables?.map((variable: any, index: any) => (
-                <Row key={`${variable.id}-${index}`}>
+                <div className="flex flex-col" key={`${variable.id}-${index}`}>
                     <MeteredVariableForm phase={type} value={variable} variableIndex={index} />
-                </Row>
+                </div>
             ))}
-        </fieldset>
+        </div>
     );
 };

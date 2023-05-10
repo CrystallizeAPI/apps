@@ -3,6 +3,9 @@ import { jsonToGraphQLQuery } from 'json-to-graphql-query';
 import { Contract } from '~/core/contract/types';
 
 const enrichMeteredVariables = (node: any): Contract => {
+    if (!node.subscriptionPlan?.meteredVariables) {
+        return node;
+    }
     const definition: Record<string, any> = node.subscriptionPlan.meteredVariables.reduce(
         (accumulator: any, variable: any) => {
             accumulator[variable.id] = variable;
@@ -13,7 +16,7 @@ const enrichMeteredVariables = (node: any): Contract => {
 
     const enrichedRecurring = {
         ...node.recurring,
-        meteredVariables: node.recurring?.meteredVariables.map((variable: any) => {
+        meteredVariables: node.recurring?.meteredVariables?.map((variable: any) => {
             return {
                 ...variable,
                 ...definition[variable.id],
@@ -83,7 +86,7 @@ const nodeQuery = () => {
             activeUntil: true,
             renewAt: true,
         },
-        // BUG!: https://app.shortcut.com/crystallize/story/7495/fatal-error-server-side-when-querying-a-initial-period
+        //BUG IN PROD: https://app.shortcut.com/crystallize/story/7495/fatal-error-server-side-when-querying-a-initial-period
         // initial: {
         //     period: true,
         //     unit: true,

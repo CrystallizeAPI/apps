@@ -1,53 +1,51 @@
 import { FormEvent } from 'react';
 import { Link } from '@remix-run/react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
 import { AddressForm } from './AddressForm';
 import { useContract } from '../provider';
 import { ContractError } from './Error';
-import { MdCancel } from 'react-icons/md';
 import { SubscriptionForm } from './SubscriptionForm';
-import { HiOutlineSparkles } from 'react-icons/hi';
 import DatePicker from 'react-datepicker';
+import { Button, Input } from '@crystallize/design-system';
 
 export const CreateContractForm: React.FC<{ submit: (event: FormEvent<HTMLFormElement>) => void }> = ({ submit }) => {
     const { state, dispatch } = useContract();
     const { contract, errors } = state;
 
     return (
-        <Form method="post" className={Object.keys(errors).length > 0 ? 'is-invalid' : ''} onSubmit={submit}>
+        <form method="post" className={Object.keys(errors).length > 0 ? 'is-invalid' : ''} onSubmit={submit}>
             <fieldset>
                 <legend>Customer Information</legend>
-                <Row>
-                    <Form.Group as={Col}>
-                        <Form.Control
+                <div className="flex">
+                    <div>
+                        <Input
                             type="text"
                             value={contract.customerIdentifier || ''}
                             onChange={(event) => dispatch.updateCustomerIdentifier(event.target.value)}
                             required={true}
                         />
-                    </Form.Group>
-                </Row>
+                    </div>
+                </div>
             </fieldset>
             <fieldset>
-                <legend>Dates</legend>
-                <Row>
-                    <Form.Group as={Col}>
-                        <Form.Label>RenewAt</Form.Label>
+                <div className="flex gap-6 mb-6">
+                    <div className="bg-white rounded shadow px-6 py-3">
+                        <label className="text-xs font-medium text-gray-500">Renew At</label>
                         <DatePicker
+                            className=""
                             selected={contract.status?.renewAt || new Date()}
                             onChange={(date: Date) => dispatch.updateDates({ renewAt: date })}
                         />
                         <ContractError path={`status.renewAt`} />
-                    </Form.Group>
-                    <Form.Group as={Col}>
-                        <Form.Label>Active Until</Form.Label>
+                    </div>
+                    <div className="bg-white rounded shadow px-6 py-3">
+                        <label className="text-xs font-medium text-gray-500">Active until</label>
                         <DatePicker
                             selected={contract.status?.activeUntil || new Date()}
                             onChange={(date: Date) => dispatch.updateDates({ activeUntil: date })}
                         />
                         <ContractError path={`status.activeUntil`} />
-                    </Form.Group>
-                </Row>
+                    </div>
+                </div>
             </fieldset>
             <AddressForm
                 addressIndex={0}
@@ -59,14 +57,14 @@ export const CreateContractForm: React.FC<{ submit: (event: FormEvent<HTMLFormEl
                 }
             />
             <SubscriptionForm />
-            <fieldset>
-                <Button variant="success" className={'float-end'} type="submit" disabled={state.loading}>
-                    <HiOutlineSparkles /> Create new Contract
-                </Button>
+            <div className="mt-6 flex gap-6 items-center">
                 <Link className="btn btn-danger" to={'/'}>
-                    <MdCancel /> Cancel
+                    Cancel
                 </Link>
-            </fieldset>
-        </Form>
+                <Button intent="action" type="submit" disabled={state.loading}>
+                    Create new Contract
+                </Button>
+            </div>
+        </form>
     );
 };

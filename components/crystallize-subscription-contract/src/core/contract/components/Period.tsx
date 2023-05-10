@@ -1,68 +1,66 @@
 import React from 'react';
-import { Badge, Col, Container, Row, Table } from 'react-bootstrap';
-import { FaInfinity } from 'react-icons/fa';
+import { Tag } from '@crystallize/design-system';
 
-export const Period: React.FC<{ period: any }> = ({ period }) => {
+export const Period: React.FC<{ period: any; label: string }> = ({ period, label }) => {
     return (
-        <Container>
-            <Row>
-                <Col md={3}>
-                    <p>
-                        <strong>Price</strong>: {period.price} {period.currency.toUpperCase()}
+        <div className="bg-yellow-50 flex rounded-md gap-8 ">
+            <div className="w-full bg-white rounded border">
+                <div className="justify-end  px-4">
+                    <h3 className="font-medium text-xs text-gray-500 w-full py-1 border-b">{label}</h3>
+                    <div className="flex flex-col py-2">
+                        <div className="flex items-center gap-2">
+                            <span className="text-lg font-bold">{period.price}</span>
+                            <Tag size="xs" variant="default">
+                                {period.currency.toUpperCase()}{' '}
+                            </Tag>{' '}
+                        </div>
                         {period.period && period.unit && (
-                            <>
-                                <br />
-                                <strong>Period</strong>: {period.period} {period.unit}
-                                <br />
-                            </>
+                            <div className="font-medium italic text-gray-500 text-xs">
+                                / {period.period} {period.unit}
+                            </div>
                         )}
-                    </p>
-                </Col>
-                <Col>
-                    <Table striped bordered hover size="sm">
-                        <tbody>
-                            {period.meteredVariables.map((meteredVariable: any) => {
-                                return (
-                                    <React.Fragment key={meteredVariable.id}>
-                                        <tr>
-                                            <th colSpan={3}>
-                                                <Badge className="float-end" bg="info">
-                                                    {meteredVariable.tierType}
-                                                </Badge>
-                                                {meteredVariable.name}{' '}
-                                                {meteredVariable.unit && <>(Unit:{meteredVariable.unit})</>}
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th>From</th>
-                                            <th>To</th>
-                                            <th>Price</th>
-                                        </tr>
-                                        {meteredVariable.tiers.map((tier: any, tierIndex: number) => {
-                                            const to = meteredVariable.tiers[tierIndex + 1]?.threshold || (
-                                                <FaInfinity />
-                                            );
+                    </div>
+                </div>
+                {period.meteredVariables?.map((meteredVariable: any) => {
+                    return (
+                        <div className="px-4 " key={meteredVariable.id}>
+                            <div className="border-t py-3 w-full">
+                                <div className="flex justify-between w-full">
+                                    <span className="text-xs font-medium text-gray-500">{meteredVariable.name}</span>
+                                    <span className="text-xs font-medium text-gray-500">
+                                        {meteredVariable.tierType}
+                                    </span>
+                                </div>
 
-                                            return (
-                                                <tr key={`tier${tierIndex}`}>
-                                                    <td>{tier.threshold}</td>
-                                                    <td>{to}</td>
-                                                    <td>
-                                                        <Badge bg="dark" className={'float-end'}>
-                                                            per unit
-                                                        </Badge>
-                                                        {tier.price} {tier.currency?.toUpperCase()}{' '}
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </React.Fragment>
-                                );
-                            })}
-                        </tbody>
-                    </Table>
-                </Col>
-            </Row>
-        </Container>
+                                {meteredVariable.tiers.map((tier: any, tierIndex: number) => {
+                                    const to = meteredVariable.tiers[tierIndex + 1]?.threshold || '';
+
+                                    return (
+                                        <div
+                                            key={`tier${tierIndex}`}
+                                            className="flex justify-between text-sm py-1 rounded-sm px-2 child even:bg-gray-100"
+                                        >
+                                            <div className="text-sm font-bold text-gray-500">
+                                                <span>{tier.threshold}</span>
+                                                {to && <span> {to}</span>}
+                                            </div>
+                                            <span>
+                                                <span className="text-sm font-bold text-gray-500">{tier.price}</span>
+                                                <Tag size="xs" className="mx-1">
+                                                    {tier.currency?.toUpperCase()}
+                                                </Tag>
+                                                <span className="text-xs italic font-medium text-gray-500">
+                                                    / per {meteredVariable.unit}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
     );
 };
