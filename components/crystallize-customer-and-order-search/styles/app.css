@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+details[open] .arrow {
+  transform: rotate(-180deg);
+  transform-origin: center center;
+}
