@@ -1,4 +1,4 @@
-import { Action, Actions, Dispatch, State } from './types';
+import { Action, Actions, Dispatch, State } from '../../contracts/ui-types';
 
 export const Reducer = (state: State, action: Action): State => {
     switch (action.type) {

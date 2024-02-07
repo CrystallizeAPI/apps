@@ -5,7 +5,7 @@ import { AiFillCaretDown } from 'react-icons/ai';
 import { BsTrashFill } from 'react-icons/bs';
 import { useImport } from '../../provider';
 import { useState } from 'react';
-import { FieldMapping, FIELD_MAPPINGS } from '../../types';
+import { FieldMapping, FIELD_MAPPINGS } from '../../../../contracts/ui-types';
 
 interface ColumnMapperProps {
     title: string;

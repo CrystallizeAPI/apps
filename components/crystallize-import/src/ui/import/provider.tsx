@@ -1,6 +1,6 @@
 import { createContext, FunctionComponent, ReactNode, useContext, useReducer } from 'react';
 import { mapToReducerActions, Reducer } from './reducer';
-import { Actions, Dispatch, State } from './types';
+import { Actions, Dispatch, State } from '~/contracts/ui-types';
 
 const StateContext = createContext<State | undefined>(undefined);
 const DispatchContext = createContext<Dispatch | undefined>(undefined);

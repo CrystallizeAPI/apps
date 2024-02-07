@@ -1,4 +1,4 @@
-import { FormSubmission } from '~/routes/api/submit';
+import { FormSubmission } from '~/contracts/form-submission';
 import { useImport } from '../../provider';
 
 const submit = async (data: FormSubmission) => {

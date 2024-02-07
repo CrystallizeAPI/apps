@@ -1,4 +1,4 @@
-import type { Item } from '@crystallize/schema/item';
+import type { Item } from '@crystallize/schema';
 import { useImport } from '../../provider';
 
 interface FolderChooserProps {

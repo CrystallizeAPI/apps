@@ -1,7 +1,7 @@
 import { ClientInterface } from '@crystallize/js-api-client';
-import { getManyShapesQuery } from '@crystallize/import-export-sdk/shape';
-import { Shape } from '@crystallize/schema/shape';
-import { Item } from '@crystallize/schema/item';
+import { getManyShapesQuery } from '@crystallize/import-export-sdk';
+import { Shape } from '@crystallize/schema';
+import { Item } from '@crystallize/schema';
 
 export default async (
     apiClient: ClientInterface,
@@ -27,7 +27,7 @@ export default async (
     const folders: Item[] = await Promise.all(
         shapes
             .filter((shape) => shape.type === 'folder')
-            .map((shape) => {
+            .map(async (shape) => {
                 const query = `
                     query GET_ITEMS_FOR_SHAPE($tenantId: ID!, $identifier: String!, $language: String!) {
                         shape {
@@ -43,13 +43,12 @@ export default async (
                         }
                     }`;
 
-                return apiClient
-                    .pimApi(query, {
-                        tenantId: apiClient.config.tenantId,
-                        identifier: shape.identifier,
-                        language: 'en',
-                    })
-                    .then((res) => res?.shape?.get?.items);
+                const res = await apiClient.pimApi(query, {
+                    tenantId: apiClient.config.tenantId,
+                    identifier: shape.identifier,
+                    language: 'en',
+                });
+                return res?.shape?.get?.items;
             }),
     ).then((res) => res.flat().filter((item) => !!item && item?.tree?.path));
 

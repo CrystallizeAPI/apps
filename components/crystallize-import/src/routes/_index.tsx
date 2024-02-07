@@ -1,13 +1,11 @@
-import { json, LoaderFunction } from '@remix-run/node';
+import { json, LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useState } from 'react';
-
 import CrystallizeAPI from '~/core.server/use-cases/crystallize';
-import { ImportContextProvider } from '~/core/import/provider';
-import { State } from '~/core/import/types';
-import { App } from '~/core/import/App';
+import { ImportContextProvider } from '~/ui/import/provider';
+import { State } from '~/contracts/ui-types';
+import { App } from '~/ui/import/App';
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
     const api = await CrystallizeAPI(request);
     try {
         const { shapes, folders } = await api.fetchTenantShapesAndFolders();
@@ -22,7 +20,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Index() {
-    const { shapes, folders } = useLoaderData();
+    const { shapes, folders } = useLoaderData<typeof loader>();
     const initialState: State = {
         shapes,
         folders,

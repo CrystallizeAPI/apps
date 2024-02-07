@@ -1,5 +1,5 @@
-import { Item } from '@crystallize/schema/item';
-import { Shape } from '@crystallize/schema/shape';
+import { Item } from '@crystallize/schema';
+import { Shape } from '@crystallize/schema';
 
 export type Action =
     | {

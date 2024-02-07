@@ -6,11 +6,12 @@ RED=$(shell echo "\033[00;31m")
 RESTORE=$(shell echo "\033[0m")
 
 # Variables
-NPM := npm
+PACKAGE_MANAGER := pnpm
 DOCKER_COMPOSE = docker-compose
-MKCERT = mkcert
-
+DEPENDENCIES := node pnpm git docker caddy
 .DEFAULT_GOAL := list
+CADDY_PID_FILE := caddy.dev.pid
+CADDY = caddy
 
 .PHONY: list
 list:
@@ -19,22 +20,40 @@ list:
 	@grep -E '^[a-zA-Z-]+:.*?## .*$$' Makefile | sort | awk 'BEGIN {FS = ":.*?## "}; {printf " ${YELLOW}%-15s${RESTORE} > %s\n", $$1, $$2}'
 	@echo "${RED}==============================${RESTORE}"
 
-.PHONY: clean
-clean: stop ## Clean non-essential files
-	@rm -rf node_modules
+.PHONY: check-dependencies
+check-dependencies:
+	@for dependency in $(DEPENDENCIES); do \
+		if ! command -v $$dependency &> /dev/null; then \
+			echo "${RED}Error:${RESTORE} ${YELLOW}$$dependency${RESTORE} is not installed."; \
+			exit 1; \
+		fi; \
+	done
+	@echo "All ${YELLOW}dependencies are installed.${RESTORE}"
 
-.PHONY: install-certificates
-install-certificates: ## Install the certificates
-	@$(MKCERT) --cert-file ./caddy/certs/cert.pem -key-file ./caddy/certs/key.pem "import.app.crystallize.com"
+.PHONY: install
+install: check-dependencies update ## Install the Application and reset the database
 
-.PHONY: stop
-stop: ## Stop all the local services you need
-	-@$(DOCKER_COMPOSE) down
+.PHONY: update
+update: check-dependencies ## Update the Repo
+	@$(PACKAGE_MANAGER) install
+
+
+.PHONY: start-services
+start-services: stop-services ## Start Services
+	@touch $(CADDY_PID_FILE)
+	@$(CADDY) start --pidfile $(CADDY_PID_FILE)
+
+
+.PHONY: stop-services
+stop-services: ## Stop Services
+	-@$(CADDY) stop > /dev/null 2>&1 &
+	-@if [ -f $(CADDY_PID_FILE) ]; then \
+		kill -9 `cat $(CADDY_PID_FILE)`; \
+		rm -f  $(CADDY_PID_FILE); \
+	fi
+
 
 .PHONY: serve
-serve:
-	-@$(DOCKER_COMPOSE) up -d
+serve: ## Serve the application
+	@$(PACKAGE_MANAGER) run dev
 
-.PHONY: codeclean
-codeclean: ## Code Clean
-	@$(NPM) run prettier:fix

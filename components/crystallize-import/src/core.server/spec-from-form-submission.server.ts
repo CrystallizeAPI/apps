@@ -1,62 +1,14 @@
 import {
-    Bootstrapper,
-    EVENT_NAMES,
     type JSONComponentContent,
     type JSONImage,
     type JSONProduct,
     type JSONProductVariant,
     type JsonSpec,
 } from '@crystallize/import-utilities';
-import { type ActionFunction, json } from '@remix-run/node';
 import { v4 as uuidv4 } from 'uuid';
-import type { NumericComponentConfig, Shape } from '@crystallize/schema/shape';
-import type { Item } from '@crystallize/schema/item';
-import { requireValidSession } from '~/core.server/session';
-import { FIELD_MAPPINGS } from '~/core/import/types';
-
-export interface FormSubmission {
-    shape: Shape;
-    folder?: Item;
-    rows: Record<string, any>[];
-    mapping: Record<string, string>;
-    groupProductsBy?: string;
-}
-
-const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, shape: Shape): JSONProductVariant => {
-    const name = row[mapping[FIELD_MAPPINGS.item.name.key]];
-    const sku = row[mapping['variant.sku']];
-    const images = row[mapping['variant.images']];
-    const price = row[mapping['variant.price']] ? Number.parseFloat(row[mapping['variant.price']]) : undefined;
-    const stock = row[mapping['variant.stock']] ? Number.parseFloat(row[mapping['variant.stock']]) : undefined;
-    const externalReference = row[mapping[FIELD_MAPPINGS.productVariant.externalReference.key]];
-
-    const attributeKeys = Object.keys(mapping).filter((key) => key.startsWith('variantAttribute.'));
-    const attributes: Record<string, string> = attributeKeys.reduce((acc: Record<string, string>, key) => {
-        const attr = key.split('.').at(-1) as string;
-        acc[attr] = `${row[mapping[key]] || ''}`;
-        return acc;
-    }, {});
-
-    const variant: JSONProductVariant = {
-        name,
-        sku,
-        price,
-        stock,
-        externalReference,
-        attributes,
-    };
-
-    if (images) {
-        variant.images = images.split(',').map(
-            (src: string): JSONImage => ({
-                src,
-            }),
-        );
-    }
-
-    variant.components = mapComponents(row, mapping, 'variantComponents', shape);
-    return variant;
-};
+import type { NumericComponentConfig, Shape } from '@crystallize/schema';
+import { FIELD_MAPPINGS } from '~/contracts/ui-types';
+import { FormSubmission } from '~/contracts/form-submission';
 
 const mapComponents = (
     row: Record<string, any>,
@@ -124,47 +76,46 @@ const mapComponents = (
         }, {});
 };
 
-const runImport = async (
-    spec: JsonSpec,
-    {
-        tenantIdentifier,
-        sessionId,
-    }: {
-        tenantIdentifier: string;
-        sessionId: string;
-    },
-) => {
-    return new Promise((resolve, reject) => {
-        const bootstrapper = new Bootstrapper();
-        bootstrapper.config.logLevel = 'verbose';
-        bootstrapper.setSessionId(sessionId);
-        bootstrapper.setTenantIdentifier(tenantIdentifier);
-        bootstrapper.setSpec(spec);
+const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, shape: Shape): JSONProductVariant => {
+    const name = row[mapping[FIELD_MAPPINGS.item.name.key]];
+    const sku = row[mapping['variant.sku']];
+    const images = row[mapping['variant.images']];
+    const price = row[mapping['variant.price']] ? Number.parseFloat(row[mapping['variant.price']]) : undefined;
+    const stock = row[mapping['variant.stock']] ? Number.parseFloat(row[mapping['variant.stock']]) : undefined;
+    const externalReference = row[mapping[FIELD_MAPPINGS.productVariant.externalReference.key]];
 
-        bootstrapper.on(EVENT_NAMES.DONE, () => resolve(null));
-        bootstrapper.on(EVENT_NAMES.ERROR, (err: any) => reject(err));
-        bootstrapper.start();
-    });
+    const attributeKeys = Object.keys(mapping).filter((key) => key.startsWith('variantAttribute.'));
+    const attributes: Record<string, string> = attributeKeys.reduce((acc: Record<string, string>, key) => {
+        const attr = key.split('.').at(-1) as string;
+        acc[attr] = `${row[mapping[key]] || ''}`;
+        return acc;
+    }, {});
+
+    const variant: JSONProductVariant = {
+        name,
+        sku,
+        price,
+        stock,
+        externalReference,
+        attributes,
+    };
+
+    if (images) {
+        variant.images = images.split(',').map(
+            (src: string): JSONImage => ({
+                src,
+            }),
+        );
+    }
+
+    variant.components = mapComponents(row, mapping, 'variantComponents', shape);
+    return variant;
 };
 
-export const action: ActionFunction = async ({ request }) => {
-    if (request.method !== 'POST') {
-        return json({ message: 'Method not allowed' }, 405);
-    }
-    const { shape, folder, rows, mapping, groupProductsBy }: FormSubmission = await request.json();
-    const { tenantIdentifier, userId } = await requireValidSession(request);
-    const cookie = request.headers.get('Cookie') || '';
-    const cookiePayload = cookie
-        .split(';')
-        .map((value: string): [string, string] => value.split('=') as [string, string])
-        .reduce((acc: Record<string, any>, value: [string, string]) => {
-            acc[decodeURIComponent(value[0]?.trim())] = decodeURIComponent(value[1]?.trim());
-            return acc;
-        }, {});
-
+export const specFromFormSubmission = async (submission: FormSubmission) => {
+    const { shape, folder, rows, mapping, groupProductsBy } = submission;
     const spec: JsonSpec = {};
     const variants = rows.map((row) => mapVariant(row, mapping, shape));
-
     const mapProduct = (obj: Record<string, JSONProduct>, row: Record<string, any>, i: number) => {
         const productName = row[mapping['item.name']];
         let product: JSONProduct = {
@@ -199,15 +150,5 @@ export const action: ActionFunction = async ({ request }) => {
             components: mapComponents(row, mapping, 'components', shape),
         }));
     }
-
-    try {
-        await runImport(spec, {
-            tenantIdentifier,
-            sessionId: cookiePayload['connect.sid'],
-        });
-    } catch (err: any) {
-        console.error(err);
-        return json({ message: err.error }, 500);
-    }
-    return json({ message: 'done' }, 200);
+    return spec;
 };

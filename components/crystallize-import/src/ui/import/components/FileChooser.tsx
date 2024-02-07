@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import * as d3 from 'd3';
-
-import { useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone-esm';
 import readXlsxFile from 'read-excel-file';
 
 export interface Data {
@@ -108,8 +107,8 @@ export const FileChooser = ({ onChange }: FileChooserProps) => {
     return !loading ? (
         <div className="file-chooser" {...getRootProps()}>
             <input {...getInputProps()} />
-            <img src="/file_upload.svg" alt="Click to Upload" />
-            <span>Upload File</span>
+            <img height={100} src="/file_upload.svg" alt="Click to Upload" />
+            <span>Upload a file</span>
         </div>
     ) : (
         <div className="center">
