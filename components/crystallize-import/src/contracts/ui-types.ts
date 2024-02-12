@@ -4,41 +4,56 @@ import { Shape } from '@crystallize/schema';
 export type Action =
     | {
           type: 'UPDATE_SELECTED_SHAPE';
-          shape: Shape;
+          shape: State['selectedShape'];
       }
     | {
           type: 'UPDATE_SELECTED_FOLDER';
-          folder: Item;
+          folder: State['selectedFolder'];
       }
     | {
           type: 'UPDATE_GROUP_PRODUCTS_BY';
-          groupProductsBy: string;
+          groupProductsBy: State['groupProductsBy'];
       }
     | {
-          type: 'UPDATE_ROWS';
-          rows: Record<string, any>[];
-      }
-    | {
-          type: 'UPDATE_HEADERS';
-          headers: string[];
+          type: 'UPDATE_SPREADSHEET';
+          headers: State['headers'];
+          rows: State['rows'];
       }
     | {
           type: 'UPDATE_MAPPING';
-          mapping: Record<string, string>;
+          mapping: State['mapping'];
       }
     | {
           type: 'UPDATE_PRODUCT_VARIANT_ATTRIBUTES';
-          attributes: string[];
+          attributes: State['attributes'];
+      }
+    | {
+          type: 'UPDATE_LOADING';
+          loading: State['loading'];
+      }
+    | {
+          type: 'UPDATE_DONE';
+          done: State['done'];
+      }
+    | {
+          type: 'UPDATE_PREFLIGHT';
+          preflight: State['preflight'];
+      }
+    | {
+          type: 'UPDATE_MAIN_ERRORS';
+          errors: State['errors'];
       };
-
 export type Actions = {
-    updateSelectedShape: (shape: Shape) => void;
-    updateSelectedFolder: (folder: Item) => void;
-    updateGroupProductsBy: (groupProductsBy: string) => void;
-    updateRows: (rows: Record<string, any>[]) => void;
-    updateHeaders: (headers: string[]) => void;
-    updateMapping: (mapping: Record<string, string>) => void;
-    updateProductVariantAttributes: (attributes: string[]) => void;
+    updateSelectedShape: (shape: State['selectedShape']) => void;
+    updateSelectedFolder: (folder: State['selectedFolder']) => void;
+    updateGroupProductsBy: (groupProductsBy: State['groupProductsBy']) => void;
+    updateSpreadsheet: (headers: State['headers'], rows: State['rows']) => void;
+    updateMapping: (mapping: State['mapping']) => void;
+    updateProductVariantAttributes: (attributes: State['attributes']) => void;
+    updateDone: (done: State['done']) => void;
+    updateLoading: (loading: State['loading']) => void;
+    updatePreflight: (preflight: State['preflight']) => void;
+    updateMainErrors: (errors: State['errors']) => void;
 };
 
 export type Dispatch = (action: Action) => void;
@@ -46,6 +61,12 @@ export type Dispatch = (action: Action) => void;
 export type State = {
     shapes: Shape[];
     folders: Item[];
+    flows: {
+        name: string;
+        identifier: string;
+        shapeRestrictions: string[];
+        stages: Record<string, string>;
+    }[];
     selectedShape: Shape;
     selectedFolder: Item;
     headers: string[];
@@ -53,9 +74,17 @@ export type State = {
     rows: Record<string, any>[];
     mapping: Record<string, string>;
     groupProductsBy?: string;
-    error?: string;
+    errors?: string[];
     loading?: boolean;
     done?: boolean;
+    preflight?: {
+        validCount: number;
+        errorCount: number;
+        errors: {
+            item: any;
+            errors: any[];
+        }[];
+    };
 };
 
 export type FieldMapping = {

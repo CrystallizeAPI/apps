@@ -1,8 +1,7 @@
 import type { MetaFunction } from '@remix-run/node';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
-
 import '../node_modules/react-datasheet-grid/dist/style.css';
-import '~/styles/app.scss';
+import '~/styles/app.css';
 
 export const meta: MetaFunction = () => [
     {

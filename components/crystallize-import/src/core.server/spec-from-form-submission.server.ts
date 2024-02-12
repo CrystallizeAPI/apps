@@ -112,9 +112,15 @@ const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, s
     return variant;
 };
 
-export const specFromFormSubmission = async (submission: FormSubmission) => {
-    const { shape, folder, rows, mapping, groupProductsBy } = submission;
+export const specFromFormSubmission = async (submission: FormSubmission, shapes: Shape[]) => {
+    const { shapeIdentifier, folderPath, rows, mapping, groupProductsBy } = submission;
     const spec: JsonSpec = {};
+
+    const shape = shapes.find((s) => s.identifier === shapeIdentifier);
+    if (!shape) {
+        throw new Error(`Shape ${shapeIdentifier} not found.`);
+    }
+
     const variants = rows.map((row) => mapVariant(row, mapping, shape));
     const mapProduct = (obj: Record<string, JSONProduct>, row: Record<string, any>, i: number) => {
         const productName = row[mapping['item.name']];
@@ -122,7 +128,7 @@ export const specFromFormSubmission = async (submission: FormSubmission) => {
             name: productName || variants[i].name,
             shape: shape.identifier,
             vatType: 'No Tax',
-            parentCataloguePath: folder?.tree?.path || '/',
+            parentCataloguePath: folderPath,
             variants: [variants[i]],
             components: mapComponents(row, mapping, 'components', shape),
         };
@@ -146,7 +152,7 @@ export const specFromFormSubmission = async (submission: FormSubmission) => {
         spec.items = rows.map((row) => ({
             name: row[mapping['item.name']],
             shape: shape.identifier,
-            parentCataloguePath: folder?.tree?.path || '/',
+            parentCataloguePath: folderPath,
             components: mapComponents(row, mapping, 'components', shape),
         }));
     }

@@ -55,5 +55,5 @@ stop-services: ## Stop Services
 
 .PHONY: serve
 serve: ## Serve the application
-	@$(PACKAGE_MANAGER) run dev
+	@$(PACKAGE_MANAGER) run dev --host
 

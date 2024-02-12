@@ -1,6 +1,5 @@
 import type { Shape } from '@crystallize/schema';
 import { useImport } from '../../provider';
-
 interface ShapeChooserProps {
     shapes: Shape[];
 }

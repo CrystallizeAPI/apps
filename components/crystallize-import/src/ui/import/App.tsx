@@ -6,19 +6,18 @@ import { useImport } from './provider';
 export const App = () => {
     const { state, dispatch } = useImport();
     const { shapes, folders } = state;
-
     return (
         <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4', padding: '20px 50px' }}>
             <ActionBar shapes={shapes} folders={folders} />
 
-            <div style={{ marginTop: 100 }} />
+            <div style={{ marginTop: 200 }} />
 
             {!state.rows?.length ? (
                 <div className="file-chooser-section app-section">
                     <FileChooser
                         onChange={({ headers, rows }) => {
-                            dispatch.updateHeaders(headers);
-                            dispatch.updateRows(
+                            dispatch.updateSpreadsheet(
+                                headers,
                                 rows.map((row) => ({
                                     _import: true,
                                     ...row,
@@ -64,28 +63,70 @@ export const App = () => {
                         </div>
                     )}
 
-                    <div className="app-section">
-                        <DataMatchingForm />
-                    </div>
-
-                    {(state.loading || state.error) && (
+                    {state.loading && (
                         <div className="feedback-container">
                             {state.loading && (
                                 <>
                                     <div className="loader-wrapper" style={{ transform: 'scale(0.5,0.5)' }}>
                                         <div className="loader"></div>
                                     </div>
-                                    <span className="import-message">Bip bop, importing your stuff...</span>
+                                    <span className="import-message">Bip bop, doing stuff...</span>
                                 </>
                             )}
+                        </div>
+                    )}
 
-                            {state.error && (
-                                <div className="error">
-                                    <pre>Error: {state.error}</pre>
+                    {state.errors && state.errors.length > 0 && (
+                        <div className="error">
+                            <p>Errors: </p>
+                            <pre>{JSON.stringify(state.errors, null, 2)}</pre>
+                        </div>
+                    )}
+
+                    {state.preflight && (
+                        <div className="feedback-container">
+                            {state.preflight.validCount > 0 && (
+                                <div className="feedback">
+                                    <h2>{state.preflight.validCount} rows are valid.</h2>
+                                </div>
+                            )}
+                            {state.preflight.errorCount > 0 && (
+                                <div className="text-error">
+                                    <h2>{state.preflight.errorCount} rows are invalid.</h2>
+
+                                    <div className="error-list grid">
+                                        {state.preflight.errors.map((error, i) => (
+                                            <details key={i} className="error-item shadow-md p-5 cursor-pointer">
+                                                <summary>Record {i + 1}</summary>
+                                                <ul>
+                                                    {error.errors.map((err, j) => (
+                                                        <li className="flex flex-row align-middle justify-between">
+                                                            <p
+                                                                key={j}
+                                                                className="text-error font-semibold self-center p-3"
+                                                            >
+                                                                {err.message}
+                                                            </p>
+                                                            <pre className="text-xs">
+                                                                {JSON.stringify(error.item, null, 2)}
+                                                            </pre>
+                                                            <pre className="text-xs">
+                                                                {JSON.stringify(err, null, 2)}
+                                                            </pre>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </details>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>
                     )}
+
+                    <div className="app-section">
+                        <DataMatchingForm />
+                    </div>
                 </>
             )}
         </div>
