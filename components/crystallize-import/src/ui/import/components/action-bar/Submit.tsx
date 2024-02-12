@@ -88,12 +88,16 @@ export const Submit = () => {
                     <input type="checkbox" ref={publishRef} />
                     Publish
                 </label>
-                <label>
-                    Send valid to: <FlowStagesSelect ref={validFlowRef} />
-                </label>
-                <label>
-                    Send errors to: <FlowStagesSelect ref={invalidFlowRef} />
-                </label>
+                {state.flows.length > 0 && (
+                    <>
+                        <label>
+                            Send valid to: <FlowStagesSelect ref={validFlowRef} />
+                        </label>
+                        <label>
+                            Send errors to: <FlowStagesSelect ref={invalidFlowRef} />
+                        </label>
+                    </>
+                )}
             </div>
             {(state.preflight?.errorCount ?? 0) > 0 && (
                 <p className="text-error"> You have {state.preflight?.errorCount ?? 0} errors.</p>

@@ -7,22 +7,27 @@ import { App } from '~/ui/import/App';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const api = await CrystallizeAPI(request);
-    try {
-        const shapes = await api.fetchShapes();
-        const [folders, flows] = await Promise.all([api.fetchFolders(shapes), api.fetchFlows()]);
-        return json({
-            shapes,
-            flows,
-            folders,
-        });
-    } catch (err) {
-        console.error(err);
-        return json({ shapes: [], folders: [], flows: [] });
-    }
+    const [shapes, validationRules] = await Promise.all([api.fetchShapes(), api.fetchValidationsSchema()]);
+    const channels = shapes.reduce((memo: Record<string, string[]>, shape) => {
+        const ch = validationRules?.[shape.identifier]?.channels ?? [];
+        return {
+            ...memo,
+            [shape.identifier]: ch,
+        };
+    }, {});
+
+    const [folders, flows] = await Promise.all([api.fetchFolders(shapes), api.fetchFlows()]);
+
+    return json({
+        shapes,
+        flows,
+        channels,
+        folders,
+    });
 };
 
 export default function Index() {
-    const { shapes, folders, flows } = useLoaderData<typeof loader>();
+    const { shapes, folders, flows, channels } = useLoaderData<typeof loader>();
     const initialState: State = {
         shapes,
         folders,
@@ -32,6 +37,7 @@ export default function Index() {
         headers: [],
         attributes: [],
         rows: [],
+        channels,
         mapping: {},
     };
 

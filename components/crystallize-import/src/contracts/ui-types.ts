@@ -77,6 +77,7 @@ export type State = {
     errors?: string[];
     loading?: boolean;
     done?: boolean;
+    channels: Record<string, string[]>;
     preflight?: {
         validCount: number;
         errorCount: number;

@@ -5,6 +5,7 @@ export interface FormSubmission {
     mapping: Record<string, string>;
     groupProductsBy?: string;
     doPublish: boolean;
+    channel?: string;
     validFlowStage?: string;
     invalidFlowStage?: string;
 }

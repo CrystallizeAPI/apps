@@ -5,9 +5,12 @@ import { PiAirplaneInFlightDuotone } from 'react-icons/pi';
 import { useImport } from '../provider';
 import { ColumnHeader } from './data-grid/ColumnHeader';
 import { FormSubmission } from '~/contracts/form-submission';
+import { useRef } from 'react';
 
 export const DataMatchingForm = () => {
     const { state, dispatch } = useImport();
+
+    const channelRef = useRef<HTMLSelectElement>(null);
 
     const columnsFromRows: Column[] = state.headers.map(
         (header): Column => ({
@@ -36,6 +39,19 @@ export const DataMatchingForm = () => {
                     </h2>
                 </div>
                 <div className="flex flex-row items-center space-x-2">
+                    {state.channels[state.selectedShape.identifier] &&
+                        state.channels[state.selectedShape.identifier].length > 0 && (
+                            <select ref={channelRef} defaultValue={''}>
+                                <option value={''} disabled>
+                                    Channel
+                                </option>
+                                {state.channels[state.selectedShape.identifier].map((channel) => (
+                                    <option key={channel} value={channel}>
+                                        {channel}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                     <button
                         className="go"
                         onClick={async () => {
@@ -46,6 +62,7 @@ export const DataMatchingForm = () => {
                                     folderPath: state.selectedFolder.tree?.path ?? '/',
                                     groupProductsBy: state.groupProductsBy,
                                     mapping: state.mapping,
+                                    channel: channelRef.current?.value,
                                     rows: state.rows.filter((row) => row._import),
                                 };
                                 const res = await fetch('/api/preflight', {

@@ -9,6 +9,7 @@ type Deps = {
 type ValidationSchema<T> = {
     schema: JSONSchemaType<T>;
     validate: ValidateFunction<JTDDataType<T>>;
+    channels: string[];
 };
 
 export const fetchValidationsSchema = async ({ apiClient }: Deps): Promise<Record<string, ValidationSchema<any>>> => {
@@ -102,6 +103,7 @@ export const fetchValidationsSchema = async ({ apiClient }: Deps): Promise<Recor
             results[key] = {
                 schema,
                 validate,
+                channels: schema.properties?.channel?.enum ?? [],
             };
         }),
     );
