@@ -14,7 +14,7 @@ jobs:
             - name: ⬇️ Checkout repo
               uses: actions/checkout@v3
 
-            - uses: actionsx/prettier@v2
+            - uses: actionsx/prettier@v3
               with:
                   # prettier CLI arguments.
                   args: --check .
