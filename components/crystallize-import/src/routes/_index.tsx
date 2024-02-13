@@ -32,6 +32,7 @@ export default function Index() {
         shapes,
         folders,
         flows,
+        subFolderMapping: [],
         selectedShape: shapes[0],
         selectedFolder: folders[0],
         headers: [],

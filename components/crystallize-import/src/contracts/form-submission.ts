@@ -11,5 +11,6 @@ export interface FormSubmission {
     doPublish: boolean;
     channel?: string;
     validFlowStage?: string;
+    roundPrices?: boolean;
     invalidFlowStage?: string;
 }

@@ -6,6 +6,7 @@ import { BsTrashFill } from 'react-icons/bs';
 import { useImport } from '../../provider';
 import { useState } from 'react';
 import { FieldMapping, FIELD_MAPPINGS } from '../../../../contracts/ui-types';
+import { ComponentChoiceComponentConfig, Shape } from '@crystallize/schema';
 
 interface ColumnMapperProps {
     title: string;
@@ -54,24 +55,29 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
             ),
         );
     }
-
-    state.selectedShape.components?.map(({ id, name, type }) =>
-        shapeFields.push({
-            key: `components.${id}`,
-            description: name,
-            type,
-        }),
-    );
-    state.selectedShape.variantComponents?.map(({ id, name, type }) =>
-        shapeFields.push({
-            key: `variantComponents.${id}`,
-            description: name,
-            type,
-        }),
-    );
+    const processComponents = (components: Shape['components'], prefix: string) => {
+        components?.forEach(({ id, name, type, config }) => {
+            if (type === 'contentChunk' && config && 'components' in config) {
+                config.components?.forEach(({ id: subid, name: subname, type: subtype }) =>
+                    shapeFields.push({
+                        key: `${prefix}.${id}.${subid}`,
+                        description: `${name} - ${subname}`,
+                        type: subtype,
+                    }),
+                );
+                return;
+            }
+            shapeFields.push({
+                key: `${prefix}.${id}`,
+                description: name,
+                type,
+            });
+        });
+    };
+    processComponents(state.selectedShape.components, 'components');
+    processComponents(state.selectedShape.variantComponents, 'variantComponents');
 
     const selectedShapeField = shapeFields.find(({ key }) => state.mapping[key] === title);
-
     const availableShapeFields = shapeFields.filter(({ key }) => !state.mapping[key]);
     const basicItemFields = availableShapeFields.filter(({ key }) => key.startsWith('item.'));
     const productVariantFields = availableShapeFields.filter(({ key }) => key.startsWith('variant.'));

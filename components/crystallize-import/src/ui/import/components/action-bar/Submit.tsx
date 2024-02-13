@@ -36,6 +36,7 @@ export const Submit = () => {
         : `No rows to import`;
 
     const publishRef = useRef<HTMLInputElement>(null);
+    const roundRef = useRef<HTMLInputElement>(null);
     const validFlowRef = useRef<HTMLSelectElement>(null);
     const invalidFlowRef = useRef<HTMLSelectElement>(null);
     return (
@@ -55,6 +56,7 @@ export const Submit = () => {
                             subFolderMapping: state.subFolderMapping,
                             validFlowStage: validFlowRef.current?.value ?? undefined,
                             invalidFlowStage: invalidFlowRef.current?.value ?? undefined,
+                            roundPrices: roundRef.current?.checked ?? false,
                         };
                         const res = await fetch('/api/submit', {
                             method: 'POST',
@@ -88,6 +90,10 @@ export const Submit = () => {
                 <label>
                     <input type="checkbox" ref={publishRef} />
                     Publish
+                </label>
+                <label>
+                    <input type="checkbox" ref={roundRef} />
+                    Round Price (2 decimals)
                 </label>
                 {state.flows.length > 0 && (
                     <>

@@ -12,6 +12,7 @@ type Results = {
         errors: any[];
     }[];
 };
+
 export const action = async ({ request }: ActionFunctionArgs) => {
     const api = await CrystallizeAPI(request);
     const [validationRules, shapes] = await Promise.all([api.fetchValidationsSchema(), api.fetchShapes()]);
@@ -19,7 +20,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const submission: FormSubmission = await request.json();
         const spec = await specFromFormSubmission(submission, shapes);
         const items = spec.items ?? [];
-
         const results = items.reduce(
             (memo: Results, item) => {
                 const validate = validationRules?.[item.shape]?.validate;
