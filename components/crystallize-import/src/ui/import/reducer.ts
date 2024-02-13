@@ -40,6 +40,11 @@ export const Reducer = (state: State, action: Action): State => {
                 preflight: undefined,
                 errors: [],
             };
+        case 'UPDATE_SUB_FOLDER_MAPPING':
+            return {
+                ...state,
+                subFolderMapping: action.mapping,
+            };
         case 'UPDATE_PRODUCT_VARIANT_ATTRIBUTES':
             return {
                 ...state,
@@ -90,4 +95,6 @@ export const mapToReducerActions = (dispatch: Dispatch): Actions => ({
     updateProductVariantAttributes: (attributes) => dispatch({ type: 'UPDATE_PRODUCT_VARIANT_ATTRIBUTES', attributes }),
     updatePreflight: (preflight) => dispatch({ type: 'UPDATE_PREFLIGHT', preflight }),
     updateMainErrors: (errors) => dispatch({ type: 'UPDATE_MAIN_ERRORS', errors }),
+    updateSubFolderMapping: (mapping: State['subFolderMapping']) =>
+        dispatch({ type: 'UPDATE_SUB_FOLDER_MAPPING', mapping }),
 });

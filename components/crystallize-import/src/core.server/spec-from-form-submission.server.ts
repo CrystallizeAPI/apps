@@ -1,9 +1,9 @@
 import {
+    JSONItem,
     type JSONComponentContent,
     type JSONImage,
     type JSONProduct,
     type JSONProductVariant,
-    type JsonSpec,
 } from '@crystallize/import-utilities';
 import { v4 as uuidv4 } from 'uuid';
 import type { NumericComponentConfig, Shape } from '@crystallize/schema';
@@ -113,48 +113,93 @@ const mapVariant = (row: Record<string, any>, mapping: Record<string, string>, s
 };
 
 export const specFromFormSubmission = async (submission: FormSubmission, shapes: Shape[]) => {
-    const { shapeIdentifier, folderPath, rows, mapping, groupProductsBy } = submission;
-    const spec: JsonSpec = {};
+    const { shapeIdentifier, folderPath, rows, mapping, groupProductsBy, subFolderMapping } = submission;
 
     const shape = shapes.find((s) => s.identifier === shapeIdentifier);
     if (!shape) {
         throw new Error(`Shape ${shapeIdentifier} not found.`);
     }
+    const buildExternalReference = (name: string) => {
+        return folderPath.replace(/^\//, '-').replace(/\//g, '-') + '-' + name.replace(/\//g, '-').toLocaleLowerCase();
+    };
 
-    const variants = rows.map((row) => mapVariant(row, mapping, shape));
-    const mapProduct = (obj: Record<string, JSONProduct>, row: Record<string, any>, i: number) => {
-        const productName = row[mapping['item.name']];
-        let product: JSONProduct = {
-            name: productName || variants[i].name,
-            shape: shape.identifier,
-            vatType: 'No Tax',
-            parentCataloguePath: folderPath,
-            variants: [variants[i]],
-            components: mapComponents(row, mapping, 'components', shape),
-        };
+    const folders = subFolderMapping
+        ? rows.reduce((memo: JSONItem[], row) => {
+              const depth = subFolderMapping.length;
+              for (let d = 0; d < depth; d++) {
+                  const column = subFolderMapping[d].column;
+                  const name = row[column];
+                  const folder = {
+                      name,
+                      shape: subFolderMapping[d].shapeIdentifier,
+                      externalReference: buildExternalReference(name),
+                      ...(d === 0
+                          ? { parentCataloguePath: folderPath }
+                          : { parentExternalReference: buildExternalReference(row[subFolderMapping[d - 1].column]) }),
+                  };
+                  if (!memo.some((f) => f.externalReference === folder.externalReference)) {
+                      memo.push(folder);
+                  }
+              }
+              return memo;
+          }, [])
+        : [];
 
-        if (groupProductsBy) {
-            if (obj[row[groupProductsBy]]) {
-                product = obj[row[groupProductsBy]];
-                product.variants = product.variants.concat(variants[i]);
+    // init spec with folder
+    const items: JSONItem[] = folders;
+
+    const findParent = (row: Record<string, any>) => {
+        if (subFolderMapping) {
+            const last = subFolderMapping.length - 1;
+            const folder = folders.find(
+                (f) => f.externalReference === buildExternalReference(row[subFolderMapping[last].column]),
+            );
+            if (folder) {
+                return {
+                    parentExternalReference: folder.externalReference,
+                };
             }
-            obj[row[groupProductsBy]] = product;
-        } else {
-            obj[uuidv4()] = product;
+            return { parentCataloguePath: folderPath };
         }
-
-        return obj;
     };
 
     if (shape.type === 'product') {
-        spec.items = Object.values(rows.reduce(mapProduct, {}));
+        const variants = rows.map((row) => mapVariant(row, mapping, shape));
+        const mapProduct = (obj: Record<string, JSONProduct>, row: Record<string, any>, i: number) => {
+            const productName = row[mapping['item.name']];
+            let product: JSONProduct = {
+                name: productName || variants[i].name,
+                shape: shape.identifier,
+                vatType: 'No Tax',
+                variants: [variants[i]],
+                components: mapComponents(row, mapping, 'components', shape),
+                ...findParent(row),
+            };
+
+            if (groupProductsBy) {
+                if (obj[row[groupProductsBy]]) {
+                    product = obj[row[groupProductsBy]];
+                    product.variants = product.variants.concat(variants[i]);
+                }
+                obj[row[groupProductsBy]] = product;
+            } else {
+                obj[uuidv4()] = product;
+            }
+
+            return obj;
+        };
+        items.push(...Object.values(rows.reduce(mapProduct, {})));
     } else {
-        spec.items = rows.map((row) => ({
-            name: row[mapping['item.name']],
-            shape: shape.identifier,
-            parentCataloguePath: folderPath,
-            components: mapComponents(row, mapping, 'components', shape),
-        }));
+        items.push(
+            ...rows.map((row) => ({
+                name: row[mapping['item.name']],
+                shape: shape.identifier,
+                components: mapComponents(row, mapping, 'components', shape),
+                ...findParent(row),
+            })),
+        );
     }
-    return spec;
+    return {
+        items,
+    };
 };

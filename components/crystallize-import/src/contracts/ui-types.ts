@@ -24,6 +24,10 @@ export type Action =
           mapping: State['mapping'];
       }
     | {
+          type: 'UPDATE_SUB_FOLDER_MAPPING';
+          mapping: State['subFolderMapping'];
+      }
+    | {
           type: 'UPDATE_PRODUCT_VARIANT_ATTRIBUTES';
           attributes: State['attributes'];
       }
@@ -49,6 +53,7 @@ export type Actions = {
     updateGroupProductsBy: (groupProductsBy: State['groupProductsBy']) => void;
     updateSpreadsheet: (headers: State['headers'], rows: State['rows']) => void;
     updateMapping: (mapping: State['mapping']) => void;
+    updateSubFolderMapping: (mapping: State['subFolderMapping']) => void;
     updateProductVariantAttributes: (attributes: State['attributes']) => void;
     updateDone: (done: State['done']) => void;
     updateLoading: (loading: State['loading']) => void;
@@ -72,7 +77,13 @@ export type State = {
     headers: string[];
     attributes: string[];
     rows: Record<string, any>[];
+    // in the form of `path.to.field: "Spreadsheet Column Name"`
     mapping: Record<string, string>;
+    // categorize/folderize, in the form of `path.to.field`
+    subFolderMapping: {
+        column: string;
+        shapeIdentifier: string;
+    }[];
     groupProductsBy?: string;
     errors?: string[];
     loading?: boolean;

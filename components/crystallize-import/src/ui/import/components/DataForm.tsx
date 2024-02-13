@@ -62,6 +62,7 @@ export const DataMatchingForm = () => {
                                     folderPath: state.selectedFolder.tree?.path ?? '/',
                                     groupProductsBy: state.groupProductsBy,
                                     mapping: state.mapping,
+                                    subFolderMapping: state.subFolderMapping,
                                     channel: channelRef.current?.value,
                                     rows: state.rows.filter((row) => row._import),
                                 };

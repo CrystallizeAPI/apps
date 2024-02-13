@@ -52,6 +52,7 @@ export const Submit = () => {
                             mapping: state.mapping,
                             rows: state.rows.filter((row) => row._import),
                             doPublish: publishRef.current?.checked ?? false,
+                            subFolderMapping: state.subFolderMapping,
                             validFlowStage: validFlowRef.current?.value ?? undefined,
                             invalidFlowStage: invalidFlowRef.current?.value ?? undefined,
                         };
