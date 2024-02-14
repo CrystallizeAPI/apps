@@ -47,6 +47,7 @@ export const Submit = () => {
                     dispatch.updateLoading(true);
                     try {
                         const post: FormSubmission = {
+                            importId: state.importId,
                             shapeIdentifier: state.selectedShape.identifier,
                             folderPath: state.selectedFolder.tree?.path ?? '/',
                             groupProductsBy: state.groupProductsBy,

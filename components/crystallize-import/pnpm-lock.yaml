@@ -68,6 +68,9 @@ dependencies:
     read-excel-file:
         specifier: ^5.7.1
         version: 5.7.1
+    remix-utils:
+        specifier: ^7.5.0
+        version: 7.5.0(@remix-run/node@2.6.0)(@remix-run/react@2.6.0)(react@18.2.0)
     uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -8016,6 +8019,51 @@ packages:
             unified: 10.1.2
         dev: true
 
+    /remix-utils@7.5.0(@remix-run/node@2.6.0)(@remix-run/react@2.6.0)(react@18.2.0):
+        resolution:
+            {
+                integrity: sha512-vzjDhbdwK+3XxqL2LM7ZPzq0zyjb+77eAWbKhDqhnh0nlA11n3CmTtYzrZYpVf6h24+6m5mD6KnRfcdD3Zrl7w==,
+            }
+        engines: { node: '>=18.0.0' }
+        peerDependencies:
+            '@remix-run/cloudflare': ^2.0.0
+            '@remix-run/deno': ^2.0.0
+            '@remix-run/node': ^2.0.0
+            '@remix-run/react': ^2.0.0
+            '@remix-run/router': ^1.7.2
+            crypto-js: ^4.1.1
+            intl-parse-accept-language: ^1.0.0
+            is-ip: ^5.0.1
+            react: ^18.0.0
+            zod: ^3.22.4
+        peerDependenciesMeta:
+            '@remix-run/cloudflare':
+                optional: true
+            '@remix-run/deno':
+                optional: true
+            '@remix-run/node':
+                optional: true
+            '@remix-run/react':
+                optional: true
+            '@remix-run/router':
+                optional: true
+            crypto-js:
+                optional: true
+            intl-parse-accept-language:
+                optional: true
+            is-ip:
+                optional: true
+            react:
+                optional: true
+            zod:
+                optional: true
+        dependencies:
+            '@remix-run/node': 2.6.0(typescript@5.3.3)
+            '@remix-run/react': 2.6.0(react-dom@18.2.0)(react@18.2.0)(typescript@5.3.3)
+            react: 18.2.0
+            type-fest: 4.10.2
+        dev: false
+
     /require-from-string@2.0.2:
         resolution:
             {
@@ -8945,6 +8993,14 @@ packages:
             {
                 integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==,
             }
+        dev: false
+
+    /type-fest@4.10.2:
+        resolution:
+            {
+                integrity: sha512-anpAG63wSpdEbLwOqH8L84urkL6PiVIov3EMmgIhhThevh9aiMQov+6Btx0wldNcvm4wV+e2/Rt1QdDwKHFbHw==,
+            }
+        engines: { node: '>=16' }
         dev: false
 
     /type-is@1.6.18:

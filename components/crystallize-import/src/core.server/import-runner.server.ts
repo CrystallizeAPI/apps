@@ -1,7 +1,13 @@
 import { Bootstrapper, EVENT_NAMES, JsonSpec } from '@crystallize/import-utilities';
-import { error } from 'ajv/dist/vocabularies/applicator/dependencies';
+import { EventEmitter } from 'events';
+import util from 'util';
+
+export const dump = (obj: any, depth?: number) => {
+    console.log(util.inspect(obj, false, depth, true));
+};
 
 type Deps = {
+    emitter: EventEmitter;
     tenantIdentifier: string;
     sessionId: string | undefined;
     skipPublication?: boolean;
@@ -24,10 +30,12 @@ type Subscriptons = {
 };
 
 export const runImport = async (
+    importUuid: string,
     spec: JsonSpec,
     { onItemCreated, onItemUpdated }: Subscriptons,
-    { tenantIdentifier, sessionId, skipPublication, verbose }: Deps,
+    { tenantIdentifier, sessionId, skipPublication, verbose, emitter }: Deps,
 ) => {
+    dump({ spec }, 200);
     return new Promise((resolve) => {
         const errors: any = [];
         const bootstrapper = new Bootstrapper();
@@ -50,13 +58,27 @@ export const runImport = async (
         }
 
         if (onItemCreated) {
-            bootstrapper.on(EVENT_NAMES.ITEM_CREATED, (data) => onItemCreated(data).catch((err) => errors.push(err)));
+            bootstrapper.on(EVENT_NAMES.ITEM_CREATED, (data) => {
+                emitter.emit(importUuid, {
+                    event: 'item-created',
+                    data,
+                });
+                onItemCreated(data).catch((err) => errors.push(err));
+            });
         }
         if (onItemUpdated) {
-            bootstrapper.on(EVENT_NAMES.ITEM_UPDATED, (data) => onItemUpdated(data).catch((err) => errors.push(err)));
+            bootstrapper.on(EVENT_NAMES.ITEM_UPDATED, (data) => {
+                emitter.emit(importUuid, data);
+                emitter.emit(importUuid, {
+                    event: 'item-updated',
+                    data,
+                });
+                onItemUpdated(data).catch((err) => errors.push(err));
+            });
         }
 
         bootstrapper.on(EVENT_NAMES.DONE, () => {
+            emitter.emit(importUuid, 'done');
             bootstrapper.kill();
             if (errors.length > 0) {
                 resolve({
@@ -69,8 +91,13 @@ export const runImport = async (
             });
         });
         bootstrapper.on(EVENT_NAMES.ERROR, (err: any) => {
+            emitter.emit(importUuid, {
+                event: 'error',
+                data: err,
+            });
             errors.push(err);
         });
+        emitter.emit(importUuid, 'started');
         bootstrapper.start();
     });
 };

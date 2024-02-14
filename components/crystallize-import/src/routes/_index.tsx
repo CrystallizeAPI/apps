@@ -29,6 +29,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function Index() {
     const { shapes, folders, flows, channels } = useLoaderData<typeof loader>();
     const initialState: State = {
+        importId: Math.random().toString(36).substring(7),
         shapes,
         folders,
         flows,

@@ -2,21 +2,30 @@ import { type ActionFunctionArgs, json } from '@remix-run/node';
 import { FormSubmission } from '~/contracts/form-submission';
 import { getCookieValue } from '~/core.server/auth.server';
 import { runImport } from '~/core.server/import-runner.server';
+import { buildServices } from '~/core.server/services.server';
 import { specFromFormSubmission } from '~/core.server/spec-from-form-submission.server';
 import CrystallizeAPI from '~/core.server/use-cases/crystallize';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+    const { emitter } = await buildServices();
     const api = await CrystallizeAPI(request);
     const post: FormSubmission = await request.json();
     const [validationRules, shapes] = await Promise.all([api.fetchValidationsSchema(), api.fetchShapes()]);
     try {
+        const importId = post.importId ?? Math.random().toString(36).substring(7);
         const spec = await specFromFormSubmission(post, shapes);
         const results = await runImport(
+            importId,
             spec,
             {
                 onItemUpdated: async (item) => {
-                    const push = (stageId: string) =>
-                        api.pushItemToFlow(
+                    const push = async (stageId: string) => {
+                        emitter.emit(importId, {
+                            event: 'stage-push',
+                            item,
+                            stageId,
+                        });
+                        await api.pushItemToFlow(
                             {
                                 id: item.id,
                                 language: item.language,
@@ -24,7 +33,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                             },
                             stageId,
                         );
-
+                    };
                     const validate = validationRules?.[item.shape.identifier]?.validate;
                     if (!validate) {
                         // no validation
@@ -48,6 +57,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 },
             },
             {
+                emitter,
                 tenantIdentifier: api.apiClient.config.tenantIdentifier,
                 skipPublication: !(post.doPublish === true),
                 sessionId: getCookieValue(request, 'connect.sid'),

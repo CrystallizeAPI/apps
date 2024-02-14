@@ -1,4 +1,5 @@
 export interface FormSubmission {
+    importId?: string;
     shapeIdentifier: string;
     folderPath: string;
     rows: Record<string, any>[];

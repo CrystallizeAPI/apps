@@ -1,17 +1,30 @@
+import { useEventSource } from 'remix-utils/sse/react';
 import { ActionBar } from './components/action-bar/ActionBar';
 import { DataMatchingForm } from './components/DataForm';
 import { FileChooser } from './components/FileChooser';
 import { useImport } from './provider';
+import { useEffect, useState } from 'react';
 
 export const App = () => {
     const { state, dispatch } = useImport();
     const { shapes, folders } = state;
+    const [streamLogs, setStreamLogs] = useState<any[]>([]);
+    const data = useEventSource(`/api/import/stream/${state.importId}`, { event: 'log' });
+
+    useEffect(() => {
+        if (state.done) {
+            setStreamLogs([]);
+        }
+        if (data) {
+            setStreamLogs((prev) => [...prev, data]);
+        }
+    }, [data, state.done]);
+
     return (
         <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4', padding: '20px 50px' }}>
             <ActionBar shapes={shapes} folders={folders} />
 
             <div style={{ marginTop: 200 }} />
-
             {!state.rows?.length ? (
                 <div className="file-chooser-section app-section">
                     <FileChooser
@@ -62,24 +75,44 @@ export const App = () => {
                             </div>
                         </div>
                     )}
-
                     {state.loading && (
-                        <div className="feedback-container">
-                            {state.loading && (
-                                <>
-                                    <div className="loader-wrapper" style={{ transform: 'scale(0.5,0.5)' }}>
-                                        <div className="loader"></div>
+                        <div>
+                            <div className="feedback-container">
+                                <div className="loader-wrapper" style={{ transform: 'scale(0.5,0.5)' }}>
+                                    <div className="loader"></div>
+                                </div>
+                                <span className="import-message">Bip bop, doing stuff...</span>
+                            </div>
+                            <div className="feedback-container">
+                                <div className="app-section">
+                                    <div className="grid">
+                                        <div className="stream-logs">
+                                            <h2>Stream logs</h2>
+                                            <ul>
+                                                {streamLogs.map((log, i) => {
+                                                    const decoded = JSON.parse(log);
+                                                    return (
+                                                        <li key={i}>
+                                                            <pre>{JSON.stringify(decoded, undefined, 2)}</pre>
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <span className="import-message">Bip bop, doing stuff...</span>
-                                </>
-                            )}
+                                </div>
+                            </div>
                         </div>
                     )}
-
                     {state.errors && state.errors.length > 0 && (
                         <div className="error">
                             <p>Errors: </p>
                             <pre>{JSON.stringify(state.errors, null, 2)}</pre>
+                        </div>
+                    )}
+                    {state.done && (
+                        <div className="feedback-container">
+                            <h1>Import completed</h1>
                         </div>
                     )}
 
