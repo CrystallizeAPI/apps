@@ -31,17 +31,17 @@ export const DataMatchingForm = () => {
 
     return (
         <div className="match-form">
-            <div className="match-header">
+            <div className="px-6 py-8 flex justify-between">
                 <div>
-                    <h1>Match column labels to item components</h1>
-                    <h2>
+                    <h1 className="m-0 p-0">Match column labels to item components</h1>
+                    <h2 className="m-0 p-0">
                         <strong>{state.rows.length}</strong> rows were found in this file.
                     </h2>
                 </div>
-                <div className="flex flex-row items-center space-x-2">
+                <div className="flex flex-row items-center space-x-2 shrink-0">
                     {state.channels[state.selectedShape.identifier] &&
                         state.channels[state.selectedShape.identifier].length > 0 && (
-                            <select ref={channelRef} defaultValue={''}>
+                            <select ref={channelRef} defaultValue={''} className="min-w-[150px]">
                                 <option value={''} disabled>
                                     Channel
                                 </option>
@@ -52,47 +52,49 @@ export const DataMatchingForm = () => {
                                 ))}
                             </select>
                         )}
-                    <button
-                        className="go"
-                        onClick={async () => {
-                            dispatch.updateLoading(true);
-                            try {
-                                const post: Omit<FormSubmission, 'doPublish'> = {
-                                    shapeIdentifier: state.selectedShape.identifier,
-                                    folderPath: state.selectedFolder.tree?.path ?? '/',
-                                    groupProductsBy: state.groupProductsBy,
-                                    mapping: state.mapping,
-                                    subFolderMapping: state.subFolderMapping,
-                                    channel: channelRef.current?.value,
-                                    rows: state.rows.filter((row) => row._import),
-                                };
-                                const res = await fetch('/api/preflight', {
-                                    method: 'POST',
-                                    cache: 'no-cache',
-                                    body: JSON.stringify(post),
-                                });
-                                if (res.status !== 200) {
-                                    const error = await res.json();
-                                    console.error(error);
+                    <div className="flex items-center shrink-0 gap-3">
+                        <button
+                            className="flex px-4 gap-2 py-3.5 font-medium bg-green-100 text-green-800 hover:border-green-600 border border-solid border-transparent rounded cursor-pointer font-medium"
+                            onClick={async () => {
+                                dispatch.updateLoading(true);
+                                try {
+                                    const post: Omit<FormSubmission, 'doPublish'> = {
+                                        shapeIdentifier: state.selectedShape.identifier,
+                                        folderPath: state.selectedFolder.tree?.path ?? '/',
+                                        groupProductsBy: state.groupProductsBy,
+                                        mapping: state.mapping,
+                                        subFolderMapping: state.subFolderMapping,
+                                        channel: channelRef.current?.value,
+                                        rows: state.rows.filter((row) => row._import),
+                                    };
+                                    const res = await fetch('/api/preflight', {
+                                        method: 'POST',
+                                        cache: 'no-cache',
+                                        body: JSON.stringify(post),
+                                    });
+                                    if (res.status !== 200) {
+                                        const error = await res.json();
+                                        console.error(error);
+                                    }
+                                    dispatch.updatePreflight((await res.json()).results);
+                                } catch (err: any) {
+                                    console.error(err);
+                                } finally {
+                                    dispatch.updateLoading(false);
                                 }
-                                dispatch.updatePreflight((await res.json()).results);
-                            } catch (err: any) {
-                                console.error(err);
-                            } finally {
-                                dispatch.updateLoading(false);
-                            }
-                        }}
-                    >
-                        <PiAirplaneInFlightDuotone />
-                    </button>
-                    <button
-                        className="reset"
-                        onClick={() => {
-                            dispatch.updateSpreadsheet([], []);
-                        }}
-                    >
-                        <FaUndo />
-                    </button>
+                            }}
+                        >
+                            <span>Preflight test</span> <PiAirplaneInFlightDuotone />
+                        </button>
+                        <button
+                            className="flex-1   px-4 gap-2 py-3.5 bg-pink-100 text-pink-600 hover:border-pink-600 border border-solid border-transparent rounded cursor-pointer px-2 py-1 font-medium"
+                            onClick={() => {
+                                dispatch.updateSpreadsheet([], []);
+                            }}
+                        >
+                            Reset upload
+                        </button>
+                    </div>
                 </div>
             </div>
             <DataSheetGrid
@@ -101,7 +103,7 @@ export const DataMatchingForm = () => {
                 columns={columns}
                 height={800}
                 rowClassName={({ rowData }) => (rowData._import ? 'row-included' : 'row-excluded')}
-                headerRowHeight={100}
+                headerRowHeight={80}
             />
         </div>
     );

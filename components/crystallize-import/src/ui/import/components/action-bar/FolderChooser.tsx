@@ -9,10 +9,9 @@ export const FolderChooser = ({ folders }: FolderChooserProps) => {
     const { dispatch } = useImport();
 
     return (
-        <div className="folder-chooser ">
-            <h2>Select Import Location</h2>
+        <div className="flex flex-col px-6 py-2 w-full">
+            <label className="pb-2">Import location</label>
             <select
-                className="grey"
                 defaultValue={folders[0].tree?.path}
                 onChange={(e) =>
                     dispatch.updateSelectedFolder(

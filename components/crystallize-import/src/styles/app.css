@@ -19,7 +19,6 @@ body {
     padding: 5px;
     cursor: pointer;
     background: #bff6f8;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     color: #4d525b;
     border: none;
@@ -27,7 +26,6 @@ body {
     font-weight: 600;
     padding: 15px 25px;
     width: 100%;
-    margin-top: 25px;
 }
 
 .submit:hover {
@@ -79,36 +77,28 @@ body {
 
 .popover-button {
     display: flex;
-    background: white;
     color: #4d525b;
     width: 100%;
     padding: 10px;
     border: 1px solid var(--dsg-border-color);
     border-radius: 4px;
+
+    @apply text-sm font-medium bg-white border border-solid border-gray-200 rounded-md hover:border-gray-400;
 }
 
 .popover-button.mapped {
-    background: #bff6f8;
-    border: 1px solid #bff6f8;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    @apply text-green-600 font-medium bg-green-100 border-green-500;
 }
 
 .popover {
-    background: white;
-    border-radius: 4px;
-    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.5);
     overflow: hidden;
-    font-family: system-ui, sans-serif;
-    color: #444;
-    margin-top: 10px;
+    font-family:'Roboto',  system-ui, sans-serif;
+    
+    @apply bg-white flex flex-col max-h-[700px] px-6 pb-4 overflow-scroll  rounded-md bg-white shadow-md border border-solid border-slate-300;
 }
 
 .popover-list-title {
-    background: var(--dsg-border-color);
-    font-size: 12px;
-    font-weight: 700;
-    padding: 5px 10px;
-    margin: 0;
+    @apply px-3 text-xs font-medium text-slate-500;
 }
 
 .popover-list {
@@ -118,14 +108,11 @@ body {
 }
 
 .popover-item {
-    display: flex;
-    padding: 10px;
-    border-bottom: 1px solid var(--dsg-border-color);
-    cursor: default;
+    @apply flex cursor-pointer pl-4 py-1 text-sm font-normal text-slate-900 min-w-48;
 }
 
 .popover-item:hover {
-    background: var(--dsg-border-color);
+    @apply bg-slate-200;
 }
 
 .popover-item-remove {
@@ -138,42 +125,46 @@ body {
 .popover-item-remove:hover {
     background: lighten(rgb(239, 72, 54), 10%);
 }
+.dsg-row-header {
+    @apply !z-30 ;
 
+}
 .dsg-cell-header-container {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
     padding: 10px;
+    @apply bg-slate-100;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 200px;
-    gap: 20px;
+
+label {
+    @apply text-slate-600 font-medium text-sm
+}
+
+label small {
+    @apply text-xs text-slate-500 font-normal;
 }
 
 select {
-    padding: 15px 30px;
-    background: white;
-    color: #4c4f5a;
     border: none;
     font-size: 16px;
     border-radius: 5px;
-    filter: drop-shadow(0px 2px 4px rgba(130, 138, 144, 0.15));
     width: 100%;
-    padding-right: 30px;
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg width='13' height='7' viewBox='0 0 13 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6.5 6L12 1' stroke='%234D525B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
     background-repeat: no-repeat, repeat;
     background-position:
-        right 0.7em top 50%,
+        right 2em top 50%,
         0 0;
     background-size:
         0.65em auto,
         100%;
+    @apply px-6 py-3 pr-8 text-sm font-medium bg-slate-100 border border-solid border-gray-200 rounded-md hover:border-gray-400;
+
 }
 select.grey {
     background-color: #f3f4f6;
@@ -262,23 +253,20 @@ select:disabled {
     display: flex;
 }
 
-.flex > div {
-    flex-grow: 1;
-    flex-shrink: 0;
-}
 
 .file-chooser {
     display: flex;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-direction: column;
     gap: 10px;
     padding-top: 10px;
-    border: 1px dashed #4a4a4a;
+    border: 1px dashed #9095a8;
     border-radius: 8px;
+    @apply  grow bg-white border-slate-400;
 }
 
 .match-label {
@@ -301,28 +289,7 @@ select:disabled {
     background: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.match-header {
-    display: flex;
-    padding: 30px;
-    background: #fff;
-}
 
-.match-header div:first-child {
-    flex-grow: 1;
-}
-
-.match-header h1 {
-    color: #4a4a4a;
-    margin-bottom: 0px;
-    font-size: 22px;
-}
-
-.match-header h2 {
-    color: #9095a8;
-    font-weight: 400;
-    font-size: 14px;
-    margin: 0;
-}
 
 .loader {
     position: relative;
@@ -426,4 +393,21 @@ select:disabled {
 
 .row-excluded .dsg-input {
     color: #888;
+}
+
+.item-updated{
+    @apply bg-yellow-50 text-yellow-700 border border-solid border-yellow-300;
+}
+.item-created, .done {
+    @apply bg-green-100 text-green-600 border border-solid border-green-300;
+}
+
+.started{
+    @apply bg-white text-slate-600 border border-solid border-slate-300;
+}
+.item-error {
+    @apply bg-pink-100 text-pink-600 border border-solid border-pink-300;
+}
+.text-tag {
+    @apply border px-2 py-1 border-solid rounded border-slate-300 bg-white italic  font-medium text-slate-500;
 }

@@ -82,6 +82,7 @@ export const FileChooser = ({ onChange }: FileChooserProps) => {
     const [loading, setLoading] = useState(false);
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
+        if (loading) return;
         setLoading(true);
         const file = acceptedFiles[0];
         const extension = file.name.split('.').at(-1);
@@ -104,18 +105,25 @@ export const FileChooser = ({ onChange }: FileChooserProps) => {
     }, []);
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-    return !loading ? (
-        <div className="file-chooser" {...getRootProps()}>
-            <input {...getInputProps()} />
-            <img height={100} src="/file_upload.svg" alt="Click to Upload" />
-            <span>Upload a file</span>
-        </div>
-    ) : (
-        <div className="center">
-            <div className="loader-wrapper">
-                <div className="loader"></div>
+    return (
+        <div className="p-4 bg-white shadow mt-8 min-h-[400px] flex items-stretch flex-col">
+            <div className="file-chooser" {...getRootProps()}>
+                <input {...getInputProps()} />
+                <img height={50} src="/file_upload.svg" alt="Click to Upload" />
+                {loading ? (
+                    <span>Uploading ...</span>
+                ) : (
+                    <span className="text-slate-600 font-medium">
+                        Upload a{' '}
+                        <span className="bg-slate-100 p-0.5 rounded border border-solid border-slate-300">.xlsx</span>{' '}
+                        <span className="bg-slate-100 p-0.5 rounded border border-solid border-slate-300">.csv</span> or
+                        <span className="bg-slate-100 p-0.5 rounded border border-solid border-slate-300">
+                            .json
+                        </span>{' '}
+                        file{' '}
+                    </span>
+                )}
             </div>
-            <span>Uploading ...</span>
         </div>
     );
 };
