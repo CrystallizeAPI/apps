@@ -14,29 +14,23 @@ export const ActionBar = ({ shapes, folders }: ActionBarProps) => {
     const { state, dispatch } = useImport();
 
     return (
-        <div className="grid floating-actionbar">
-            <ShapeChooser shapes={shapes} />
-            <FolderChooser folders={folders} />
-            {state.selectedShape.type === 'product' ? (
-                <div>
-                    <h2>Group Product Variants By</h2>
-                    <select
-                        className="grey"
-                        onChange={(e) => dispatch.updateGroupProductsBy(e.target.value)}
-                        disabled={!state.rows?.length}
-                    >
-                        <option defaultChecked={true} value="" />
-                        {state.headers.map((header) => (
-                            <option key={header} value={header}>
-                                {header}
-                            </option>
-                        ))}
-                    </select>
+        <div className=" pt-2  bg-white gap-4 rounded-b-md shadow-sm">
+            <div className="grid grid-cols-[1fr_1fr_230px] px-6">
+                <div className="flex ">
+                    <ShapeChooser shapes={shapes} />
+                    <FolderChooser folders={folders} />
                 </div>
-            ) : (
-                <div style={{ flexGrow: '1' }} />
+
+                <Submit />
+            </div>
+
+            {(state.preflight?.errorCount ?? 0) > 0 && (
+                <div className="block text-xs  px-6 py-1 text-sm text-right">
+                    <span className="text-pink-700 font-medium">
+                        You have {state.preflight?.errorCount ?? 0} errors.{' '}
+                    </span>
+                </div>
             )}
-            <Submit />
         </div>
     );
 };

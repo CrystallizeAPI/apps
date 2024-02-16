@@ -4,11 +4,12 @@ import { useRef, forwardRef } from 'react';
 
 const FlowStagesSelect = forwardRef<HTMLSelectElement>((props, ref) => {
     const { state } = useImport();
+    const { defaultOption } = props;
 
     return (
-        <select className="inline-block w-1/2 text-xs p-1" ref={ref} defaultValue={''}>
+        <select className="first:rounded-r-none last:rounded-l-none last:border-r-0" ref={ref} defaultValue={''}>
             <option disabled value={''}>
-                Select a Stage
+                {defaultOption}
             </option>
             {state.flows
                 .filter((flow) => {
@@ -40,76 +41,78 @@ export const Submit = () => {
     const validFlowRef = useRef<HTMLSelectElement>(null);
     const invalidFlowRef = useRef<HTMLSelectElement>(null);
     return (
-        <div>
-            <button
-                className="submit mb-2"
-                onClick={async () => {
-                    dispatch.updateLoading(true);
-                    try {
-                        const post: FormSubmission = {
-                            importId: state.importId,
-                            shapeIdentifier: state.selectedShape.identifier,
-                            folderPath: state.selectedFolder.tree?.path ?? '/',
-                            groupProductsBy: state.groupProductsBy,
-                            mapping: state.mapping,
-                            rows: state.rows.filter((row) => row._import),
-                            doPublish: publishRef.current?.checked ?? false,
-                            subFolderMapping: state.subFolderMapping,
-                            validFlowStage: validFlowRef.current?.value ?? undefined,
-                            invalidFlowStage: invalidFlowRef.current?.value ?? undefined,
-                            roundPrices: roundRef.current?.checked ?? false,
-                        };
-                        const res = await fetch('/api/submit', {
-                            method: 'POST',
-                            cache: 'no-cache',
-                            body: JSON.stringify(post),
-                        });
-                        if (res.status !== 200) {
-                            const error = await res.json();
-                            console.error(error);
-                        } else {
-                            const response = await res.json();
-                            if (response.success === true) {
-                                dispatch.updateDone(true);
-                            } else {
-                                console.error('dispatching', response.errors);
-                                dispatch.updateMainErrors(response.errors);
-                            }
-                        }
-                    } catch (err: any) {
-                        console.error(err);
-                    } finally {
-                        dispatch.updateLoading(false);
-                    }
-                }}
-                type="button"
-                disabled={!state.rows?.length || state.done}
-            >
-                {state.done ? 'Import completed' : buttonText}
-            </button>
-            <div className="text-xs flex flex-col">
-                <label>
-                    <input type="checkbox" ref={publishRef} />
-                    Publish
-                </label>
-                <label>
-                    <input type="checkbox" ref={roundRef} />
-                    Round Price (2 decimals)
-                </label>
-                {state.flows.length > 0 && (
-                    <>
-                        <label>
-                            Send valid to: <FlowStagesSelect ref={validFlowRef} />
-                        </label>
-                        <label>
-                            Send errors to: <FlowStagesSelect ref={invalidFlowRef} />
-                        </label>
-                    </>
-                )}
+        <>
+            <div className="flex flex-col py-2">
+                <div>
+                    {state.flows.length > 0 && (
+                        <>
+                            <label className="pb-2 block">Flows</label>
+                            <div className="flex items-start ">
+                                <FlowStagesSelect ref={validFlowRef} defaultOption="Valid items" />
+                                <FlowStagesSelect ref={invalidFlowRef} defaultOption="Invalid items" />
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
-            {(state.preflight?.errorCount ?? 0) > 0 && (
-                <p className="text-error"> You have {state.preflight?.errorCount ?? 0} errors.</p>
-            )}
-        </div>
+            <div className="py-2.5 pl-3">
+                <div className="text-xs flex gap-3 pb-2">
+                    <label className="flex items-center">
+                        <input type="checkbox" ref={publishRef} />
+                        <small>Publish</small>
+                    </label>
+                    <label className="flex items-center">
+                        <input type="checkbox" ref={roundRef} />
+                        <small>Round Prices</small>
+                    </label>
+                </div>
+                <button
+                    className="submit"
+                    onClick={async () => {
+                        dispatch.updateLoading(true);
+                        try {
+                            const post: FormSubmission = {
+                                importId: state.importId,
+                                shapeIdentifier: state.selectedShape.identifier,
+                                folderPath: state.selectedFolder.tree?.path ?? '/',
+                                groupProductsBy: state.groupProductsBy,
+                                mapping: state.mapping,
+                                rows: state.rows.filter((row) => row._import),
+                                doPublish: publishRef.current?.checked ?? false,
+                                subFolderMapping: state.subFolderMapping,
+                                validFlowStage: validFlowRef.current?.value ?? undefined,
+                                invalidFlowStage: invalidFlowRef.current?.value ?? undefined,
+                                roundPrices: roundRef.current?.checked ?? false,
+                            };
+                            const res = await fetch('/api/submit', {
+                                method: 'POST',
+                                cache: 'no-cache',
+                                body: JSON.stringify(post),
+                            });
+                            if (res.status !== 200) {
+                                const error = await res.json();
+                                console.error(error);
+                            } else {
+                                const response = await res.json();
+                                if (response.success === true) {
+                                    dispatch.updateDone(true);
+                                } else {
+                                    console.error('dispatching', response.errors);
+                                    dispatch.updateMainErrors(response.errors);
+                                }
+                            }
+                        } catch (err: any) {
+                            console.error(err);
+                        } finally {
+                            dispatch.updateLoading(false);
+                        }
+                    }}
+                    type="button"
+                    disabled={!state.rows?.length || state.done}
+                >
+                    {state.done ? 'Import completed' : buttonText}
+                </button>
+            </div>
+        </>
     );
 };

@@ -35,7 +35,7 @@ export const runImport = async (
     { onItemCreated, onItemUpdated }: Subscriptons,
     { tenantIdentifier, sessionId, skipPublication, verbose, emitter }: Deps,
 ) => {
-    dump({ spec }, 200);
+    // dump({ spec }, 200);
     return new Promise((resolve) => {
         const errors: any = [];
         const bootstrapper = new Bootstrapper();
@@ -68,7 +68,6 @@ export const runImport = async (
         }
         if (onItemUpdated) {
             bootstrapper.on(EVENT_NAMES.ITEM_UPDATED, (data) => {
-                emitter.emit(importUuid, data);
                 emitter.emit(importUuid, {
                     event: 'item-updated',
                     data,
@@ -78,7 +77,7 @@ export const runImport = async (
         }
 
         bootstrapper.on(EVENT_NAMES.DONE, () => {
-            emitter.emit(importUuid, 'done');
+            emitter.emit(importUuid, { event: 'done' });
             bootstrapper.kill();
             if (errors.length > 0) {
                 resolve({
@@ -92,12 +91,12 @@ export const runImport = async (
         });
         bootstrapper.on(EVENT_NAMES.ERROR, (err: any) => {
             emitter.emit(importUuid, {
-                event: 'error',
+                event: 'item-error',
                 data: err,
             });
             errors.push(err);
         });
-        emitter.emit(importUuid, 'started');
+        emitter.emit(importUuid, { event: 'started' });
         bootstrapper.start();
     });
 };

@@ -2,7 +2,7 @@ import { Popover } from 'react-tiny-popover';
 import cn from 'classnames';
 
 import { AiFillCaretDown } from 'react-icons/ai';
-import { BsTrashFill } from 'react-icons/bs';
+import { BsTrash, BsTrashFill } from 'react-icons/bs';
 import { useImport } from '../../provider';
 import { useState } from 'react';
 import { FieldMapping, FIELD_MAPPINGS } from '../../../../contracts/ui-types';
@@ -23,8 +23,8 @@ const ColumnMapperList = ({ title, shapeFields, onChange }: ColumnMapperProps) =
     const { state } = useImport();
 
     return (
-        <>
-            <h3 className="popover-list-title">{title}</h3>
+        <div className="px-2 bg-slate-100 mb-4 rounded-md pb-2">
+            <label className="px-2 py-0.5 pt-4 block text-xs text-slate-500">{title}</label>
             <ul className="popover-list">
                 {shapeFields
                     .filter((field) => !state.mapping[field.key])
@@ -34,7 +34,7 @@ const ColumnMapperList = ({ title, shapeFields, onChange }: ColumnMapperProps) =
                         </li>
                     ))}
             </ul>
-        </>
+        </div>
     );
 };
 
@@ -101,24 +101,50 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
     const subFolderMapped = state.subFolderMapping?.find((folderM) => folderM.column === title);
     return (
         <>
-            <span style={{ flexGrow: 1 }}>{title}</span>
+            <span className="text-sm font-medium text-gray-500" style={{ flexGrow: 1 }}>
+                {title}
+            </span>
             <Popover
                 onClickOutside={() => setIsPopoverOpen(false)}
                 isOpen={isPopoverOpen}
                 positions={['bottom']}
                 content={
                     <div className="popover">
-                        <>
-                            <h3 className="popover-list-title">Categories</h3>
-                            <p className="italic text-gray-300 text-xs pt-2 pl-2 pr-2 m-0">
-                                Create a subfolder from that column.
-                            </p>
+                        <div className="py-4 flex flex-col gap-1">
+                            {selectedShapeField && (
+                                <button
+                                    className="w-full bg-pink-200 border border-solid cursor-pointer border-transparent rounded-md flex justify-between px-4 py-2 text-pink-600 font-medium hover:border-pink-600"
+                                    onClick={() => onChange('')}
+                                >
+                                    <span style={{ flexGrow: 1, textAlign: 'left' }}>Clear mapping</span> <BsTrash />
+                                </button>
+                            )}
+                            {subFolderMapped && (
+                                <button
+                                    className="w-full bg-pink-200 border border-solid cursor-pointer border-transparent rounded-md flex justify-between px-4 py-2 text-pink-600 font-medium hover:border-pink-600"
+                                    onClick={() => {
+                                        // just remove the existing one
+                                        const newMapping = state.subFolderMapping?.filter(
+                                            (folderM) => folderM.column !== title,
+                                        );
+                                        dispatch.updateSubFolderMapping(newMapping);
+                                        setIsPopoverOpen(!isPopoverOpen);
+                                    }}
+                                >
+                                    <span style={{ flexGrow: 1, textAlign: 'left' }}>Clear subfolder mapping</span>{' '}
+                                    <BsTrash />
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="px-2 bg-slate-100 mb-4 rounded-md">
+                            <label className="px-2 py-0.5 pt-4 block text-xs text-slate-500 ">Subfolders</label>
                             <ul className="popover-list">
                                 {state.shapes
                                     .filter((shape) => shape.type === 'folder')
                                     .map((shape) => (
                                         <li
-                                            className={`popover-item ${subFolderMapped?.shapeIdentifier === shape.identifier ? 'font-bold' : ''}`}
+                                            className={`popover-item ${subFolderMapped?.shapeIdentifier === shape.identifier ? 'font-bold ' : ''}`}
                                             key={shape.identifier}
                                             onClick={() => {
                                                 const newMapping = [
@@ -138,26 +164,8 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
                                             {shape.name}
                                         </li>
                                     ))}
-                                {subFolderMapped && (
-                                    <li
-                                        className="popover-item popover-item-remove"
-                                        onClick={() => {
-                                            // just remove the existing one
-                                            const newMapping = state.subFolderMapping?.filter(
-                                                (folderM) => folderM.column !== title,
-                                            );
-                                            dispatch.updateSubFolderMapping(newMapping);
-                                            setIsPopoverOpen(!isPopoverOpen);
-                                        }}
-                                    >
-                                        <span style={{ flexGrow: 1, textAlign: 'left' }}>Clear</span> <BsTrashFill />
-                                    </li>
-                                )}
                             </ul>
-                        </>
-                        <hr className="w-2/3" />
-                        <h3 className="popover-list-title">Field Mapping</h3>
-                        <p className="italic text-gray-300 text-xs pt-2 pl-2 pr-2 m-0">One to one mapping.</p>
+                        </div>
                         {!!basicItemFields.length && (
                             <ColumnMapperList
                                 title="Item Details"
@@ -197,11 +205,6 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
                                 selectedShapeField={selectedShapeField}
                                 onChange={onChange}
                             />
-                        )}
-                        {selectedShapeField && (
-                            <li className="popover-item popover-item-remove" onClick={() => onChange('')}>
-                                <span style={{ flexGrow: 1, textAlign: 'left' }}>Clear</span> <BsTrashFill />
-                            </li>
                         )}
                     </div>
                 }

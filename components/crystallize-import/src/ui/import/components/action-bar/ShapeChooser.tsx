@@ -5,13 +5,12 @@ interface ShapeChooserProps {
 }
 
 export const ShapeChooser = ({ shapes }: ShapeChooserProps) => {
-    const { dispatch } = useImport();
+    const { dispatch, state } = useImport();
 
     return (
-        <div className="shape-chooser">
-            <h2>Select Shape</h2>
+        <div className="flex flex-col py-2 w-full">
+            <label className="pb-2">Shape</label>
             <select
-                className="grey"
                 defaultValue={shapes[0].identifier}
                 onChange={(e) =>
                     dispatch.updateSelectedShape(shapes.find((shape) => shape.identifier === e.target.value) as Shape)
