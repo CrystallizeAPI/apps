@@ -106,7 +106,7 @@ export const FileChooser = ({ onChange }: FileChooserProps) => {
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
-        <div className="p-4 bg-white shadow mt-8 min-h-[400px] flex items-stretch flex-col">
+        <div className="p-4 bg-white shadow mt-8 min-h-[400px] flex items-stretch flex-col rounded-md">
             <div className="file-chooser" {...getRootProps()}>
                 <input {...getInputProps()} />
                 <img height={50} src="/file_upload.svg" alt="Click to Upload" />
