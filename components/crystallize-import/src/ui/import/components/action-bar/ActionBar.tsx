@@ -11,7 +11,7 @@ export interface ActionBarProps {
 }
 
 export const ActionBar = ({ shapes, folders }: ActionBarProps) => {
-    const { state, dispatch } = useImport();
+    const { state } = useImport();
 
     return (
         <div className=" pt-2  bg-white gap-4 rounded-b-md shadow-sm">
@@ -25,7 +25,7 @@ export const ActionBar = ({ shapes, folders }: ActionBarProps) => {
             </div>
 
             {(state.preflight?.errorCount ?? 0) > 0 && (
-                <div className="block text-xs  px-6 py-1 text-sm text-right">
+                <div className="block px-6 py-1 text-sm text-right">
                     <span className="text-pink-700 font-medium">
                         You have {state.preflight?.errorCount ?? 0} errors.{' '}
                     </span>

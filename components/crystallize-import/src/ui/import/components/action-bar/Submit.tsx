@@ -2,7 +2,7 @@ import { FormSubmission } from '~/contracts/form-submission';
 import { useImport } from '../../provider';
 import { useRef, forwardRef } from 'react';
 
-const FlowStagesSelect = forwardRef<HTMLSelectElement>((props, ref) => {
+const FlowStagesSelect = forwardRef<HTMLSelectElement, { defaultOption: string }>((props, ref) => {
     const { state } = useImport();
     const { defaultOption } = props;
 

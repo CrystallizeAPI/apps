@@ -20,11 +20,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             {
                 onItemUpdated: async (item) => {
                     const push = async (stageId: string) => {
-                        emitter.emit(importId, {
-                            event: 'stage-push',
-                            item,
-                            stageId,
-                        });
                         await api.pushItemToFlow(
                             {
                                 id: item.id,
@@ -33,6 +28,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                             },
                             stageId,
                         );
+                        emitter.emit(importId, {
+                            event: 'stage-pushed',
+                            data: {
+                                ...item,
+                                stageId,
+                            },
+                        });
                     };
                     const validate = validationRules?.[item.shape.identifier]?.validate;
                     if (!validate) {

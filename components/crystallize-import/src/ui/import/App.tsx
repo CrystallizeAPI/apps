@@ -9,6 +9,7 @@ const messageFactory = (decoded: any) => {
         case 'started':
             return 'Import started';
         case 'item-updated':
+        case 'item-created':
             return (
                 <>
                     <span>Updated item</span> <span className="text-tag">{decoded.data.id}</span> <span>with name</span>{' '}
@@ -17,27 +18,24 @@ const messageFactory = (decoded: any) => {
                     <span className="text-tag">{decoded.data.shape.identifier}</span>
                 </>
             );
-        case 'item-created':
+        case 'stage-pushed':
             return (
                 <>
-                    <span>Created item</span> <span className="text-tag">{decoded.data.id}</span> <span>with name</span>{' '}
+                    <span>Item</span> <span className="text-tag">{decoded.data.id}</span> <span>with name</span>{' '}
                     <span className="text-tag">{decoded.data.name}</span> <span>in language</span>{' '}
-                    <span className="text-tag">{decoded.data.language}</span> <span>using shape</span>{' '}
-                    <span className="text-tag">{decoded.data.shape.identifier}</span>
+                    <span className="text-tag">{decoded.data.language}</span> was <span>pushed to stage</span>{' '}
+                    <span className="text-tag">{decoded.data.stageId}</span>
                 </>
-            );
-
-        case 'item-error':
-            return (
-                <span>
-                    <pre>{JSON.stringify(decoded.data, undefined, 2)}</pre>
-                </span>
             );
 
         case 'done':
             return <span className="font-bold">Import done 🎉</span>;
         default:
-            return 'Working ...';
+            return (
+                <span>
+                    <pre>{JSON.stringify(decoded.data, undefined, 2)}</pre>
+                </span>
+            );
     }
 };
 export const App = () => {
@@ -146,7 +144,7 @@ export const App = () => {
                         <h2 className="text-gray-600 font-semibold m-0">Progress log</h2>
                         <label>{state.done ? 'Import completed' : 'Running data import ...'}</label>
                     </div>
-                    <div className="flex flex-col py-4 px-6 bg-slate-100 max-h-[500px] overflow-scroll reverse flex-col-reverse">
+                    <div className="flex py-4 px-6 bg-slate-100 max-h-[500px] overflow-scroll reverse flex-col-reverse">
                         <div className="flex flex-col gap-2">
                             {streamLogs.map((log, i) => {
                                 const decoded = JSON.parse(log);

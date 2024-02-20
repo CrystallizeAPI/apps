@@ -54,7 +54,7 @@ export const DataMatchingForm = () => {
                         )}
                     <div className="flex items-center shrink-0 gap-3">
                         <button
-                            className="flex px-4 gap-2 py-3.5 font-medium bg-green-100 text-green-800 hover:border-green-600 border border-solid border-transparent rounded cursor-pointer font-medium"
+                            className="flex px-4 gap-2 py-3.5 bg-green-100 text-green-800 hover:border-green-600 border border-solid border-transparent rounded cursor-pointer font-medium"
                             onClick={async () => {
                                 dispatch.updateLoading(true);
                                 try {
@@ -87,7 +87,7 @@ export const DataMatchingForm = () => {
                             <span>Preflight test</span> <PiAirplaneInFlightDuotone />
                         </button>
                         <button
-                            className="flex-1   px-4 gap-2 py-3.5 bg-pink-100 text-pink-600 hover:border-pink-600 border border-solid border-transparent rounded cursor-pointer px-2 py-1 font-medium"
+                            className="flex-1 gap-2 bg-pink-100 text-pink-600 hover:border-pink-600 border border-solid border-transparent rounded cursor-pointer px-2 py-1 font-medium"
                             onClick={() => {
                                 dispatch.updateSpreadsheet([], []);
                             }}

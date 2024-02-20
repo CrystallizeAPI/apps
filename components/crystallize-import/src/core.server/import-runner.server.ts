@@ -63,7 +63,10 @@ export const runImport = async (
                     event: 'item-created',
                     data,
                 });
-                onItemCreated(data).catch((err) => errors.push(err));
+                onItemCreated(data).catch((err) => {
+                    console.error('onItemCreated error', err);
+                    errors.push(err);
+                });
             });
         }
         if (onItemUpdated) {
@@ -72,7 +75,10 @@ export const runImport = async (
                     event: 'item-updated',
                     data,
                 });
-                onItemUpdated(data).catch((err) => errors.push(err));
+                onItemUpdated(data).catch((err) => {
+                    console.error('onItemUpdated error', err);
+                    errors.push(err);
+                });
             });
         }
 

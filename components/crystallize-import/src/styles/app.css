@@ -92,8 +92,8 @@ body {
 
 .popover {
     overflow: hidden;
-    font-family:'Roboto',  system-ui, sans-serif;
-    
+    font-family: 'Roboto', system-ui, sans-serif;
+
     @apply bg-white flex flex-col max-h-[700px] px-6 pb-4 overflow-scroll  rounded-md bg-white shadow-md border border-solid border-slate-300;
 }
 
@@ -126,8 +126,7 @@ body {
     background: lighten(rgb(239, 72, 54), 10%);
 }
 .dsg-row-header {
-    @apply !z-30 ;
-
+    @apply !z-30;
 }
 .dsg-cell-header-container {
     display: flex;
@@ -138,9 +137,8 @@ body {
     @apply bg-slate-100;
 }
 
-
 label {
-    @apply text-slate-600 font-medium text-sm
+    @apply text-slate-600 font-medium text-sm;
 }
 
 label small {
@@ -164,7 +162,6 @@ select {
         0.65em auto,
         100%;
     @apply px-6 py-3 pr-8 text-sm font-medium bg-slate-100 border border-solid border-gray-200 rounded-md hover:border-gray-400;
-
 }
 select.grey {
     background-color: #f3f4f6;
@@ -253,7 +250,6 @@ select:disabled {
     display: flex;
 }
 
-
 .file-chooser {
     display: flex;
     width: 100%;
@@ -266,7 +262,7 @@ select:disabled {
     padding-top: 10px;
     border: 1px dashed #9095a8;
     border-radius: 8px;
-    @apply  grow bg-white border-slate-400;
+    @apply grow bg-white border-slate-400;
 }
 
 .match-label {
@@ -289,7 +285,6 @@ select:disabled {
     background: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 
 .loader {
     position: relative;
@@ -395,14 +390,15 @@ select:disabled {
     color: #888;
 }
 
-.item-updated{
+.item-updated {
     @apply bg-yellow-50 text-yellow-700 border border-solid border-yellow-300;
 }
-.item-created, .done {
+.item-created,
+.done {
     @apply bg-green-100 text-green-600 border border-solid border-green-300;
 }
 
-.started{
+.started {
     @apply bg-white text-slate-600 border border-solid border-slate-300;
 }
 .item-error {

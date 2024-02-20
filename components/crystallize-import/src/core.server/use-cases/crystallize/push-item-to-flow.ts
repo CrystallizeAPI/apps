@@ -15,13 +15,23 @@ export const pushItemToFlow = async (
     { apiClient }: Deps,
 ): Promise<void> => {
     const query = `#graphql
-        mutation ADD_TO_STAGE($itemId: ID!, $language: String!, $version: VersionLabel!, $stage: String!) {
-            addItemFlowStage(itemId: $itemId, language: $language, version: $version, stage: $stage) {
-                ... on FlowStageContent {
-                    id
+        mutation ADD_TO_STAGE(
+            $itemId: ID!
+            $language: String!
+            $version: VersionLabel!
+            $stage: String!
+        ) {
+            addItemsToFlowStage(
+                stage: $stage
+                items: [{ id: $itemId, language: $language, version: $version }]
+            ) {
+                ... on FlowStageContentList {
+                    content {
+                        id
+                    }
                 }
                 ... on BasicError {
-                    error: message
+                    or: message
                 }
             }
         }
@@ -33,9 +43,10 @@ export const pushItemToFlow = async (
         stage,
     });
 
-    if (!res?.addItemFlowStage?.id) {
+    if (!res?.addItemsToFlowStage?.content || res?.addItemsToFlowStage?.content.length === 0) {
         throw new Error(
-            res?.addItemFlowStage?.error || `Failed to add item to flow ${id}-${language}-${version} to stage ${stage}`,
+            res?.addItemsToFlowStage?.error ||
+                `Failed to add item to flow ${id}-${language}-${version} to stage ${stage}`,
         );
     }
 };

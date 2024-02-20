@@ -1,11 +1,12 @@
 import type { Shape } from '@crystallize/schema';
 import { useImport } from '../../provider';
+
 interface ShapeChooserProps {
     shapes: Shape[];
 }
 
 export const ShapeChooser = ({ shapes }: ShapeChooserProps) => {
-    const { dispatch, state } = useImport();
+    const { dispatch } = useImport();
 
     return (
         <div className="flex flex-col py-2 w-full">
