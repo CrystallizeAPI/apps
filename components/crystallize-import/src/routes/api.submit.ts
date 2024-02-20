@@ -44,7 +44,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                         }
                         return;
                     }
-                    const valid = validate(item);
+                    const valid = validate(item.from);
                     if (!valid) {
                         if (post.invalidFlowStage) {
                             await push(post.invalidFlowStage);

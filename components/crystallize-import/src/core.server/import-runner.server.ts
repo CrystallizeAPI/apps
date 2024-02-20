@@ -1,4 +1,4 @@
-import { Bootstrapper, EVENT_NAMES, JsonSpec } from '@crystallize/import-utilities';
+import { Bootstrapper, EVENT_NAMES, JSONItem, JsonSpec } from '@crystallize/import-utilities';
 import { EventEmitter } from 'events';
 import util from 'util';
 
@@ -22,6 +22,7 @@ type Item = {
         type: 'document' | 'folder' | 'product';
         identifier: string;
     };
+    from: JSONItem;
 };
 
 type Subscriptons = {
