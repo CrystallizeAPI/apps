@@ -1,10 +1,15 @@
-import { catalogueFetcherGraphqlBuilder, ClientInterface, createCatalogueFetcher, createClient } from '@crystallize/js-api-client';
+import {
+    catalogueFetcherGraphqlBuilder,
+    ClientInterface,
+    createCatalogueFetcher,
+    createClient,
+} from '@crystallize/js-api-client';
 
 export default async (apiClient: ClientInterface) => {
     const fetcher = createCatalogueFetcher(apiClient);
     const builder = catalogueFetcherGraphqlBuilder;
     const genericPathToTest = ['/', '/subscriptions'];
-    let children = []
+    let children = [];
     for (const path of genericPathToTest) {
         const data: any = await fetcher({
             catalogue: {
@@ -46,5 +51,5 @@ export default async (apiClient: ClientInterface) => {
             return children;
         }
     }
-    return children
+    return children;
 };
