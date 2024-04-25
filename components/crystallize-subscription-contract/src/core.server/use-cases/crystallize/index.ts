@@ -17,10 +17,41 @@ export default async (request: Request) => {
             return memo;
         }, {});
 
-    const apiClient = createClient({
+    const pimAwareClient = createClient({
         tenantId: signatureChecked.tenantId,
         tenantIdentifier: signatureChecked.tenantIdentifier,
         sessionId: cookiePayload['connect.sid'],
+    });
+
+
+    // apiClient is a PIM Client if there is a static auth token we need to use it...
+    // it can be more abstract but this is only here that we need to use it.
+    // so let's keep it simple for now
+    // let's check
+    const authMethod = await pimAwareClient.pimApi(`#graphql
+        query GET_TENANT_AUTHENTICATION_METHOD($tenantId: ID!, $identifier: String!) {
+            tenant {
+                    get(id: $tenantId, identifier: $identifier) {
+                        authenticationMethod {
+                            catalogue
+                            search
+                        }
+                        staticAuthToken
+                    }
+                }
+            }
+        `, {
+        tenantId: pimAwareClient.config.tenantId,
+        identifier: pimAwareClient.config.tenantIdentifier,
+    })
+
+    const apiClient = createClient({
+        tenantId: pimAwareClient.config.tenantId,
+        tenantIdentifier: pimAwareClient.config.tenantIdentifier,
+        sessionId: cookiePayload['connect.sid'],
+        ...(authMethod.tenant.get.authenticationMethod.catalogue === 'staticToken' && {
+            staticAuthToken: authMethod.tenant.get.staticAuthToken,
+        }),
     });
 
     return {
