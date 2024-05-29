@@ -143,7 +143,11 @@ export const ColumnHeader = ({ title }: ColumnHeaderProps) => {
                                     .filter((shape) => shape.type === 'folder')
                                     .map((shape) => (
                                         <li
-                                            className={`popover-item ${subFolderMapped?.shapeIdentifier === shape.identifier ? 'font-bold ' : ''}`}
+                                            className={`popover-item ${
+                                                subFolderMapped?.shapeIdentifier === shape.identifier
+                                                    ? 'font-bold '
+                                                    : ''
+                                            }`}
                                             key={shape.identifier}
                                             onClick={() => {
                                                 const newMapping = [
