@@ -1,10 +1,9 @@
+import { useState } from 'react';
 import { Popover } from 'react-tiny-popover';
 import cn from 'classnames';
-
 import { AiFillCaretDown } from 'react-icons/ai';
 import { BsTrash } from 'react-icons/bs';
 import { useImport } from '../../provider';
-import { useState } from 'react';
 import { FieldMapping, FIELD_MAPPINGS } from '../../../../contracts/ui-types';
 import { Shape } from '@crystallize/schema';
 
