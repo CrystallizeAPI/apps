@@ -4,6 +4,7 @@ import { DataMatchingForm } from './components/DataForm';
 import { FileChooser } from './components/FileChooser';
 import { useImport } from './provider';
 import { useEffect, useState } from 'react';
+
 const messageFactory = (decoded: any) => {
     switch (decoded.event) {
         case 'started':
@@ -43,6 +44,7 @@ export const App = () => {
     const { shapes, folders } = state;
     const [streamLogs, setStreamLogs] = useState<any[]>([]);
     const data = useEventSource(`/api/import/stream/${state.importId}`, { event: 'log' });
+    const [grouping, setGrouping] = useState<string>(state.headers[0] ?? '');
 
     useEffect(() => {
         if (state.done) {
@@ -52,6 +54,11 @@ export const App = () => {
             setStreamLogs((prev) => [...prev, data]);
         }
     }, [data, state.done]);
+
+    useEffect(() => {
+        dispatch.updateGroupProductsBy(grouping);
+    }, [grouping]);
+
     return (
         <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4', padding: '0px 50px 200px' }}>
             <ActionBar shapes={shapes} folders={folders} />
@@ -98,14 +105,14 @@ export const App = () => {
                         <label></label>
                     </div>
                     <div className="max-w-sm">
-                        <label className="pb-4 block ">
-                            Group products by variants <br />
+                        <label className="pb-4 block">
+                            Group products by: <br />
                         </label>
-
                         <select
-                            className="grey"
-                            onChange={(e) => dispatch.updateGroupProductsBy(e.target.value)}
+                            className="grey w-[200px]"
+                            onChange={(e) => setGrouping(e.target.value)}
                             disabled={!state.rows?.length}
+                            value={grouping}
                         >
                             <option defaultChecked={true} disabled value="">
                                 Select a column
