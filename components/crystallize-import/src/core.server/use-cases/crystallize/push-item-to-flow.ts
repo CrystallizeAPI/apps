@@ -22,7 +22,7 @@ export const pushItemToFlow = async (
             $stage: String!
         ) {
             addItemsToFlowStage(
-                stage: $stage
+              stageIdentifier: $stage
                 items: [{ id: $itemId, language: $language, version: $version }]
             ) {
                 ... on FlowStageContentList {
