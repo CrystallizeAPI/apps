@@ -125,7 +125,7 @@ const mapVariant = (
     options?: MapVariantOptions,
 ): JSONProductVariant => {
     const name = row[mapping[FIELD_MAPPINGS.item.name.key]];
-    const sku = row[mapping['variant.sku']];
+    const sku = `${row[mapping['variant.sku']]}`;
     const images = row[mapping['variant.images']];
     let price = row[mapping['variant.price']] ? Number.parseFloat(row[mapping['variant.price']]) : undefined;
     const stock = row[mapping['variant.stock']] ? Number.parseFloat(row[mapping['variant.stock']]) : undefined;

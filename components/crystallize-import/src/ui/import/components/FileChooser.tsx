@@ -60,7 +60,7 @@ const readCsv = async (file: File): Promise<Data> => {
 
 const readXlsx = async (file: File): Promise<Data> => {
     const allRows = await readXlsxFile(file);
-    const headers = allRows[0].map((col) => col.toString());
+    const headers = allRows[0].map((col) => `${col || ''}`.trim());
     const rows = allRows.splice(1).map((row) =>
         row.reduce((record: Record<string, any>, col, i) => {
             record[headers[i]] = col;
