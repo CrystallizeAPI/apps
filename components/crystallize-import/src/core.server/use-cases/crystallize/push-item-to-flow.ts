@@ -25,7 +25,7 @@ export const pushItemToFlow = async (
               stageIdentifier: $stage
                 items: [{ id: $itemId, language: $language, version: $version }]
             ) {
-                ... on FlowStageContentList {
+                ... on FlowContentList {
                     content {
                         id
                     }
@@ -46,7 +46,7 @@ export const pushItemToFlow = async (
     if (!res?.addItemsToFlowStage?.content || res?.addItemsToFlowStage?.content.length === 0) {
         throw new Error(
             res?.addItemsToFlowStage?.error ||
-                `Failed to add item to flow ${id}-${language}-${version} to stage ${stage}`,
+            `Failed to add item to flow ${id}-${language}-${version} to stage ${stage}`,
         );
     }
 };
