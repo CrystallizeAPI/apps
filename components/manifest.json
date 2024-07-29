@@ -16,6 +16,14 @@
         "hello-world-comics": {
             "name": "Hello World Comics",
             "git": "git@github.com:CrystallizeAPI/hello-world-comics-app.git"
+        },
+        "generative-ai-app": {
+            "name": "Generative AI App",
+            "git": "git@github.com:CrystallizeAPI/generative-ai-app.git"
+        },
+        "translation-app": {
+            "name": "Crystallize Translation App",
+            "git": "git@github.com:CrystallizeAPI/translation-app.git"
         }
     }
 }
