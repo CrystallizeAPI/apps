@@ -1,0 +1,30 @@
+import type { Maybe, Product } from '~/__generated__/types';
+import type { ClientInterface } from '@crystallize/js-api-client';
+
+type Deps = {
+    apiClient: ClientInterface;
+};
+
+export const getVariants = async (id: string, language: string, { apiClient }: Deps) => {
+    const data = await apiClient.pimApi(
+        `#graphql
+     query GET_VARIANTS($id: ID!, $language: String!, $versionLabel: VersionLabel) {
+      product {
+       get(id: $id, language: $language, versionLabel: $versionLabel) {
+        variants {
+          id
+          sku
+        }
+      }
+    }
+  }
+    `,
+        {
+            id,
+            language,
+            version: 'draft',
+        },
+    );
+
+    return data?.product?.get as Maybe<Product>;
+};

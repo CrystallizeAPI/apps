@@ -1,0 +1,46 @@
+{
+    "name": "crystallize-translation-app",
+    "private": true,
+    "sideEffects": false,
+    "scripts": {
+        "build": "pnpm codegen && remix build",
+        "dev": "remix dev --manual",
+        "start": "remix-serve ./build/index.js",
+        "typecheck": "tsc",
+        "codegen": "graphql-codegen --require dotenv/config --config codegen.ts"
+    },
+    "dependencies": {
+        "@crystallize/app-signal": "^1.1.1",
+        "@crystallize/design-system": "^1.19.1",
+        "@crystallize/js-api-client": "^1.12.2",
+        "@remix-run/css-bundle": "^2.1.0",
+        "@remix-run/node": "^2.1.0",
+        "@remix-run/react": "^2.1.0",
+        "@remix-run/serve": "^2.1.0",
+        "isbot": "^3.7.0",
+        "jose": "^4.15.4",
+        "openai": "^4.12.4",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-textarea-autosize": "^8.5.3"
+    },
+    "devDependencies": {
+        "@graphql-codegen/cli": "^5.0.0",
+        "@graphql-codegen/typescript": "^4.0.1",
+        "@remix-run/dev": "^2.1.0",
+        "@remix-run/eslint-config": "^2.1.0",
+        "@tailwindcss/container-queries": "^0.1.1",
+        "@types/react": "^18.2.31",
+        "@types/react-dom": "^18.2.14",
+        "eslint": "^8.52.0",
+        "tailwindcss": "^3.3.3",
+        "typescript": "^5.2.2"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "@packageManager": "pnpm@8.9.2",
+    "volta": {
+        "node": "18.18.2"
+    }
+}
