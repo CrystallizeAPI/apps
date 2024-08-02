@@ -19,6 +19,8 @@ All contributions will happen here:
 | [Crystallize Refund App][2]                | [Live][3] | ![MIT]     |
 | [Crystallize Subscription Contract App][4] | [Live][5] | ![MIT]     |
 | [Hello World Comics][6]                    |           | ![MIT]     |
+| [Translation App][7]                       | [Live][8] | ![MIT]     |
+| [Generative AI App][9]                     |           | ![MIT]     |
 
 ## Contributions
 
@@ -40,3 +42,6 @@ make add-component COMPONENT=my-new-component
 [4]: https://github.com/CrystallizeAPI/crystallize-subscription-contract-app
 [5]: https://subscription-contract.app-labs.crystallize.com
 [6]: https://github.com/CrystallizeAPI/hello-world-comics-app
+[7]: https://github.com/CrystallizeAPI/translation-app
+[8]: https://translation-app-three.vercel.app/
+[9]: https://github.com/CrystallizeAPI/generative-ai-app
