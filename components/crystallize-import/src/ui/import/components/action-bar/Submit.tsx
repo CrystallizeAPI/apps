@@ -44,7 +44,7 @@ export const Submit = () => {
         <>
             <div className="flex flex-col py-2">
                 <div>
-                    {state.flows.length > 0 && (
+                    {state.flows?.length > 0 && (
                         <>
                             <label className="pb-2 block">Flows</label>
                             <div className="flex items-start ">
