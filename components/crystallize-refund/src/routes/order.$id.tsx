@@ -1,5 +1,5 @@
 import { json, LoaderFunction } from '@remix-run/server-runtime';
-import { Form, Link, useLoaderData, useTransition } from '@remix-run/react';
+import { Form, Link, useLoaderData, useNavigation } from '@remix-run/react';
 import CrystallizeAPI from 'src/core.server/use-cases/crystallize';
 import { Address as AddressType, Order, OrderItem } from '@crystallize/js-api-client';
 import { Address } from 'src/components/Address';
@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default () => {
     const { order } = useLoaderData() as unknown as { order: Order };
-    const transition = useTransition();
+    const navigation = useNavigation();
     const [refunds, setRefunds] = useState<Refunds>({});
     const isCredit = (order?.total?.gross || 0) < 0;
 
@@ -211,11 +211,11 @@ export default () => {
                                         <td valign="middle">
                                             <button
                                                 type="submit"
-                                                disabled={totalRefund <= 0 || transition.state == 'submitting'}
+                                                disabled={totalRefund <= 0 || navigation.state == 'submitting'}
                                                 className="btn btn-outline-dark btn-lg"
                                             >
                                                 <FaRegCreditCard className={'r-icon'} />
-                                                {transition.state == 'submitting' ? 'Generating' : 'Trigger'} a refund
+                                                {navigation.state == 'submitting' ? 'Generating' : 'Trigger'} a refund
                                                 of:
                                                 <strong>
                                                     {totalRefund} {order.total.currency.toUpperCase()}

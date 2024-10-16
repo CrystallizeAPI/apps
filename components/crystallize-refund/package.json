@@ -6,18 +6,20 @@
         "build:remix": "remix build",
         "build:css": "sass -q --no-source-map src/styles/app.scss:src/styles/app.css",
         "dev": "run-p \"dev:*\"",
-        "dev:remix": "PORT=3001 remix dev",
+        "dev:remix": "remix vite:dev",
         "dev:sass": "sass -q --no-source-map --watch src/styles/app.scss:src/styles/app.css",
         "start": "remix-serve build",
         "prettier:fix": "prettier --write .",
         "prettier:check": "prettier --check ."
     },
     "dependencies": {
-        "@crystallize/js-api-client": "^1.3",
-        "@remix-run/node": "^1.7.0",
-        "@remix-run/react": "^1.7.0",
-        "@remix-run/serve": "^1.7.0",
+        "@crystallize/js-api-client": "^2.5.0",
+        "@remix-run/node": "^2.8.1",
+        "@remix-run/react": "^2.8.1",
+        "@remix-run/serve": "^2.8.1",
+        "@remix-run/v1-route-convention": "^0.1.4",
         "bootstrap": "^5.2.1",
+        "isbot": "^4",
         "jsonwebtoken": "^8.5.1",
         "react": "^18.2.0",
         "react-debounce-input": "^3.3.0",
@@ -25,14 +27,16 @@
         "react-icons": "^4.4.0"
     },
     "devDependencies": {
-        "@remix-run/dev": "^1.7.0",
+        "@remix-run/dev": "^2.8.1",
         "@types/jsonwebtoken": "^8.5.9",
         "@types/react": "^18.0.15",
         "@types/react-dom": "^18.0.6",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.7.1",
         "sass": "^1.54.9",
-        "typescript": "^4.7.4"
+        "typescript": "^5.4.4",
+        "vite": "^5.2.8",
+        "vite-tsconfig-paths": "^4.3.2"
     },
     "engines": {
         "node": ">=18"

@@ -1,12 +1,16 @@
 {
     "private": true,
     "devDependencies": {
-        "prettier": "3.2.5"
+        "prettier": "3.2.5",
+        "typescript": "^5.4.4"
     },
     "scripts": {
         "prettier": "prettier --write ."
     },
     "volta": {
         "node": "16.14.2"
+    },
+    "dependencies": {
+        "@crystallize/js-api-client": "^2.5.0"
     }
 }
